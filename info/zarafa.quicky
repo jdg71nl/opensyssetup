@@ -1,0 +1,31 @@
+# zarafa.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# jdg: note on zarafa-database:
+* zarafa is completely domain-agnostic, no reference in zarafa-DB, only 'mydomain' and 'mydestinations' in /etc/postfix/main.cf
+* zarafa resolves 'user-email-address' to 'username' (without domain)
+* zarafa uses 'username' (without domain) as delivery address --> username@<any "mydestination"> will deliver to "username"
+* zarafa uses 'user-email-address' as from-address (and reply-to address)
+
+# > zarafa-admin -l --details jdgraaff | egrep '(Username|Emailaddress)'
+# Username:      jdgraaff
+# Emailaddress:  john.de.graaff@networkconcepts.nl
+#
+# > postmap -q john.de.graaff@networkconcepts.nl mysql:/etc/postfix/mysql_zarafa-user-lookup.cf
+# jdgraaff
+# > postmap -q jdgraaff mysql:/etc/postfix/mysql_zarafa-user-lookup.cf
+# jdgraaff
+# > postmap -q jdgraaff@networkconcepts.nl mysql:/etc/postfix/mysql_zarafa-user-lookup.cf
+# > postmap -q john.de.graaff mysql:/etc/postfix/mysql_zarafa-user-lookup.cf
+#
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# update email adres:
+
+> zarafa-admin -u jdgraaff -e jdgraaff@networkconcepts.nl
+
+# update set-admin
+zarafa-admin -u jdgraaff -a 1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

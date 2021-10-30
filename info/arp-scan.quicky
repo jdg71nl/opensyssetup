@@ -1,0 +1,25 @@
+# arp-scan.quicky
+
+# ---+---
+apt-get install libpcap0.8 libpcap0.8-dev
+apt-get install build-essential
+
+# ---+---
+cd ~
+wget -c http://www.nta-monitor.com/tools/arp-scan/download/arp-scan-1.7.tar.gz
+tar xvfz arp-scan-1.7.tar.gz 
+cd arp-scan-1.7/
+./configure 
+make
+make check
+make install
+
+> arp-scan --version
+arp-scan 1.7
+# ---+---
+
+flush arp cache on linux:
+ip neigh flush all
+
+# ---+---
+

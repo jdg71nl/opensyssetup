@@ -1,0 +1,39 @@
+# dokuwiki.quiky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# debain install
+
+# see: ttp://www.dokuwiki.org/install:debian
+apt-get install dokuwiki
+
+# apache2 cnfig:
+> cat /etc/apache2/conf.d/dokuwiki.conf 
+Alias /wiki    /usr/share/dokuwiki
+<Directory /usr/share/dokuwiki/>
+	Options +FollowSymLinks
+	AllowOverride All
+	order allow,deny
+	allow from all
+</Directory>
+
+# config
+cd /etc/dokuwiki/
+
+# data
+cd /var/lib/dokuwiki/
+
+# webroot
+cd /usr/share/dokuwiki/
+
+# make settings, do first:
+cd /etc/dokuwiki/
+cp -a local.php.dist local.php
+
+/wiki?do=admin
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# template: minima
+
+http://www.dokuwiki.org/template:minima
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

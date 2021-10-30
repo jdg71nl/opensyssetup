@@ -1,0 +1,12 @@
+# filemanager.quicky
+
+# 4pane
+http://www.4pane.co.uk/
+#
+http://www.debianadmin.com/how-to-install-4pane-file-manager-in-debian-squeezelenny.html
+vi /etc/apt/sources.list
+deb http://www.4pane.co.uk/debian/ squeeze contrib
+apt-key adv --fetch-keys http://www.4pane.co.uk/4Pane.asc
+apt-get update
+apt-get install 4pane
+

@@ -1,0 +1,39 @@
+# scanner-usb-sane.quicky
+
+--
+scanner:
+sane package
+need to edit dll.conf: to only enable EPSON (?)
+edit epson.conf: only 'usb' not scsi
+--
+if usb does not work (did not after upgrade CetOS4.2 on Gloria nov2005):
+	add 'acpi=off pci=noacpi' to kernel options in grub.conf:
+	kernel /vmlinuz-2.6.9-22.0.1.EL ro root=LABEL=/-gloria40 rhgb acpi=off pci=noacpi
+--
+d060117 
+experience on BONE with new Epson Perfection 2480 PHOTO
+> rpm -e sane-backends
+	this was: sane-backends-1.0.14-6.i386.rpm at CentOS 4.2
+download v1.0.17
+make/make install
+will go in /usr/local/.....
+
+dll.conf
+only enable 'snapscan'
+in snapscan.conf:
+
+#jdg
+firmware /var/scanweb/epson_scanner_2480_cdrom/Esfw43.bin
+# get this from CDROM Epson (windows, CAB file)
+#jdg
+# Epson Perfection 2480
+usb 0x04b8 0x0121
+
+sane-find-scanner 
+scanimage -L 
+
+test with
+/usr/local/bin/scanimage -d snapscan:libusb:001:014 --format tiff > x.tif
+/usr/local/bin/scanimage -d snapscan --format tiff > x.tif
+--
+

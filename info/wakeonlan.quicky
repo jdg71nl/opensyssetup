@@ -1,0 +1,32 @@
+# wakeonlan.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+> apt-get install etherwake
+...
+  The following NEW packages will be installed:
+    etherwake wakeonlan
+...
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# extra info on: http://wiki.debian.org/WakeOnLan
+
+# should do on software level:
+ethtool -s eth0 wol g
+
+iface eth0 inet dhcp
+	post-up ethtool -s $IFACE wol g
+	post-down ethtool -s $IFACE wol g
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# > arp -a
+# gloria.de-graaff.lan (172.24.2.60) at 00:17:31:83:0C:8B [ether] on eth1
+# macmini.de-graaff.lan (172.24.2.12) at 00:16:CB:AD:EE:97 [ether] on eth1
+# samba.de-graaff.lan (172.24.2.50) at 00:1C:C0:A8:F5:44 [ether] on eth1
+# jdgncnl-macbook-glan.de-graaff.lan (172.24.2.100) at 00:1F:5B:EA:60:F4 [ether] on eth1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+> cat /var/lib/dhcp/dhcpd.leases | grep ether | perl -ne '$_=~/\s+hardware ethernet\s*([\d\:abcdef]+)/;print "$1\n";' | xargs -i wakeonlan "{}"
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

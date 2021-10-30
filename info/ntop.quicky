@@ -1,0 +1,18 @@
+# ntop.quicky
+
+# ---
+# on debian/4/etch
+
+# run first as root:
+> ntop
+# (will ask for password, then keep running)
+
+# then start from init.d
+
+# ---
+# set admin pwd on HTTP mgt
+
+ntop --set-admin-password=admin
+
+# ---
+

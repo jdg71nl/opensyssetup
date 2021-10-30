@@ -1,0 +1,202 @@
+# debian.quicky
+# Debian info
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# show debian release:
+
+> lsb_release -cs
+jessie
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install gcc, make, etc
+apt-get install build-essential
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# this script from: http://ubuntuforums.org/showthread.php?t=19106
+sudo update-rc.d iptables start 37 S . stop 37 0 .
+
+update-rc.d -f samba remove
+update-rc.d samba defaults 91 07
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+
+# Permanently booting to test-mode
+systemctl set-default multi-user.target
+
+# OLD below ..
+#
+Howto Boot debian in text mode instead of graphical mode (GUI)
+
+You can prevent automatic running of the GUI when you boot your
+debian machine by disabling your login manager be it KDM, GDM or
+XDM from running at boot time. To disable the login manager from
+automatically running at boot up, run the following command as root
+
+#update-rc.d -f gdm remove
+
+Replace gdm with kdm or xdm if they are what you use.
+
+To start X manually, you would then have to login at the command
+prompt and enter the command startx.
+
+To reset your login manager so that it runs at boot up, do
+
+#update-rc.d -f gdm defaults 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+Debian nirvana commands
+http://www.debian.org/doc/manuals/reference/ch-package.en.html#s-debian-package
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# tasksel
+
+See file: 
+tasksel.debian.quicky
+
+# hints:
+> tasksel -t install gnome-desktop --new-install
+> tasksel --task-packages desktop | egrep -v '(openoffice|gimp|alsa|spell|cups)'  | perl -pe 's/\n/ /'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Debian X window manager update:
+
+# produce list of available window managers:
+apt-cache search x-window-manager
+
+update-alternatives --list x-window-manager
+update-alternatives --config x-window-manager
+update-alternatives 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# list of all packages: rmv, flexvpn, umts:
+apt-get install unison vim-tiny man dialog libterm-readline-perl-perl apt-utils htop usbutils minicom wvdial rrdtool host mtr unison rsync vim-tiny openvpn redir iperf nmap tshark subversion arping arp-scan libgd-gd2-perl ntp librrds-perl mysql-server apache2 snmpd snmp php5-snmp libnet-snmp-perl libnet-telnet-cisco-perl  tofrodos libconfig-inifiles-perl php5-xmlrpc php5-mysql php5-common php5-cli libapache2-mod-php5 apache2 mysql-server php5-mysql sudo libtemplate-perl libnetaddr-ip-perl libdigest-sha1-perl nsis libnet-ldap-perl libconfig-inifiles-perl
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# disable ipv6
+http://www.debian-administration.org/article/Disabling_IPv6_under_a_2.6_kernel
+
+vi /etc/modprobe.d/aliases.conf
+alias net-pf-10 off ipv6
+
+# or in GRUB at kernel load:
+Just add this option to your kernel boot line:
+ipv6.disable=1 (Press e to edit at the grub boot screen ...)
+If you like that, you can put this in /etc/default/grub:
+GRUB_CMDLINE_LINUX="ipv6.disable=1"
+and then run update-grub
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# enable ip_forwarding routing:
+
+> cat /etc/sysctl.conf | grep ip_forward
+net.ipv4.ip_forward=1
+
+echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf 
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# howto update etch to lenny (dist-upgrade):
+
+# set sources.list
+cat > /etc/apt/sources.list
+
+deb http://ftp.nl.debian.org/debian/ lenny main
+deb-src http://ftp.nl.debian.org/debian/ lenny main
+deb http://security.debian.org/ lenny/updates main contrib
+deb-src http://security.debian.org/ lenny/updates main contrib
+
+# update:
+aptitude update
+
+# first upgrade the core apt packages
+aptitude install apt dpkg aptitude
+
+# perform the full upgrade
+aptitude full-upgrade
+# old way: apt-get dist-upgrade
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# LSB Initscript
+
+# http://wiki.debian.org/LSBInitScripts
+# need header like this:
+
+### BEGIN INIT INFO
+# Provides:          scriptname
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# force downgrade
+
+# http://linuxmafia.com/faq/Debian/downgrade.html
+
+> cat /etc/apt/preferences 
+Package: *
+Pin: release a=stable
+Pin-Priority: 1001
+
+Package: *
+Pin: release a=testing
+Pin-Priority: 60
+
+Package: *
+Pin: release a=unstable
+Pin-Priority: 50
+
+# then:
+apt-get update
+apt-get -s upgrade    (just to check what would happen)
+apt-get  upgrade
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# how to import a debian apt key:
+
+# first do a apt-get update and install pkg: debian-archive-keyring
+apt-get install debian-archive-keyring
+
+# info: http://en.kioskea.net/faq/809-debian-apt-get-no-pubkey-gpg-error
+#       Debian - Apt-get : NO_PUBKEY / GPG error
+
+# check which key you want:
+W: GPG error: ftp://ftp.debian.org/ testing Release:  
+The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 010908312D230C5F 
+
+# get the key:
+gpg --keyserver pgpkeys.mit.edu --recv-key AED4B06F473041FA
+
+# import the key:
+gpg -a --export AED4B06F473041FA | sudo apt-key add -
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# upgrade lenny to squeeze
+
+http://www.cyberciti.biz/faq/howto-upgrade-debian-linux-lenny-to-squeeze-testing/
+
+> cat /etc/apt/source.list
+deb http://ftp.us.debian.org/debian/ squeeze main
+deb-src http://ftp.us.debian.org/debian/ squeeze main
+deb http://security.debian.org/ squeeze/updates main
+deb-src http://security.debian.org/ squeeze/updates main
+deb http://volatile.debian.org/debian-volatile squeeze/volatile main
+deb-src http://volatile.debian.org/debian-volatile squeeze/volatile main
+
+> apt-get update
+> apt-get install apt dpkg aptitude
+> apt-get dist-upgrade
+OR
+> aptitude update
+> aptitude install apt dpkg aptitude
+> aptitude full-upgrade
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

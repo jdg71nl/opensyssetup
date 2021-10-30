@@ -1,0 +1,1 @@
+../bin/set_remarks.sh

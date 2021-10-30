@@ -1,0 +1,56 @@
+# nfs.quicky
+
+# - - -
+# d2109
+
+# add on NFS server:
+> apt install nfs-kernel-server
+# check 'uid' of specific user:
+> id -u jdg
+# USE THIS FILE:
+> cp /usr/local/syssetup/debian/etc/exports /etc/exports
+> vi /etc/exports
+# activate and start:
+> sudo exportfs -vra
+> /usr/sbin/rpc.statd
+
+#jdg
+# https://serverfault.com/questions/716350/mount-nfs-volume-on-ubuntu-linux-server-from-macos-client
+# also do:
+# > apt install nfs-kernel-server
+# > /usr/sbin/rpc.statd
+# > vi /etc/exports
+# > sudo exportfs -vra
+/home/jdg 10.220.0.0/16(insecure,rw,all_squash,anonuid=1001,anongid=1001,no_subtree_check)
+
+# on NFS (Mac) client:
+sudo mount -t nfs -o resvport $REMOTE_HOST:/home/jdg $LOCAL_MOUNT_DIR
+
+# - - -
+# server:
+> cat /etc/exports 
+/mnt/sdb1 172.16.0.50(rw,no_root_squash)
+
+# client:
+mount -t nfs 172.16.0.56:/mnt/sdb1 /mnt/nfs/
+
+# test if RPC workss (should give a list of portnumbers):
+rpcinfo -p 172.16.0.61
+
+# test if nfs-server exports (should give list):
+exportfs -arv
+
+
+# ---
+
+# use on client:
+cat /etc/fstab
+172.24.2.50:/nfs_scratch/printserver /mnt/nfs_scratch  nfs     defaults 0 0
+
+# use on server (no space between ip/mask and (options) !):
+cat /etc/exports
+/nfs_scratch/printserver 172.24.2.21/255.255.255.255(rw,sync,no_root_squash,no_subtree_check)
+
+
+# ---
+#

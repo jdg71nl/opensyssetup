@@ -1,0 +1,30 @@
+# iperf.quicky
+--
+get it here:
+
+iperf-2.0.2-1.2.el4.rf.i386.rpm
+http://dast.nlanr.net/Projects/Iperf/
+http://dag.wieers.com/packages/iperf/
+--
+need server/client:
+> iperf -s -i 1 -m
+> iperf -c 12.12.1.1 -i 1 -m
+
+-s			server
+-c 		client, connect to <ip>
+-i 1		display speed each 1 second
+-m			display MSS and MTU (when done)
+-w 250k	change TCP Windows size
+--
+NOTES: 
+* default TCP-port is 5001
+* TCP-connection (SYN) is:	client -> server
+* main stream is:				client -> server (so data-PUSH from client->server)
+  --> return channel is ACK and reports (can do bidir)
+  --> so from client-perspective it is a data-stream PUSH!
+* strange results when doing iperf (TCP) inside an OpenVPN(UDP) tunnel,
+  much higher rersults, but Ethereal shows small (96b) packets.
+  Normal is iperf(TCP) with MTU/1500 packets
+--
+
+

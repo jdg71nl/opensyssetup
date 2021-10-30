@@ -1,0 +1,12 @@
+# unrar.quicky
+
+http://en.wikipedia.org/wiki/RAR
+
+> cat /etc/apt/sources.list
+# non-free for unrar
+deb http://ftp.nl.debian.org/debian/ squeeze non-free
+> aptitude update
+> aptitude remove unrar-free
+> aptitude install unrar
+
+

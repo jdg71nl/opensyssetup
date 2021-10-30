@@ -1,0 +1,8 @@
+#
+
+# check runlevel:
+% runlevel
+N 2
+
+# see inittab
+

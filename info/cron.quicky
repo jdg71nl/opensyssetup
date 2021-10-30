@@ -1,0 +1,29 @@
+# cron.quicky
+
+# ------+++------
+# system-wide crontab:
+vi /etc/crontab
+
+# per-user crontab (file is saved in: /var/spool/cron/<user> BUT only edit this way!:)
+crontab -e
+
+# ------+++------
+
+# syntax:
+# m h dom mon dow user  command
+
+*/3 means 'every 3 minutes' (NOT: 60 mins / 3 = every 20 mins)
+
+# ------+++------
+# disable cron messages in /var/log
+
+# add filter f_no_cron:
+> cat /etc/syslog-ng/syslog-ng.conf | egrep -B3 -A2 f_no_cron 
+filter f_no_cron { not facility(cron); };
+log {
+	source(s_all);
+	filter(f_syslog);
+	filter(f_no_cron);
+	destination(df_syslog);
+};
+# ------+++------

@@ -1,0 +1,89 @@
+# pure-ftpd.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# pre-d05 CentOS
+
+install instruction:
+
+* build as per example below
+* copy int/config
+
+cp /var/syssetup/common/root/etc/pure-ftpd.conf.sbddevel /etc/pure-ftpd.conf
+cp /var/syssetup/common/root/etc/rc.d/init.d/pure-ftpd /etc/init.d/
+chkconfig --add pure-ftpd
+cp /var/syssetup/common/root/usr/local/sbin/pure-config.pl /usr/local/sbin/pure-config.pl
+
+* make group/user:
+
+groupadd pureftp
+useradd -d /var/empty -M -s /sbin/nologin -g pureftp pureftp
+
+--
+
+pure-ftpd:
+- can do virtual chroot (ftp / is chroot to dir, but with symlinks!)
+- can do quota's, bw-limits, etc.
+- can do virtual users 
+- can do FTPS (FTP over SSL) (FTP-control channel over SSL: pwd-protect, FTP-data channel normal)(at all different from SFTP, which is SCP alike on SSH2)(disadvantage SFTP is: no chroot, users can see complete filesystem that is world-readable, also not bw-controls)
+
+
+get: http://www.pureftpd.org/
+latest (d0504): /root/pure-ftpd-1.0.20.tar.gz
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+d050409 successully made on rmv-v2.1:
+
+./configure --with-everything --with-paranoidmsg --without-capabilities \
+	--with-virtualchroot --with-largefile --with-tls \
+	2>&1 | tee ../configure.stdout
+
+make install-strip 2>&1 | tee ../make.stdout
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+NOTE:
+
+from README:
+--with-everything: build a big server with almost all features turned on:
+altlog, cookies, throttling, ratios, ftpwho, upload script, virtual users
+(puredb), quotas, virtual hosts, directory aliases, external authentication
+and rendezvous.
+
+===> so that is no: --with-virtualchroot, --with-largefile, --with-tls !!
+
+for MySQL support:
+
+./configure --with-mysql ...
+
+
+	
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+d050417 made on multi-adam-01 with MySQL and SSL:
+
+./configure --with-everything --with-paranoidmsg --without-capabilities \
+   --with-virtualchroot --with-largefile --with-tls \
+	--with-mysql \
+	2>&1 | tee ../configure.stdout
+	
+make install-strip 2>&1 | tee ../make.stdout
+make install
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+d1004 pure-ftpd on debian5 (uses wrapper with alternative config files):
+
+apt-get install pure-ftpd
+
+> cat /etc/default/pure-ftpd-common | egrep '^(STANDALONE_OR_INETD|VIRTUALCHROOT)'
+STANDALONE_OR_INETD=inetd
+VIRTUALCHROOT=true
+
+> cat /etc/inetd.conf | grep pure
+ftp	stream	tcp	nowait	root	/usr/sbin/tcpd /usr/sbin/pure-ftpd-wrapper
+
+ # see
+man pure-ftpd-wrapper
+
+echo Yes > /etc/pure-ftpd/conf/DontResolve 
+echo No  > /etc/pure-ftpd/conf/NoAnonymous 
+echo Yes > /etc/pure-ftpd/conf/ChrootEveryone 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

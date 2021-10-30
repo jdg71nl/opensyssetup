@@ -1,0 +1,31 @@
+# macports.quicky
+
+# ---
+Open Source for Mac: MacPorts → http://www.macports.org/
+MacPorts Guide → http://guide.macports.org/#using.port
+MacPorts wiki → http://trac.macports.org/wiki
+
+# ---
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+export MANPATH=/opt/local/share/man:$MANPATH
+
+# ---
+# http://guide.macports.org/chunked/installing.shell.html
+
+cat <<HERE >> ~/.profile
+export PATH=/opt/local/bin:/opt/local/sbin:\$PATH
+export MANPATH=/opt/local/share/man:\$MANPATH
+HERE
+
+cat <<HERE >> ~/.bash_profile
+export PATH=/opt/local/bin:/opt/local/sbin:\$PATH
+export MANPATH=/opt/local/share/man:\$MANPATH
+HERE
+
+# ---
+port -v selfupdate
+port list
+port search ghost*
+port install ghostscript
+
+# ---

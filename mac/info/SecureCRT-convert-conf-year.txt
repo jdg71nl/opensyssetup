@@ -1,0 +1,7 @@
+#
+
+cd /Users/jdg/Library/Application Support/VanDyke/SecureCRT/Config/Sessions
+
+find . -type f -name "*.ini" -exec perl -pi -e 's/d12/d13/' "{}" \;
+
+

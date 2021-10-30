@@ -1,0 +1,88 @@
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# bash.quicky
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# interpreter call in shell scripting (shebang):
+
+# USE this instead of generic "#!/bin/sh" :
+
+	#!/usr/bin/env bash
+
+#!/usr/bin/env bash
+#  according to http://en.wikipedia.org/wiki/Shebang_%28Unix%29#Portability
+#  it is BETTER to use:
+#!/usr/bin/env bash
+#  than:
+#!/bin/bash
+
+because of portability (env resolves full path)
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+There are two formats for redirecting  standard  output  and  standard error:
+format 1: command &>word
+format 2: command >&word
+Of the two forms, the first is preferred.  This is semantically equiv-alent to
+> command >word 2>&1
+
+equivalent examples:
+> /bin/ls &>/dev/null
+> /bin/ls 1>/dev/null 2>/dev/null
+> /bin/ls >/dev/null 2>&1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+There are two formats for redirecting  standard  output  and  standard error:
+global bash config: /etc/bashrc
+user specific: ~/.bashrc
+example:
+> cat ~/.bashrc
+	user # .bashrc
+	# User specific aliases and functions
+
+	# Source global definitions
+	if [ -f /etc/bashrc ]; then
+				  . /etc/bashrc
+	fi
+	#jdg add after global - to set again
+	#jdg need group-readable/writealbe because of unison sync
+	umask 0002
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# pause
+echo
+echo -n 'Press any key to continue'
+read
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# debugging Bash scripts:
+
+bash -x script.sh 
+
+# or inside a script:
+
+set -x			# activate debugging from here
+w
+set +x			# stop debugging from here
+
+# or in the slash-bang:
+#!/bin/bash -x
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Ubuntu uses DASH instead of BASH
+# See: https://wiki.ubuntu.com/DashAsBinSh
+
+> lt /bin/sh
+lrwxrwxrwx 1 root root 4 2008-12-14 12:49 /bin/sh -> dash
+
+replace:
+#!/bin/sh
+with:
+#!/bin/bash
+
+perl -pi -e 's/\/bin\/sh/\/bin\/bash/' *.sh
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# for loop
+
+for i in `seq 1 10`; do echo $i; done
+for i in {1..10}; do echo $i; done
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

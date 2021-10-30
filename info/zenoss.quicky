@@ -1,0 +1,29 @@
+# zenoss.quicky
+
+# http://nootech.blogspot.com/2007/02/zenoss-and-syslog-catching.html
+"option that can be passed to zensyslog, --parsehosts, to tell it to use what's in the actual message instead of the packet. "
+
+# ---
+# install Zenoss on Debian:
+
+# Add the Zenoss repository to the /etc/apt/sources.list file:
+> echo "deb http://dev.zenoss.org/deb main stable" >> /etc/apt/sources.lst
+
+> apt-cache search zenoss-stack
+zenoss-stack - Zenoss Stack with all requirements.
+
+> apt-get install zenoss-stack
+
+# ---
+# zenoss machine cpu 100% 
+
+solve liek this:
+http://community.zenoss.org/thread/2430
+
+You can suppress route table scanning by setting zProperty
+"zCollectorIgnorePlugins" to "RouteMap". You can add this property to
+all routers at once, or just a single router by taking advantage of the
+Zenoss class hierarchy.
+
+# ---
+

@@ -1,0 +1,14 @@
+
+Alias /linkcode /var/www/linkcode
+<Directory "/var/www/linkcode">
+	Options -Indexes -ExecCGI -Includes 
+	php_flag engine off
+	RemoveType .php
+	RemoveHandler .php
+	AllowOverride None
+	Order allow,deny
+	Allow from all
+</Directory>
+<Directory "/var/www/linkcode/????????/">
+	Options +Indexes +FollowSymLinks
+</Directory>

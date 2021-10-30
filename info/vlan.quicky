@@ -1,0 +1,57 @@
+# vlan.quicky
+
+modprobe 8021q
+
+#not sure if needed: 
+#> modprobe ebt_vlan
+
+vconfig add eth0 55
+vconfig rem eth0.55
+
+#note: eth0 needs to be up (cando without IP)
+ifconfig eth0 up
+
+ifconfig eth0.55 up
+ifconfig eth0.55 down
+
+cat /proc/net/vlan/config
+cat /proc/net/vlan/eth0.55
+
+--
+NOTE on VLAN trunks
+
+MTU = max size body of Eth-frame.
+Max Eth-frame WITHOUT VLAN-tag = MTU + 14 = 1500 + 14 = 1514
+Max Eth-frame WITH    VLAN-tag = MTU + 14 + 4 = 1500 + 14 = 1518
+
+IP-header = 20 bytes
+ICMP header = 8 bytes
+--> max ICMP body-size for PING = 1500-20-8 = 1472
+
+dus over VLAN-trunk, als je wilt checken of vlan-tag/4bytes geen probleem veroorzaakt (trunk ondersteund 1518 frames)
+doe:
+ping -s 1472 <ip>
+--> succesull ping op max MTU
+ping -s 1473 <ip>
+zal fragmentatie geven op source host
+
+--
+# centos / redhat
+
+> cat /etc/sysconfig/network-scripts/ifcfg-vlan2
+#
+VLAN=yes
+VLAN_NAME_TYPE=VLAN_PLUS_VID_NO_PAD
+DEVICE=vlan2
+PHYSDEV=eth0
+BOOTPROTO=static
+ONBOOT=yes
+TYPE=Ethernet
+IPADDR=172.16.2.60
+NETMASK=255.255.255.0
+NETWORK=172.16.2.0
+BROADCAST=172.16.2.255
+#
+
+--
+

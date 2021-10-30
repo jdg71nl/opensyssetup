@@ -1,0 +1,23 @@
+# curl.quicky
+
+> man curl
+-f, --fail            (HTTP) Fail silently (no output at all) on server errors.
+-S, --show-error      When used with -s, --silent, it makes curl show an error message if it fails.
+-s, --silent          Silent or quiet mode. Don't show progress meter or error messages.
+-L, --location        (HTTP)  If  the  server  reports  that the requested page has moved to a different location
+-o, --output <file>   Write  output  to  <file> instead  of stdout.
+-O, --remote-name     Write output to a local file named like the remote file we get.
+
+# save HTTP output to 'stdout':
+curl -fsL http://host.name/ > file
+#
+alias curl-cat="curl -fsL"
+
+# save HTTP output to filename from URI:
+curl -fsLO http://hostname/uri/filename
+#
+alias curl-save="curl -fsLO"
+
+# show TLS negotiation and Request-Response HTTP Headers:
+curl -v link
+

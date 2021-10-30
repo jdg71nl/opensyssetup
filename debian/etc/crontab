@@ -1,0 +1,37 @@
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user	command
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+
+# JDG NOTES:
+# - consider disable MAILTO=""
+# - make sure command can run as 'user' (test with: su user -c 'command')
+# - make sure in scripts there are full paths (there is no PATH env)
+# - use spaces instead of tabs between 'user prog'
+#
+# fields:      minute         0-59
+#              hour           0-23
+#              day of month   1-31
+#              month          1-12 (or names, see below)
+#              day of week    0-7 (0 or 7 is Sun, or use names)
+#
+#m    h d m w     user     prog
+#
+# Every 10 minutes:
+#*/10 * * * * root /usr/local/bin/syssetup-backup.pl
+# Every 03:02am:
+#02   3 * * * root /usr/local/bin/syssetup-rsync-thissystem.pl
+
+*/10 * * * * root /usr/local/syssetup/bin/check_restart_ntp.sh
+

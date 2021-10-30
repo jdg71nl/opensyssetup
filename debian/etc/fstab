@@ -1,0 +1,5 @@
+/dev/hdc1		/       	ext2    defaults,noatime,rw     0       0
+/dev/hdc2		/data		ext2    defaults,noatime,rw     0       0
+proc            /proc   proc    defaults                0       0
+tmpfs           /rw     tmpfs   defaults,size=32M       0       0
+

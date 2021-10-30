@@ -1,0 +1,24 @@
+# lft.quicky
+
+# a better traceroute, can do AS-numbers
+# also tool WhoB
+
+# centos
+yum install lft
+
+> lft -r 80.69.65.224
+Tracing ................T
+TTL LFT trace to colo.smallbizconcepts.nl (80.69.65.224):80/tcp
+1  [50554] gw.v162.grafix-alphen-r201.inet.networkconcepts.nl (89.106.162.1) 0.6/0.6ms
+2  [50554] v201.tc2-ams-r101.inet.networkconcepts.nl (89.106.160.17) 2.4/1.6ms
+3  [6461] k559.networkconcepts.ams4.nl.above.net (94.31.0.49) 0.9/1.0ms
+4  [6461] xe-0-1-0.nl.above.net (64.125.26.153) 45.9/1.3ms
+5  [6461] PNI.Level3.mpr1.ams1.nl.above.net (62.4.95.214) 1.4/1.3ms
+6  [3356] ge-11-0.ipcolo1.Amsterdam1.Level3.net (4.69.139.174) 1.6/1.6ms
+7  [3356] 212.72.44.22 1.6/1.6ms
+8  [20857] [target open] colo.smallbizconcepts.nl (80.69.65.224):80 1.7/1.8ms
+
+> whob 89.106.160.1
+89.106.160.1 | origin-as 50554 (89.106.160.0/21) | Networkconcepts BV 
+
+

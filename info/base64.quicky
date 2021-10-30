@@ -1,0 +1,21 @@
+# base64.quicky
+# base64.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# example 1
+cat dinner.zip |     openssl enc -e -base64 > dinner.zip.b64
+cat dinner.zip.b64 | openssl enc -d -base64 > dinner.zip
+
+cat verzekering.php | gzip -c | openssl enc -base64
+cat | openssl enc -d -base64 | gzip -dc > verzekering.php
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# example 2
+
+tar czvf - * | openssl base64 
+
+(copy-paste text to other host)
+
+cat | openssl base64 -d | tar xvfz - 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

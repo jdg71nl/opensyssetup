@@ -1,0 +1,24 @@
+# ------+++------
+# intermapper.quicky
+# ------+++------
+
+# download page:
+http://www.intermapper.com/support/complete-downloads.aspx
+
+# intermapper 5.5.5 for Debian:
+http://download.dartware.com/im555/intermapper_5.5.5-3.1-1_i386.deb
+
+# readme with installation instructions:
+http://download.dartware.com/im555/ReadMeFirst5.5.5-Debian.html
+
+# ------+++------
+# Configuring admin for initial IMRA access remotely:
+
+/etc/init.d/intermapperd stop
+/usr/local/bin/intermapperd -f /usr/local/etc/intermapperd.conf -A "username:password@*.*.*.*" 
+# login with IMRA, add new admin, delete 'username' admin, then:
+^C
+/etc/init.d/intermapperd start
+
+# ------+++------
+

@@ -1,0 +1,22 @@
+# ftp_passive.quicky
+
+http://www.netadmintools.com/art273.html
+
+ Locate libnet.cfg. For us, it is here:
+
+/usr/lib/perl5/site_perl/5.8.0/Net/libnet.cfg
+
+
+Edit the file so that the ftp_int_passiveline is:
+
+{
+        'ftp_int_passive' => 1,
+	...
+}
+
+For good measure, we also changed our environment:
+
+root@srv-1 root # export FTP_PASSIVE=1
+root@srv-1 root # set | grep FTP_PA
+FTP_PASSIVE=1
+

@@ -1,0 +1,16 @@
+
+jdg: use 'locate' !!
+
+
+# #!/bin/sh
+rm -f /allfiles
+rm -f /allfiles.gz
+
+find /	-path "*/dev/*" -prune -or \
+	-path "*/media/*" -prune -or \
+	-path "*/mnt/*" -prune -or \
+	-path "*/proc/*" -prune -or \
+	-path "*/windows/*" -prune -or \
+	-print > /allfiles
+gzip /allfiles
+rm -f /allfiles

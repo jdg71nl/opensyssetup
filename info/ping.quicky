@@ -1,0 +1,35 @@
+# ping.quicky
+# ping
+
+# ---
+# test MTU with ping under unix/linux:
+# use option: '-M do' ('do' use DF flag, Dont Fragment)
+
+# this results in packet size 1500 (std ethernet mtu=1500) with ip-header:20 and icmp-header:8
+ping -M do -s 1472 85.184.201.6
+
+# if interface MTU=1500 this will give an error before anything is sent out:
+> ifconfig eth1 | egrep '(eth|inet|MTU)'
+eth1      Link encap:Ethernet  HWaddr 00:30:48:71:93:77  
+          inet addr:85.184.201.5  Bcast:85.255.255.255  Mask:255.0.0.0
+          inet6 addr: fe80::230:48ff:fe71:9377/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+> ping -M do -s 1473 85.184.201.6
+From 85.184.201.5 icmp_seq=1 Frag needed and DF set (mtu = 1500)
+
+#
+> ifconfig eth1 85.184.201.5 mtu 1600
+> ifconfig eth1 | egrep '(eth|inet|MTU)'
+eth1      Link encap:Ethernet  HWaddr 00:30:48:71:93:77  
+          inet addr:85.184.201.5  Bcast:85.255.255.255  Mask:255.0.0.0
+          inet6 addr: fe80::230:48ff:fe71:9377/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1600  Metric:1
+
+
+# ---
+# on Mac:
+
+> ping -D -s 1472 172.28.10.10
+
+# ---
+

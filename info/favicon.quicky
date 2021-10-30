@@ -1,0 +1,8 @@
+# favicon.quicky
+
+# Create favicon.ico for use in websites from a PNG:
+
+http://www.winterdrache.de/freeware/png2ico/index.html
+
+png2ico favicon.ico logo16x16.png logo32x32.png
+

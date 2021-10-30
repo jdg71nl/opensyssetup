@@ -1,0 +1,11 @@
+#
+
+boot on Asus Bone AMD failed.
+Lilo gave message: L 02 02 02 02 ....
+see lilo error message codes: http://en.opensuse.org/SDB%3ALILO_fails%3A_Error_messages_and_their_interpretation
+lilo stage1 cannot find stage2 - probably geometry problems
+I downloaded lilo-22.8.bin.tar.gz and read lilo.conf manual.
+The lilo.conf setting "geometric" helped (opposite of "lba32")
+Also in bios I set geometry to manual/"normal" (not "lba") or to manual/"match partition table"
+
+

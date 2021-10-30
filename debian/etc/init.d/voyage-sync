@@ -1,0 +1,135 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          voyage-sync
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     S
+# Default-Stop:      0 6
+# Short-Description: Voyage tmpfs and sync
+### END INIT INFO
+#
+# skeleton  example file to build /etc/init.d/ scripts.
+#       This file should be used to construct scripts for /etc/init.d.
+#
+#       Written by Miquel van Smoorenburg <miquels@cistron.nl>.
+#       Modified for Debian
+#       by Ian Murdock <imurdock@gnu.ai.mit.edu>.
+#
+# Version:  @(#)skeleton  1.9  26-Feb-2001  miquels@cistron.nl
+#
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+#DAEMON=/usr/sbin/voyage-sync
+NAME=voyage-sync
+DESC=voyage-sync
+
+TMPFS_ROOT=/lib/init/rw
+SYNC_DIRS="var/log var/tmp"
+
+# using the following commands to install
+#	
+#	update-rc.d voyage-sync start 36 S . stop 99 0 6 .
+
+if [ -f /etc/default/voyage-util ] ; then 
+	. /etc/default/voyage-util; 
+fi
+
+SYNC_DIRS="$SYNC_DIRS $VOYAGE_SYNC_DIRS"
+UNIONFS=${VOYAGE_UNIONFS:=tmpfs}
+
+mount_dirs()
+{
+	# $1 : aufs|unionfs|tmpfs
+	# $2 : source directory
+	# $3 : target directory
+	case $1 in
+		'aufs')
+			PERM=$(stat --format=%U:%G $2)
+			chmod --reference=$2 $3
+			chown --reference=$2 $3
+			mount -t aufs -o dirs=$3:$2=ro none $2> /dev/null 2>&1
+			#echo "chown $PERM $2"
+			chown $PERM $2
+			;;
+		'unionfs')
+			PERM=$(stat --format=%U:%G $2)
+			chmod --reference=$2 $3
+			chown --reference=$2 $3
+			mount -t unionfs -o dirs=$3:$2=ro none $2> /dev/null 2>&1
+			#echo "chown $PERM $2"
+			chown $PERM $2
+			;;
+		'tmpfs')
+			cp -rp $2/* $3/
+			echo "    tmpfs: mount back $3 to $2"
+			mount --bind $3 $2 
+			;;
+		*)
+	    	;;
+	esac
+}
+
+case $1 in
+	'start')
+		echo "Voyage is now setting up tmpfs for changed files..."
+		
+		for SYNC_DIR in $SYNC_DIRS; do
+			[ ! -d $TMPFS_ROOT/$SYNC_DIR ] && mkdir -p $TMPFS_ROOT/$SYNC_DIR			
+			
+			mount_dirs $UNIONFS /$SYNC_DIR $TMPFS_ROOT/$SYNC_DIR
+			
+			#chmod --reference=/$SYNC_DIR $TMPFS_ROOT/$SYNC_DIR
+			#chown --reference=/$SYNC_DIR $TMPFS_ROOT/$SYNC_DIR			
+			#mount -t aufs -o dirs=$TMPFS_ROOT/$SYNC_DIR:$SYNC_DIR=ro none /$SYNC_DIR> /dev/null 2>&1
+		done
+		echo "Done."
+		;;
+	'sync')
+		echo "Voyage is now synchroning changed files..."
+
+		# jdg
+		mkdir -p /var/lib/php5
+		touch /var/lib/php5/empty.file
+
+		for SYNC_DIR in $SYNC_DIRS; do
+			if [ ! -d /.sync/$SYNC_DIR ] ; then
+            	mkdir -p /.sync/$SYNC_DIR
+            	PERM=$(stat --format=%U:%G /$SYNC_DIR)
+            	chown $PERM /.sync/$SYNC_DIR
+            fi
+			
+			echo "  Sync'ing /$SYNC_DIR to `dirname /$SYNC_DIR`	"
+			rsync -a -q --delete-after /$SYNC_DIR/* /.sync/$SYNC_DIR
+		done
+		;;
+		
+	'stop')
+		[ -f /usr/local/sbin/remountrw ] && /usr/local/sbin/remountrw
+
+		# call "voyage-sync sync"
+		$0 sync
+
+		# then kill suspicous process in sync dir and unmount
+		for SYNC_DIR in $SYNC_DIRS; do
+			for P in `lsof -F p /$SYNC_DIR/*`
+			do
+				echo "Killing process ${P:1}"
+				kill ${P:1}
+			done
+			sleep 1
+
+			umount /$SYNC_DIR		
+			
+			rsync -a -q --delete-after /.sync/$SYNC_DIR `dirname /$SYNC_DIR`			
+			#PERM=$(stat --format=%U:%G $SYNC_DIR)
+            #echo "owner $PERM $SYNC_DIR"
+		done
+		
+		# at last remove /.sync
+		rm -rf /.sync
+		echo "Done."
+		;;
+	*)
+	    ;;
+esac
+

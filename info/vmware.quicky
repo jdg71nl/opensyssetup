@@ -1,0 +1,65 @@
+# vmware.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# What is the location of the directory of C header files that match your running kernel? [/usr/src/linux/include] 
+yum install kernel-devel
+--
+VMware Player
+Create vmachines here: http://www.easyvmx.com/
+--
+Problem:
+> vmware-config.pl
+...
+/tmp/vmware-config3/vmmon-only/./include/compat_kernel.h:21: error: expected declaration specifiers or ‘...’ before ‘compat_exit’
+
+Solution:
+http://www.subvs.co.uk/vmware101_with_server_2.6.20
+vmware with kernel 2.6.20 errors
+
+vmmon stuff
+
+cd /usr/lib/vmware/modules/source/
+sudo tar -xvf vmmon.tar
+cd vmmon-only
+sudo vi include/compat_kernel.h
+
+Find this:
+
+#define __NR_compat_exit __NR_exit
+static inline _syscall1(int, compat_exit, int, exit_code);
+
+and change the static inline ..... line to:
+
+int compat_exit(int exit_code);
+
+Then tar up the vmmon-only directory again.
+
+cd .. #go back to the source directory
+tar -cf vmmon.tar vmmon-only
+
+vmnet stuff
+
+Lucky someone has been here before, and made a patch and some lazy instructions: check out  http://nerdbynature.de/bits/2.6.19-rc5/ for the lowdown, otherwise check http://www.vmware.com/community/message.jspa?messageID=512232 on the vmtn forum.
+last bit
+
+For the error complaining of no config.h, just make a fake one :)
+
+touch /usr/src/linux-headers-`uname -r`/include/linux/config.h
+
+Now just run vmware-config.pl (or sudo vmware-config.pl) again and it should go through without complaining.
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Re: Up arrow and down arrow don't work in vmware console
+echo "xkeymap.nokeycodeMap = true" >> ~/.vmware/config
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# VMware Workstation 6.5.3 on Ubuntu Karmic 9.10
+
+# http://aldeby.org/blog/index.php/vmware-workstation-6-5-3-on-ubuntu-karmic-9-10.html/comment-page-1
+VMware workstation 6.5.3 is supported only on Ubuntu Jaunty 9.04 and backwards. With this brief tutorial we’ll have a look on how to install it also on Ubuntu Karmic 9.10. By default the installer would freeze at the “Configuring…” stage, never actually completing.
+
+# http://communities.vmware.com/thread/228949
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

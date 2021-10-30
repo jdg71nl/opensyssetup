@@ -1,0 +1,21 @@
+# php.quicky
+
+# standard redir:
+cat index.php
+<?php
+	Header("Location: /wiki/");
+?>
+
+# ------+++------
+# Debian6: if you get errors like:
+# suhosin ALERT - script tried to disable memory_limit by setting it to a negative value -1 bytes which is not allowed (attacker 'REMOTE_ADDR not set', file 'unknown') 
+
+# then fix it here:
+
+> cat /etc/php5/cli/php.ini | grep -A2 jdg
+;jdg, http://forums.cacti.net/viewtopic.php?f=2&t=42196, Suhosin Alert After Debian Squeeze Upgrade, log errors "debian REMOTE_ADDR not set"
+;memory_limit = -1
+memory_limit = 512M
+
+# ------+++------
+

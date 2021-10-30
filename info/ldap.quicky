@@ -1,0 +1,23 @@
+# ldap.quicky
+
+# dump LDAP info:
+> slapcat  | grep 'dn: uid=' | perl -ne 's/^.*uid=([a-z]*),.*$/$1/; print' | sort
+
+# ---
+# Debian
+
+# ldapsearch via package: ldapscripts
+> apt-get install ldapscripts
+
+> ldapsearch -h 172.16.0.60 -x -b "ou=People,dc=twswireless,dc=loc" "(&(uid=*)(mail=*twsinfra*))" dn mail | egrep '^(dn|mail):'
+
+# ---
+# CentOS
+
+yum install mozldap-tools
+
+ln -s /usr/lib/mozldap/ldapsearch /usr/local/bin/
+
+# ---
+
+

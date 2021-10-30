@@ -1,0 +1,12 @@
+# proxy_arp.quicky
+
+# show proxy_arp:
+cat /proc/sys/net/ipv4/conf/eth0/proxy_arp 
+
+# enable proxy_arp:
+echo 1 > /proc/sys/net/ipv4/conf/eth0/proxy_arp 
+
+# enable routing on linux:
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+

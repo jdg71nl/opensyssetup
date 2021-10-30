@@ -1,0 +1,32 @@
+# hostname.quicky
+# hostname.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# lessons:
+
+name de local domain name ".lan"
+Dont use ".local" because that can interfere with avahi/zeroconf (which uses ".local" for service announcements)
+
+dont use public TLD in a local LAN (such as "de-graaff.net") because that will mask public services.
+Use "de-graaff.lan"
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# example of resolv.conf:
+
+> cat ../debian/etc/resolv.conf 
+domain de-graaff.lan
+options timeout:1 attempts:3
+nameserver 172.24.2.254
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# update hostname directly (need to re-login for bash/colorprompt to notice):
+echo "dualwan.networkconcepts.nl" > /proc/sys/kernel/hostname
+
+# on centos/redhat:
+echo $( . /etc/sysconfig/network; echo $HOSTNAME ) > /proc/sys/kernel/hostname
+
+# on debian/ubuntu:
+cat /etc/hostname > /proc/sys/kernel/hostname
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

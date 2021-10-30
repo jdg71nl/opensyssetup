@@ -1,0 +1,26 @@
+# serial-terminal-minicom.quicky
+#
+
+use minicom as serial-terminal (for switch management)
+start minicom.
+ctrl-A Z for help
+ctrl-A O for cOnfiguration
+change to COM1: /dev/ttyS0 and 9600n81, no flow etc
+save as dfl (default)
+exit
+start minicom again
+--
+
+
+ln -s /dev/ttyS0 /dev/modem 
+
+--
+
+cat /etc/minirc.dfl 
+
+# Machine-generated file - use "minicom -s" to change parameters.
+pu baudrate         9600
+pu rtscts           No 
+
+--
+

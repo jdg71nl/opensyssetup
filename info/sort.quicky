@@ -1,0 +1,30 @@
+# sort.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# sort on IP-address:
+
+# http://www.cyberciti.biz/faq/unix-linux-shell-script-sorting-ip-addresses/
+#
+# Where,
+# * -t . : Set field to . (dot) as our IPs separated by dot symbol
+# * -n : Makes the program sort according to numerical value
+# * -k opts: Sort data / fields using the given column number. 
+#   For example, the option -k 2 made the program sort using the second column of data. 
+#   The option -k 3,3n -k 4,4n sorts each column. First it will sort 3rd column and then 4th column.
+
+cat | sort -t . -k 3,3n -k 4,4n
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# sort on a specific column with specific field-serepator
+
+> cat x | sort --field-separator=: --key=2
+example data:
+s:policy-level:auto
+n:policy-list-auto:0
+s:policy-list-include:192.168.100.0 / 255.255.255.0,192.168.50.0 / 255.255.255.0
+n:policy-nailed:0
+n:vendor-chkpt-enable:0
+n:version:2
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

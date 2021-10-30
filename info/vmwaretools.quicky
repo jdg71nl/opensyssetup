@@ -1,0 +1,48 @@
+# vmwaretools.quicky
+
+# d1408: debian 7 
+aptitude install build-essential linux-headers-$(uname -r)
+./vmware-install.pl 
+# NOTE:
+# this package did NOT work on Debian 7 on ESX 5.5 (but did once work on another ESX?)
+aptitude install open-vm-tools
+
+# ---
+http://www.electrictoolbox.com/install-vmware-tools-debian-5/
+
+# do first:
+apt-get install make
+apt-get install gcc-4.1
+ln -s /usr/bin/gcc-4.1 /usr/bin/gcc
+apt-get install linux-headers-$(uname -r)
+apt-get install psmisc
+# BETTER:
+apt-get install binutils gcc-4.1-base make linux-headers-$(uname -r)
+
+# then mount cdrom:
+mount /dev/cdrom /media/cdrom
+cd /tmp
+tar -zxf /media/cdrom/VMwareTools-1.0.8-126538.tar.gz
+/tmp/vmware-tools-distrib/vmware-install.pl
+
+# ---
+http://www.howtoforge.com/installing-vmware-tools-on-debian-lenny-5.0.2-with-gnome-desktop-on-esx-server-3.5-update-4
+
+apt-get install binutils gcc-4.1-base make linux-headers-$(uname -r)
+
+get iso from ESX root-ssh-login, find 'iso' cp to storage/iso, copy to other machine extract tgz from ISO
+VMwareTools-4.0.0-208167.tar.gz
+
+export CC=/usr/bin/gcc-4.1
+
+cd /var/installs/vmware-tools-distrib
+./vmware-install.pl
+
+# ---
+# check version
+
+> vmware-config-tools.pl -h 2>&1 | grep -i configurator
+VMware Tools 8.6.0 build-425873 configurator.
+
+# ---
+

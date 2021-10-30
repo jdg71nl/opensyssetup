@@ -1,0 +1,17 @@
+--
+I got
+> lspci -v
+Promise Technology, Inc. PDC20375 (SATA150 TX2plus) (rev 02)
+--
+good info on:
+http://linuxmafia.com/faq/Hardware/sata.html
+
+See on Gloria:
+/mnt/sda1/DATA-d1/Drivertree/Storage/Promise SATA150 TX2plus/Linux/Promise_SATA150_TX4_SOURCECODE-2_SATALINUXSRC1.00.0.8.zip___sucessfullycompiled_kernel2.4.20.-31.9_pdc-ultra.tgz
+
+Seems that CentOS4.2 supports it nativelly
+in /etc/modules.conf
+alias scsi_hostadapter sata_promise
+
+--
+

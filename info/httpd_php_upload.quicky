@@ -1,0 +1,73 @@
+# httpd_php_upload.quicky
+
+--
+edit in /etc/php.ini:
+
+; see also: memory_limit, post_max_size, upload_max_filesize, max_input_time 
+;memory_limit = 8M      	; Maximum amount of memory a script may consume (8MB)
+memory_limit = 200M
+
+;post_max_size = 8M			; Maximum size of POST data that PHP will accept.
+post_max_size = 200M
+
+;upload_max_filesize = 2M	; The maximum size of an uploaded file.
+upload_max_filesize = 200M
+
+;max_input_time = 60 ; Maximum amount of time each script may spend parsing request data
+max_input_time = 2000
+
+--
+HTTPD config
+
+- Timeout
+- and:
+	<Files *.php>
+		SetOutputFilter PHP
+		SetInputFilter PHP
+		LimitRequestBody 33554432
+	</Files>
+
+--
+			
+PHP example:
+
+<form enctype="multipart/form-data" action="/projectsiemens/upload/index.php" method="POST">
+
+<!-- MAX_FILE_SIZE must precede the file input field -->
+<input type="hidden" name="MAX_FILE_SIZE" value="1000000000" />
+
+<UL>
+<LI>Upload a file:
+<INPUT TYPE="FILE" NAME="userfile" SIZE="60" VALUE="" />
+<INPUT TYPE="SUBMIT" VALUE="Upload" />
+<BR>
+<BR>
+<LI>Go to the <A HREF="/projectsiemens/">Files/Download</A>
+</UL>
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+	$uploaddir = '/www/secure.smallbizconcepts.nl/projectsiemens/';
+	$filename = basename($_FILES['userfile']['name']);
+	$uploadfile = $uploaddir . $filename;
+
+	echo '<pre>';
+	if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+		   echo "File is valid, and was successfully uploaded.\n";
+	} else {
+		   echo "Possible file upload attack!\n";
+	}
+
+	if (0) {
+		echo 'Here is some more debugging info:';
+	print_r($_FILES);
+	print "filename=$filename";
+	}
+
+	print "</pre>";
+}
+?>
+
+</form>
+--
+

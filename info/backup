@@ -1,0 +1,4 @@
+
+
+find /usr/ -xtype f -xdev \( -iname '*_ms' -o -iname '*_jdg' \) \
+ -exec /bin/cp -LpRv --parents {} /backup/ \;

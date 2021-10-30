@@ -1,0 +1,10 @@
+# chown.quicky
+--
+-h		change ownership of symlink itself, instead of referent:
+-c		like -v but only report changed files
+> chown -Rhc samba.samba .
+--
+find -type f -exec chmod -c 644 {} \;
+find -type d -exec chmod -c 755 {} \;
+--
+ 

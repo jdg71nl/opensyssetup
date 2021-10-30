@@ -1,0 +1,16 @@
+# fstab.quicky
+
+# ---
+#NTFS
+/dev/hda2              /mnt/ntfs-ro/hda2             ntfs     ro,auto,async,uid=samba,gid=samba   0 0
+# ---
+# samba / cifs:
+
+> cat /etc/fstab 
+//172.24.2.50/samba     /mnt/samba/     cifs    username=samba,password=samba,file_mode=0744,dir_mode=0777,uid=samba,gid=samba        0 0
+
+# mount dir in fstab:
+/source-dir/      /destination-dir/   none bind,defaults 0 0
+
+# ---
+

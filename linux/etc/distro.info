@@ -1,0 +1,3 @@
+# /etc/distro.info 
+# read by: /etc/colorprompt.sh 
+DISTRO_TYPE="Debian4"

@@ -1,0 +1,19 @@
+# xargs.quicky
+#
+
+--
+xargs
+	-i			use {} as stdin-string (can contain blanks/spaces !), implies -x and -l1
+	-L1		use one stdin-string per command
+--
+Example:
+find files and sort by time, also show user-readable time:
+> locate -i maandplaat | xargs -i find {} -printf "%T@ %t %p\n" | sort -n | o
+--
+
+find -type f -print0 | xargs -0i grep -sin "{}"
+
+--
+locate -r '\.pgd$' -0 | xargs -0i stat --printf "%011Y\t[%y]\t%010s\t00000000000000000000000000000000\t%n\n" "{}" | awk 'BEGIN {FS="\t"} {print $1 "\t" $2 "\t" $3 "\t" system("echo \"" $5 "\"") "\t" $5}' | o
+--
+

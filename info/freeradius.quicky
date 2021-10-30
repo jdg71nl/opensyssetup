@@ -1,0 +1,45 @@
+# freeradius.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Get Freeradius2
+howto: http://wiki.freeradius.org/Red_Hat_FAQ
+
+cat > freeradius2.repo
+[freeradius2]
+name=Freeradius2
+baseurl=http://people.redhat.com/jdennis/freeradius-rhel-centos
+enabled=1
+^D
+
+> yum install freeradius2
+================================================================================
+ Package             Arch         Version             Repository           Size
+================================================================================
+Installing:
+ freeradius2         i386         2.1.8-2.el5         freeradius2         1.5 M
+================================================================================
+Error:
+Package freeradius2-2.1.8-2.el5.i386.rpm is not signed
+
+> cd /var/cache/yum/freeradius2/packages
+> rpm -Uvh freeradius2-2.1.8-2.el5.i386.rpm
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# radtest
+
+radtest is in:
+> yum install freeradius2-utils
+Package freeradius2-utils-2.1.8-2.el5.i386.rpm is not signed
+> cd /var/cache/yum/freeradius2/packages
+> rpm -Uvh freeradius2-utils-2.1.8-2.el5.i386.rpm
+
+# test werkt:
+> radtest dbuser dbpwd localhost:1812 0 radpwd 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# ldapsearch
+
+ldapsearch -h 172.25.10.10 -x -D 'CN=BindUserRadius,OU=Beheer,DC=domain,DC=local' -w bindpwd -b 'OU=BASE,DC=domain,DC=local' '(sAMAccountName=*partofname**)'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

@@ -1,0 +1,17 @@
+# diff.quicky
+# diff.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+diff -bur file1 file2
+
+-b     Ignore changes in amount of white space.
+-u     Use the unified output format.
+-r     When comparing directories, recursively compare any subdirectories found.
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+diff -y file1 file2
+
+-y     Use the side by side output format.
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

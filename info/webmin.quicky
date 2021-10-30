@@ -1,0 +1,5 @@
+# webmin
+
+# debian
+wget -c http://downloads.sourceforge.net/project/webadmin/webmin/1.570/webmin_1.570_all.deb?r
+

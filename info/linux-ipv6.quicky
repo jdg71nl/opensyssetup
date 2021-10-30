@@ -1,0 +1,51 @@
+# linux-ipv6.quicky
+
+# ------+++------
+# config ipv6-tunnel on debian from xs4all
+
+# info: http://wiki.debian.org/DebianIPv6
+
+> vi /etc/network/interfaces 
+
+# ---
+#auto xs6all
+iface xs6all inet6 v4tunnel
+        # SIT tunnel, xs4all: 2001:888:10:d07::1/64, jdg: 2001:888:10:d07::2/64
+        endpoint        194.109.5.241
+        address         2001:888:10:d07::2
+        netmask         64
+        ttl             64
+        up ip route add default via 2001:888:10:d07::1
+
+iface eth0 inet6 static
+	# prefix assigned to jdg from xs4all: 2001:888:1d07::/64
+        address         2001:888:1d07::1
+        netmask         64
+# ---
+
+# also advertise-daemon:
+
+apt-get install radvd
+
+cat >> /etc/sysctl.conf
+net.ipv6.conf.all.forwarding=1
+
+cat /proc/sys/net/ipv6/conf/all/forwarding 
+echo 1 > /proc/sys/net/ipv6/conf/all/forwarding 
+
+cat >> /etc/radvd.conf:
+interface eth0 {
+ AdvSendAdvert on;
+ AdvHomeAgentFlag off;
+ prefix 2001:888:1d07::/64 { 
+  AdvOnLink on;
+  AdvAutonomous on; 
+  AdvRouterAddr off;
+ };
+};
+
+/etc/init.d/radvd start
+
+
+# ------+++------
+

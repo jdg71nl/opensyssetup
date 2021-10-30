@@ -1,0 +1,17 @@
+# amavisd-new.quicky
+
+groupadd amavis
+
+adduser -d /var/lib/amavis/ -g amavis amavis
+
+chown -R amavis:amavis /var/lib/amavis
+chmod -R 750 /var/lib/amavis
+
+cp amavisd /usr/local/sbin/
+chown root /usr/local/sbin/amavisd
+chmod 755  /usr/local/sbin/amavisd
+
+cp amavisd.conf /etc/
+chown root /etc/amavisd.conf
+chmod 644  /etc/amavisd.conf
+		  

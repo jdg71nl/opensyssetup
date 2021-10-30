@@ -1,0 +1,12 @@
+
+d030413 had problems with booting redhat.
+After boot kernel, and init, check / fs, usually:
+ remount / with read-write
+This gave error -> it stayed read-only, then boot up failed.
+
+Problem:
+ mount uses 'label' of ext2/ext3 filesystem.
+Resolution:
+ Make sure only on filesystem has label '/'
+ Use tool: e2label /dev/hda6 otherlabel
+

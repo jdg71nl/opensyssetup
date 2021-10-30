@@ -1,0 +1,7 @@
+# xsensor-hardware-cpu-temperature-monitoring.quicky
+#
+
+# tested on debian/4/etch
+# nice graphical overview of temperature:
+apt-get install xsensors
+

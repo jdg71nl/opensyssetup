@@ -1,0 +1,16 @@
+# sabnzbd.quicky
+ 
+> cat /etc/apt/sources.list
+deb http://ftp.nl.debian.org/debian/ squeeze main non-free contrib
+
+> apt-get update
+> apt-get install sabnzbdplus unrar
+
+> cat /etc/default/sabnzbdplus 
+USER=samba
+HOST=0.0.0.0
+PORT=8080
+
+# webui:
+http://172.24.2.50:8080/sabnzbd/
+

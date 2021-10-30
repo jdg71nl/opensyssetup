@@ -1,0 +1,13 @@
+# inetutils-inetd.quicky
+
+# there is a bug where inetd only listens on ipv6 not ipv6
+# see: http://groups.google.com/group/linux.debian.bugs.dist/browse_thread/thread/775e7ec805f96979 
+# solve with "tcp4" in config:
+
+> cat /etc/inetd.conf | grep ftp
+#ftp stream tcp nowait root /usr/sbin/tcpd /usr/sbin/pure-ftpd-wrapper
+ftp stream tcp4 nowait root /usr/sbin/tcpd /usr/sbin/pure-ftpd-wrapper
+
+
+ 
+

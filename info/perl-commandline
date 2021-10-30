@@ -1,0 +1,25 @@
+# perl-commandline.quicky
+
+# also look at 'sed -i'
+
+# replace all occurances in a file:
+# see: man perlrun
+perl -pi -e 's/bar/baz/' testfile
+for x in $(find -type f -not -path '*v1.2*' -prune  -name '*.htm*'); do echo $x; perl -pi -e 's/></>\n</g' $x; done
+# in DNS zone files update serial (date)
+for file in $( find . -name '*zone' -mmin -60 ); do 
+	echo "$file"; 
+	perl -pi -e 's/^(\s+)\d{6,}\s*;.*?serial.*$/${1}0801212103 ; serial in YYMMDDHHMM/' "$file";
+	#perl -pi -e 's/^(\s+)\d{6,}\s*;.*?serial.*$/${1}2008012105 ; serial/' "$file" ; 
+done
+
+
+# grep with Regular Expression from perl:
+cat /etc/services | perl -ne 'print if /\d0\d{3}/'
+
+# pipe-string-functions (size in 9 digits, and the dots in between)
+du -sb * | perl -ne '/^(\d+)\s+(.*)$/;$n=sprintf"%09d",$1;$f=$2;$n=~/(\d{3})(\d{3})(\d{3})/;printf"%s.%s.%s  %s\n",$1,$2,$3,$f;' | sort
+
+# rename files:
+for x in March\ 2007\ Image*; do echo $x; y=`echo $x|perl -ne '$_=~ /^.*?(Image)(\d+)\.psp/;print $1;printf("%03d.psp",$2)'`; echo "$y"; mv "$x" "$y"; done;
+

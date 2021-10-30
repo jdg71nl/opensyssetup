@@ -1,0 +1,35 @@
+# cp.quicky
+JdG: examples
+
+cp -avP dir1/dir2/file* /existing_dir/
+   -> copies to : /existing_dir/dir1/dir2/file*
+
+
+Usage: cp [OPTION]... SOURCE DEST
+  or:  cp [OPTION]... SOURCE... DIRECTORY
+
+  -a, --archive                same as -dpr
+  -b, --backup                 make backup before removal
+  -d, --no-dereference         preserve links
+  -f, --force                  remove existing destinations, never prompt
+  -i, --interactive            prompt before overwrite
+  -l, --link                   link files instead of copying
+  -p, --preserve               preserve file attributes if possible
+  -r                           copy recursively, non-directories as files
+  -s, --symbolic-link          make symbolic links instead of copying
+  -u, --update                 copy only older or brand new files
+  -v, --verbose                explain what is being done
+  -x, --one-file-system        stay on this file system
+  -P, --parents                append source path to DIRECTORY
+  -R, --recursive              copy directories recursively
+  -S, --suffix SUFFIX          override the usual backup suffix
+  -V, --version-control WORD   override the usual version control
+      --help                   display this help and exit
+      --version                output version information and exit
+
+The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The
+version control may be set with VERSION_CONTROL, values are:
+
+  t, numbered     make numbered backups
+  nil, existing   numbered if numbered backups exist, simple otherwise
+  never, simple   always make simple backups  

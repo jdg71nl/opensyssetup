@@ -1,0 +1,96 @@
+# smokeping.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Debian 4
+
+# info on: http://www.howtoforge.com/monitoring_network_latency_smokeping_debian_etch
+
+> apt-get install smokeping
+
+> vi /etc/smokeping/config
+
+# create config for apache2:
+> cat /etc/apache2/sites-available/smokeping 
+
+Alias /smokeping/ /var/www/smokeping/
+<Directory "/var/www/smokeping/">
+	AllowOverride None
+	Options -MultiViews +SymLinksIfOwnerMatch
+	Order allow,deny
+	Allow from all
+</Directory>
+ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+<Directory "/usr/lib/cgi-bin">
+	AllowOverride None
+	Options ExecCGI -MultiViews +SymLinksIfOwnerMatch
+	Order allow,deny
+	Allow from all
+</Directory>
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Centos5:
+
+yum install rrdtool perl-rrdtool fping perl-libwww-perl perl-Net-DNS perl-CGI-SpeedyCGI
+
+# How To Install Smokeping in Centos/RHEL Server
+# http://wowtutorial.org/en/tutorial/145.html
+
+# Found RPM here:
+# [smokeping-users] Re: Smokeping RPM
+# https://lists.oetiker.ch/pipermail/smokeping-users/2006-December/002187.html
+
+wget -c http://ftp.nakedape.cc/pub/nakedape/rpms/main/el4/rpm/smokeping/smokeping-2.0.9-2.el4.nac.noarch.rpm
+
+> rpm -Uvh smokeping-2.0.9-2.el4.nac.noarch.rpm 
+warning: smokeping-2.0.9-2.el4.nac.noarch.rpm: Header V3 DSA signature: NOKEY, key ID 859411aa
+error: Failed dependencies:
+fping >= 2.4b2 is needed by smokeping-2.0.9-2.el4.nac.noarch
+
+rpm -Uvh smokeping-2.0.9-2.el4.nac.noarch.rpm --nodeps
+
+> vi /etc/httpd/conf.d/smokeping.conf 
+# allow script:
+ScriptAlias /smokeping/smokeping.cgi /usr/lib/smokeping/cgi/smokeping.cgi
+<Location /smokeping/smokeping.cgi>
+	order allow,deny
+	allow from all
+</Location>
+# allow images:
+Alias /smokeping/img/ /var/lib/smokeping/img/
+<Directory /var/lib/smokeping/img/>
+	DirectoryIndex index.php
+	Options -Indexes
+	AllowOverride all
+	order deny,allow
+	allow from all
+</Directory>
+# end
+
+> vi /etc/smokeping/config
+*** General ***
+owner    = John de Graaff
+contact  = john.de.graaff@networkconcepts.nl
+mailhost = smtp.networkconcepts.nl
+imgcache = /var/lib/smokeping/img
+imgurl   = ./img
+datadir  = /var/lib/smokeping/rrd
+piddir   = /var/run/
+cgiurl   = http://monitor.networkconcepts.nl/smokeping/smokeping.cgi
+*** Probes ***
++ FPing
+binary = /usr/sbin/fping
+
+chmod -v +x /usr/sbin/fping*
+
+/etc/init.d/smokeping start
+
+
+# example config:
+> cat /etc/smokeping/config.d/Targets | tail -n5
+++ ONC-PD-R2-AC3
+menu = ONC-PD-R2-AC3
+host = 172.16.14.23
+title = ONC-PD-R2-AC3 (172.16.14.23)
+#alerts = bigloss,someloss,startloss
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

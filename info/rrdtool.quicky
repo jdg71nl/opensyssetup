@@ -1,0 +1,23 @@
+# rrdtool.quicky
+
+# ---+++---
+# on CentOS-5.2 the up2date packages for rrdtool (1.2.28) result in graphs with lines but without text...
+# found some website, install older version:
+cd ~
+wget -c http://dag.wieers.com/rpm/packages/rrdtool/rrdtool-1.2.23-1.el5.rf.i386.rpm
+wget -c http://dag.wieers.com/rpm/packages/rrdtool/perl-rrdtool-1.2.23-1.el5.rf.i386.rpm
+wget -c http://dag.wieers.com/rpm/packages/rrdtool/rrdtool-devel-1.2.23-1.el5.rf.i386.rpm
+rpm -Uvh --oldpackage *rrdtool*1.2.23*rpm
+
+# cacti - refresh images (from crontab):
+su - cacti bash -c "/usr/bin/php /var/www/cacti/poller.php"
+
+# ---+++---
+# re-write RRD file:
+
+rrdtool dump old.rrd > old.rrd.xml
+# edit the data-source names or something else:
+vi old.rrd.xml
+rrdtool restore old.rrd.xml new.rrd
+
+# ---+++---

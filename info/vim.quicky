@@ -1,0 +1,59 @@
+# vim.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# debian:
+#
+# default 
+> dpkg -l | grep vim
+ii  vim-common                        7.0-122+1etch3                       Vi IMproved - Common files
+ii  vim-tiny                          7.0-122+1etch3                       Vi IMproved - enhanced vi editor - compact v
+
+# Debian minimal:
+apt-get install vim-tiny    
+
+# on debian install vim:
+apt-get install vim vim-perl
+
+# edit
+> vi /etc/vim/vimrc
+add:
+syntax on
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# default vimrc per user: (or else edit /etc/vimrc for all users)
+> cat >> ~/.vimrc
+
+set tabstop=3
+set shiftwidth=3
+set incsearch
+set autoindent
+set smartindent
+set hlsearch
+syntax on
+set background=dark
+
+"Auto-comment is a good idea for Vim, but sometimes you may like to disable it. To disable for all files:
+au FileType * setl fo-=cro
+
+"Indenting comments to match code in vim:
+filetype plugin indent on
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# show current function while programming
+
+#Add in .vimrc :
+
+" http://vim.wikia.com/wiki/Show_current_function_name_in_C_programs
+fun! ShowFuncName()
+	let lnum = line(".")
+	let col = col(".")
+	echohl ModeMsg
+	echo getline(search("^[^ \t#/]\\{2}.*[^:]\s*$", 'bW'))
+	echohl None
+	call search("\\%" . lnum . "l" . "\\%" . col . "c")
+	endfun
+map f :call ShowFuncName() <CR>
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

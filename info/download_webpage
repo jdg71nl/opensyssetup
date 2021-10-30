@@ -1,0 +1,20 @@
+
+# where do you want to page?
+cd /tmp
+
+# download page recursively (r) with images (p) for local viewing (k)
+# .. continue if previously stopped (c) 
+# .. and only from dir and sub (no-parent) (np)
+wget -crkp -np http://www.page.com/sub/
+
+-> page will be under "/tmp/www.page.com/sub/"
+
+# if you want an index.html to point to the starting URL:
+# create this INDEX.HMTL with HTML-redirect
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<meta http-equiv="Refresh" content="0 ; url=sub/page.html">
+</head>
+</html>

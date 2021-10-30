@@ -1,0 +1,28 @@
+# ufw.quicky
+
+# https://wiki.ubuntu.com/UncomplicatedFirewall
+# http://manpages.ubuntu.com/manpages/xenial/en/man8/ufw.8.html#usage
+
+/etc/init.d/iptables stop
+update-rc.d iptables remove
+
+ufw allow 53
+ufw allow http
+ufw allow https
+ufw allow in from 127.0.0.0/8 comment 'localhost'
+ufw allow in from 80.100.229.147/32 comment 'jdg-dgt-xs4all-ip'
+ufw allow in from 80.127.201.64/29 comment 'jdg-dgt-xs4all-subnet'
+ufw allow in from 80.100.196.48/32 comment 'opa-jan-xs4all'
+ufw allow in from 212.114.109.201/32 comment 'vps1-vh.dgt-bv.com'
+ufw allow in from 193.70.42.208/32 comment 'vps4-ov.dgt-bv.com'
+ufw allow in from 5.157.83.103/32 comment 'vps5-yh.dgt-bv.com'
+ufw allow in from 217.71.88.148/32 comment 'tmc-debian-01'
+ufw allow in from 81.173.57.11/32 comment 'efx-librenms'
+ufw enable
+
+ufw --force enable
+ufw status
+ufw delete allow 2221/tcp
+
+#
+

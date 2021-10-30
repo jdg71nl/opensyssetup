@@ -1,0 +1,8 @@
+
+--[CWD=~/Documents/SecureCRT-logs]--[14:09:03 Sat 09-Feb-2013 CET]--[jdg@Johns-MacBook-Pro]--[MacOS-10.8.2]------
+
+ls -1 Secure*d1201*log > files
+cat files | perl -ne 'while (my $file=<STDIN>) { chomp $file; my $new=$file; $new=~s/d120/d130/;my $cmd="mv \"$file\" \"$new\"\n"; print $cmd; }' > convert.sh
+. convert.sh
+
+

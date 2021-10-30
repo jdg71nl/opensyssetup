@@ -1,0 +1,10 @@
+# timesync.quicky
+
+# d2011 next to NTP, Debian also has this method for time sync:
+systemctl enable systemd-timesyncd
+systemctl start systemd-timesyncd
+#
+systemctl stop systemd-timesyncd
+systemctl disable systemd-timesyncd
+
+#

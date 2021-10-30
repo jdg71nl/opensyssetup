@@ -1,0 +1,7 @@
+# apache.quicky
+
+# on debian/4/etch
+
+> cat /etc/apache2/apache2.conf  | grep Servername
+Servername "rmv-neo-01.networkconcepts.nl"
+

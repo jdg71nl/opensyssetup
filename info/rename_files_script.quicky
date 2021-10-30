@@ -1,0 +1,5 @@
+# rename_files_script.quicky
+
+prename.pl -v -e 's/^d0310-d0310-(.*)$/$1/' d0310-d0310-IMG*.JPG     
+prename.pl -v -e 's/^(.*)$/d0310-$1/' IMG*.JPG
+

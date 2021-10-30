@@ -1,0 +1,15 @@
+# date.quicky
+
+# set time/date:
+#
+# man:
+# date MMDDhhmm[[CC]YY][.ss]]
+# set to: Fri Aug 19 12:09:30 CEST 2005
+#
+date 081912092005.30
+
+# print date:
+> date +d%y%m%d%H%M%S
+d110424203339
+
+

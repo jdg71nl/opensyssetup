@@ -1,0 +1,13 @@
+
+Realtek 8019 ISA card is NE2000 compatible.
+
+Jumperless. User RSET8019.EXE to change settings.
+Last change
+IO=0x300
+IRQ=5
+
+Linux:
+Use 'modinfo ne' to see.
+Use 'modprobe ne io=0x300 irq=5' to enable
+Use 'alias eth2 ne io=0x300 irq=5' to set default system bootup
+

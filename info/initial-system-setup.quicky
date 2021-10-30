@@ -1,0 +1,114 @@
+# initial-system-setup.quicky
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# change initdefault runlevel to 3:
+> vi /etc/inittab
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# change root-filesystem LABEL to unique-ID (such as /-gloria40 or %mountpoint-%systemname%disksize )
+> e2label /dev/hda1 /boot-gloria40
+> e2label /dev/hda2 /-gloria40
+> vi /boor/grub/grub.conf
+title CentOS (2.6.9-22.0.1.EL)
+	kernel /vmlinuz-2.6.9-22.0.1.EL ro root=LABEL=/-gloria40 rhgb 
+> vi /etc/fstab
+LABEL=/-gloria40      /       ext3    defaults        1 1
+LABEL=/boot-gloria40  /boot	ext3    defaults        1 2
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# add users 
+> adduser jdg
+> passwd jdg
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# change (hosts will override over DNS)
+> vi /etc/hosts
+127.0.0.1       localhost.localdomain localhost
+172.24.1.13     testserver.smallbizconcepts.net testserver
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# prepare 'syssetup'
+> scp -P 222 212.238.146.228:~/syssetup-setup.sh .
+# (scp requires login as root)
+# (follow instructions)
+# get unison, then move to local
+> mv unison-build-centos4.bin /usr/local/bin/unison
+# install rsync
+> rpm -Uvh rsync-2.6.4-1.1.el3.rf.i386.rpm
+# if no sbc-vpn tunnel, do:
+> route add -net 172.24.0.0/13 gw 172.24.1.10
+# then, do first time sync:
+> syssetup-sync-common-root.sh
+# do a one time 'settools':
+> syssetup-settools.sh
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# copy colorprompt:
+## > cp /var/syssetup/common/root/etc/profile.d/colorprompt.sh /etc/profile.d/
+# ALREADY DONE IN syssetup-settools.sh
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# edit crontab to NOT send email:
+> vi /etc/crontab
+# change to:
+	#MAILTO=root
+	MAILTO=""
+> /etc/init.d/crond reload
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# edit syslog
+> vi /etc/syslog.conf
+# add:
+*.*	/dev/tty12
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# enable 'locate'
+> vi /etc/updatedb.conf
+# change to:
+	DAILY_UPDATE=yes
+# first time run
+> /etc/cron.daily/slocate.cron
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# get GPG key for YUM
+> rpm --import http://mirror.centos.org/centos/RPM-GPG-KEY-centos4
+# update
+> yum update
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# edit SSH, to make secure !!!!!!!!!
+> vi /etc/ssh/sshd_config
+# replace:
+	Port 22
+	Protocol 2
+	PermitRootLogin no
+# then reload (note that changes will only apply for NEW connections)
+> /etc/init.d/sshd reload
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# set NTP (time is important for logging etc)
+> cp /var/syssetup/common/root/etc/ntp.conf /etc/ntp.conf
+# edit servers (user these for internet-sync, use 172.28.2.1 for SBC-VPN sync)
+
+> vi /etc/sysconfig/ntpd
+#jdg: add '-g' to allow any offset (no sanity check <1000s)
+OPTIONS="-g -u ntp:ntp -p /var/run/ntpd.pid"
+
+# add to init for auto start (same result as menu-driven 'ntsys')
+> chkconfig --level 35 ntpd on
+# (re)start NTP
+> /etc/init.d/ntpd start
+# check funtioning with (note allow 20 seconds for 1st contact, then ~5min for actual sync)
+> ntpq
+# in this shell:
+ntpq> as
+# gives all associtions
+ntpq> pe
+# gives all peers
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# other config (ntp, dhcp, etc...)
+# see examples in:
+> cat /var/syssetup/common/root/usr/local/info/ ...     (=symlink /usr/local/info/)
+> cat /var/syssetup/common/root/usr/local/info/bin/ ...
+
+

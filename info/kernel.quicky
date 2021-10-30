@@ -1,0 +1,82 @@
+# kernel.quicky
+# kernel.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# debian alternative kernel:
+
+# CAREFULL: etchnhalf-686 did not work in NEO-CV700 (686 <== ??)
+
+# Zie info:
+# alternative kernels in Debian → http://wiki.debian.org/DebianKernel
+# etch-and-a-half → http://www.debian.org/releases/etch/debian-installer/etchnhalf
+
+# summary:  
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# enable alternative kernel downloads:
+echo "deb http://kernel-archive.buildserver.net/debian-kernel/ trunk main" >> /etc/apt/sources.list
+
+# get the list
+apt-get update
+
+# not sure if needed, but suggested:
+wget -q -O - http://kernel-archive.buildserver.net/key | apt-key add -
+
+# check current platform
+> uname -a
+Linux rmv-neo-01.networkconcepts.nl 2.6.18-6-686 #1 SMP Fri Dec 12 16:48:28 UTC 2008 i686 GNU/Linux
+
+# check current kernel:
+> dpkg -l | grep linux-image
+ii  linux-image-2.6-686               2.6.18+6etch3                        Linux kernel 2.6 image on PPro/Celeron/PII/P
+ii  linux-image-2.6.18-6-686          2.6.18.dfsg.1-23etch1                Linux 2.6.18 image on PPro/Celeron/PII/PIII/
+
+# look for proper platform
+> apt-cache search linux-image | grep etchnhalf | grep 486
+linux-headers-2.6.24-etchnhalf.1-486 - Header files for Linux 2.6.24 on x86
+linux-image-2.6-486-etchnhalf - Linux 2.6-etchnhalf image on x86
+linux-image-2.6.24-etchnhalf.1-486 - Linux 2.6.24 image on x86
+
+# choose and install the new kernel:
+> apt-get install linux-image-2.6.24-etchnhalf.1-486
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# remove kernel on neo-cv700 (etchnhalf did not boot, panic at kernel-load)
+
+> dpkg -r linux-image-2.6.24-etchnhalf.1-686
+(Reading database ... 24487 files and directories currently installed.)
+Removing linux-image-2.6.24-etchnhalf.1-686 ...
+Running postrm hook script /sbin/update-grub.
+You shouldn't call /sbin/update-grub. Please call /usr/sbin/update-grub instead!
+
+Searching for GRUB installation directory ... found: /boot/grub
+Searching for default file ... found: /boot/grub/default
+Testing for an existing GRUB menu.lst file ... found: /boot/grub/menu.lst
+Searching for splash image ... none found, skipping ...
+Found kernel: /boot/vmlinuz-2.6.18-6-686
+Updating /boot/grub/menu.lst ... done
+
+The link /vmlinuz is a damaged link
+Removing symbolic link vmlinuz 
+you may need to re-run your boot loader
+The link /initrd.img is a damaged link
+Removing symbolic link initrd.img 
+you may need to re-run your boot loader
+  
+# this is how I fixed it:
+
+> update-grub 
+Searching for GRUB installation directory ... found: /boot/grub
+Searching for default file ... found: /boot/grub/default
+Testing for an existing GRUB menu.lst file ... found: /boot/grub/menu.lst
+Searching for splash image ... none found, skipping ...
+Found kernel: /boot/vmlinuz-2.6.18-6-686
+Updating /boot/grub/menu.lst ... done
+
+> cd /
+> ln -sf boot/vmlinuz-2.6.18-6-686 vmlinuz
+> ln -sf boot/initrd.img-2.6.18-6-686 initrd.img
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

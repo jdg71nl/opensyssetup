@@ -1,0 +1,10 @@
+# inodes.quicky
+
+# if filesystem has no more free inodes:
+df -i
+
+# then search like this for dir using the most inodes:
+find / -xdev -printf '%h\n' | sort | uniq -c | sort -k 1 -n
+find . -xdev -printf '%h\n' | sort | uniq -c | sort -k 1 -n
+
+

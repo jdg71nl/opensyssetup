@@ -1,0 +1,47 @@
+# unison.quicky
+# unison
+
+# which .unison/FILE is used for my sync?
+for x in ar* ; do echo -e "--\nfile: $x"; head -n 3 $x | strings ; done
+--
+file: ar539e0076c168649f90283e482ee42aea
+Unison archive format 22
+Archive for root //john-de-graaffs-macbook-pro.local//Volumes/JDG-ENCRYPT/JDGPRIVE synchronizing roots //gloria.de-graaff.net//samba/jdgdata/encrypted/jdg, //john-de-graaffs-macbook-pro.local//Volumes/JDG-ENCRYPT/JDGPRIVE
+Written at 2008-11-12 at 22:23:58
+--
+
+CentOS4 / RHEL4:
+ftp://fr2.rpmfind.net/linux/dag/redhat/el4/en/i386/dag/RPMS/unison-2.32.52-1.el4.rf.i386.rpm
+
+# NOTE: CentOS6 default has unison-2.4
+# install older version
+CentOS6:
+rpm -Uvh http://apt.sw.be/redhat/el6/en/x86_64/rpmforge/RPMS/unison-2.32.52-1.el6.rf.x86_64.rpm
+rpm -Uvh http://apt.sw.be/redhat/el6/en/i386/rpmforge/RPMS/unison-2.32.52-1.el6.rf.i686.rpm
+
+# ---
+# debian
+
+# set APT to the 'testing' distro for the latest unison:
+deb http://ftp.nl.debian.org/debian/ testing main
+#or:
+deb http://mirrors.nl.kernel.org/debian/ testing main
+
+
+# then
+apt-get update
+apt-get install unison
+# ---
+# ubuntu
+
+#info:
+https://launchpad.net/ubuntu/+source/unison/2.32.52-1ubuntu2
+#download:
+http://launchpadlibrarian.net/48064865/unison_2.32.52-1ubuntu2_i386.deb
+
+# ---
+# delete remote archive:
+
+ssh syssetup@syssetup.networkconcepts.nl "rm -v .unison/ar24fad115861c4ecaae487e69a608f176"
+
+# ---

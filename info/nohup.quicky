@@ -1,0 +1,39 @@
+# nohup.quicky
+
+# info on: http://en.wikipedia.org/wiki/Nohup
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# run a program in the background:
+nohup nice myprogram &
+nohup nice myprogram > foo.out 2> foo.err < /dev/null &
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# in bash manual:
+# SIGNALS:
+# The shell exits by default upon receipt of a SIGHUP.  Before exiting, an interactive shell resends the SIGHUP  to  all  jobs,
+# running or stopped.  Stopped jobs are sent SIGCONT to ensure that they receive the SIGHUP.  To prevent the shell from sending
+# the signal to a particular job, it should be removed from the jobs table with the disown builtin (see SHELL BUILTIN  COMMANDS
+# below) or marked to not receive SIGHUP using disown -h.
+
+# http://wiki.linuxquestions.org/wiki/Disown
+# 'disown -h' allows you to reconnect to the job later by keeping it in your job list. 
+
+# put a job into background, which is already running:
+# (make immune to HUP-signal)
+
+program # run prog normally
+ctrl-z
+bg # put in jobs list
+jobs
+psg program # lookup pid
+
+# detach a proces from the current shell
+# put a job in background (make immune to HUP-signal when closing shell):
+disown -h %1 # for job-id 1
+disown -h <pid>
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

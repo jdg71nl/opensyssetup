@@ -1,0 +1,76 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+#jdg-default
+#allow-hotplug enp1s0
+#iface enp1s0 inet dhcp
+
+auto enp1s0
+iface enp1s0 inet manual
+
+auto enp2s0
+iface enp2s0 inet manual
+
+auto enp3s0
+iface enp3s0 inet manual
+
+auto br1
+#iface br1 inet manual
+iface br1 inet static
+        #bridge_ports enp1s0 vlan10
+        #bridge_ports enp1s0 enp3s0 wlan0
+        bridge_ports enp1s0 enp3s0 
+        bridge_stp off
+        address 10.21.10.75
+        netmask 255.255.255.0
+        broadcast 10.21.10.255
+        gateway 10.21.10.254
+
+#auto br2
+#iface br2 inet static
+#iface br2 inet manual
+#       bridge_ports enp2s0 vlan99
+#       #bridge_ports enp2s0 enp3s0
+#       bridge_stp off
+
+#auto vlan10
+#iface vlan10 inet static
+#       vlan-raw-device enp3s0
+
+auto vlan99
+#iface vlan99 inet static
+iface vlan99 inet manual
+        vlan-raw-device enp3s0
+        #vlan-raw-device br1
+
+# d200413 JDG this works on cmdline:
+# brctl addbr br99
+# ip link set br99 up
+# brctl addif br99 vlan99
+# brctl addif br99 enp2s0
+
+auto br2
+#iface br2 inet manual
+iface br2 inet static
+        bridge_ports enp2s0 
+        bridge_stp off
+        address 192.168.178.75
+        netmask 255.255.255.0
+        broadcast 192.168.178.255
+        #pre-up ...
+        post-up brctl addif br2 vlan99
+
+#allow-hotplug wlan0
+auto wlan0
+iface wlan0 inet manual
+ 
+# ------+++------------+++------------+++------------+++------------+++------
+# interfaces.sysetup
+# ------+++------------+++------------+++------------+++------------+++------

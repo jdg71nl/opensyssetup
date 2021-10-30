@@ -1,0 +1,50 @@
+# pcre.quicky
+#
+
+# ---
+#jdg
+# from: http://spider.stat.umn.edu/R/library/base/html/regex.html
+# Extended Regular Expressions
+# They use the glibc 2.3.6 implementation of the POSIX 1003.2 standard. 
+
+[:alnum:]
+    Alphanumeric characters: [:alpha:] and [:digit:].
+[:alpha:]
+    Alphabetic characters: [:lower:] and [:upper:].
+[:blank:]
+    Blank characters: space and tab.
+[:cntrl:]
+    Control characters. In ASCII, these characters have octal codes 000 through 037, and 177 (DEL). In another character set, these are the equivalent characters, if any.
+[:digit:]
+    Digits: 0 1 2 3 4 5 6 7 8 9.
+[:graph:]
+    Graphical characters: [:alnum:] and [:punct:].
+[:lower:]
+    Lower-case letters in the current locale.
+[:print:]
+    Printable characters: [:alnum:], [:punct:] and space.
+[:punct:]
+    Punctuation characters: ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~.
+[:space:]
+    Space characters: tab, newline, vertical tab, form feed, carriage return, and space.
+[:upper:]
+    Upper-case letters in the current locale.
+[:xdigit:]
+    Hexadecimal digits: 0 1 2 3 4 5 6 7 8 9 A B C D E F a b c d e f. 
+
+[:print:]
+[:alnum:][:punct:][:space:]
+
+# ---
+# found on: http://www.virtuosimedia.com/dev/php/37-tested-php-perl-and-javascript-regular-expressions
+
+email
+'/^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})*$/'
+IP address
+'/^((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))*$/'
+Password
+'/^(?=^.{6,}$)((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.*$/'
+URL
+'/^(((http|https|ftp):\/\/)?([[a-zA-Z0-9]\-\.])+(\.)([[a-zA-Z0-9]]){2,4}([[a-zA-Z0-9]\/+=%&_\.~?\-]*))*$/'
+
+# ---

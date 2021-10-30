@@ -1,0 +1,12 @@
+# remote.quicky
+#
+
+# get a config shell:
+tsclient
+
+# run RDP directly:
+rdesktop -g 1024x768 -u trainer 192.168.2.90 &
+
+# run VNC directly:
+vncviewer 192.168.2.90:0 &
+

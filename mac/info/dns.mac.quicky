@@ -1,0 +1,5 @@
+# dns.mac.quicky
+
+# flush dns cache on mac:
+dscacheutil -flushcache
+

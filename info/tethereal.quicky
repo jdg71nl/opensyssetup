@@ -1,0 +1,27 @@
+# tethereal.quicky
+
+# nieuwe naam: tshark, wireshark 
+
+# ---
+
+# split an existing CAP file into multiple parts with each 1500000 packets:
+> editcap -c 1500000 VLB.Alcatel-VLA.Alcatel-LAN.cap VLB.Alcatel-VLA.Alcatel-LAN.cap.split
+creates: 
+VLB.Alcatel-VLA.Alcatel-LAN.cap.split.001
+VLB.Alcatel-VLA.Alcatel-LAN.cap.split.002
+VLB.Alcatel-VLA.Alcatel-LAN.cap.split.003
+etc
+
+# ---
+> tethereal -n -i eth1 -V -S -w dhcp-d050408.cap -R "udp.port eq 67 or udp.port eq 68"
+
+-V				decode packets
+-w file		write to file (instead of console)
+-S				do write to console if writting to file
+
+> tethereal -n -r dhcp-d050408.cap -t ad
+
+-t ad			display absolute time and date
+-r file		read from file
+
+# ---

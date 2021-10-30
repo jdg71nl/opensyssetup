@@ -1,0 +1,18 @@
+# squid.quicky
+
+> cat /etc/squid/squid.conf | grep -A3 jdg
+#jdg
+#http_access deny all
+http_access allow all
+
+
+#jdg:
+acl SSL_ports port 20443        # https-alt20k
+#jdg:
+#http_access deny all
+http_access allow all
+#jdg:
+#http_port 3128
+http_port 13128
+
+

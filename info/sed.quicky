@@ -1,0 +1,7 @@
+# sed.quicky
+
+# replace all occurences of a string in a file:
+sed -i 's/ap.coova.org\/js\/chilli.js/172.17.39.9\/uam\/chilli.js/g' /var/www/hotspot/uam/index.html
+
+
+

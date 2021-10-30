@@ -1,0 +1,24 @@
+# debian-livehelper.quicky
+
+# http://packages.debian.org/search?keywords=live-magic
+# live-helper → http://wiki.debian.org/DebianLive/live-helper
+# homepage live-helper → http://debian-live.alioth.debian.org/
+# Debian Live Manual → http://live.debian.net/manual/html/
+
+# Installing debootstrap or cdebootstrap from backports.org
+# add
+vi /etc/apt/sources.list
+deb http://www.backports.org/debian etch-backports main
+
+apt-get update
+apt-get install -t etch-backports debootstrap
+
+# It is not recommended that you use live-helper from 
+# backports.org as it is likely to be out of date.
+apt-get install -t testing live-helper
+
+
+lh_clean --binary
+lh_config -b usb-hd --distribution etch
+lh_build 
+

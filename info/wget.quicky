@@ -1,0 +1,7 @@
+# wget.quicky
+
+recurse, level3, k=convertlinks, no parents:
+wget -r -l3 -k -np http://www.delouw.ch/linux
+
+wget -c -v -m --passive-ftp --limit-rate=100k -nH --cut-dirs=1
+

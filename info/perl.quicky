@@ -1,0 +1,113 @@
+# perl.quicky
+--
+BEFORE you go CPAN, install regular RPMs from CetnOS:
+yum install perl-Bit-Vector perl-Date-Calc perl-DateManip perl-Digest-HMAC perl-Digest-SHA1 perl-Filter perl-HTML-Parser perl-HTML-Tagset perl-libwww-perl perl-libxml-enno perl-libxml-perl perl-Net-DNS perl-Time-HiRes perl-URI
+
+--
+# if need PROXY:
+> vi /usr/lib/perl5/5.8.5/CPAN/Config.pm
+# change:
+$CPAN::Config = {
+...
+  'ftp_proxy' => q[http://172.28.2.1:3128/],
+  'http_proxy' => q[http://172.28.2.1:3128/],
+  ...
+}
+# also:
+export ftp_proxy=http://172.28.2.1:3128/
+export http_proxy=http://172.28.2.1:3128/
+
+
+# on Debian first do (need 'make)':
+apt-get install build-essential
+
+# Update CPAN
+> perl -MCPAN -e shell
+cpan> install Bundle::CPAN
+cpan> reload cpan
+
+# if you dont want to be asked (new modules) every time, set:
+cpan> o conf prerequisites_policy follow
+# if you do (default)
+cpan> o conf prerequisites_policy ask
+# commit the changes (if you want this to be persistent):
+cpan> o conf commit
+commit: wrote /usr/lib/perl5/5.8.8/CPAN/Config.pm
+
+# Install perl module via CPAN
+> perl -MCPAN -e 'install Config::IniFiles'
+
+# test if module is available (if so no error)
+> perl -MConfig::IniFiles -e 1
+
+# install perl module in TGZ format
+> tar xvfz Module-MakeDist-1.00.tgz
+> cd Module-MakeDist-1.00
+> perl Makefile.PL
+> make
+> make test
+> make install
+--
+
+Make code more readable, tidy, indent:
+
+> perl -MCPAN -eshell
+cpan> install Perl::Tidy
+  
+perltidy <file>
+
+John default:
+perltidy -b -i=3 --cuddled-else 
+
+-b 					change file in-place and ori to .BAK (instead default output to file.tidy)
+-i=3 					indent=3 (instead default 4)
+--cuddled-else 	use: "} else {"
+--indent-only		no formatting/linebreaks, only do the indents
+
+
+--
+locate -i 'iso' | perl -ne 'print if /\.iso$/i'
+--
+
+# ------+++------
+# chomp does not remove \r (only \n), can use s/\s*$//g
+
+chomp ($line);
+$line =~ s/\s*$//g;
+
+# ------+++------
+# CAREFULL with CPAN in Debian !!
+
+# Debian ia using Perl in its OS, so for Perl packages in APT there is a Perl Policy: http://www.debian.org/doc/packaging-manuals/perl-policy/
+# Use the Debian provided CPAN module
+# Make sure CPAN installes in /usr/local/ (and not in the system-wide perl dirs) !
+
+# if CPAN messes up your Debian/Perl system, remove the /usr/local/ perl installed stuff:
+
+> perl -e 'use Data::Dumper; print Dumper(\@INC)'
+$VAR1 = [
+          '/etc/perl',
+          '/usr/local/lib/perl/5.10.1',
+          '/usr/local/share/perl/5.10.1',
+          '/usr/lib/perl5',
+          '/usr/share/perl5',
+          '/usr/lib/perl/5.10',
+          '/usr/share/perl/5.10',
+          '/usr/local/lib/site_perl',
+          '.'
+        ];
+
+for d in \
+	/usr/local/lib/perl/5.10.1/ \
+	/usr/local/share/perl/5.10.1/ \
+	/usr/local/man/man3/ \
+	; do
+echo "# $d:"
+echo mkdir -pv /root/perl-move$d
+echo rsync -av $d /root/perl-move$d
+echo find $d -type f -exec rm "{}" \;
+done
+
+
+# ------+++------
+

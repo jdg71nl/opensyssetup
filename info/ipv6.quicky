@@ -1,0 +1,119 @@
+# ipv6.qiucky
+
+# ------+++------
+# Centos: config IPv6 address on eth interface
+
+# as simple as adding:
+
+> cat /etc/sysconfig/network-scripts/ifcfg-eth0 | grep IPV6
+IPV6INIT=yes
+IPV6_AUTOCONF=no
+IPV6ADDR=2a00:1bc8:1:3::2/64
+IPV6_DEFAULTGW=2a00:1bc8:1:3::1
+
+# ------+++------
+# on centos: force disable autoconf on ipv6
+
+> cat /etc/sysctl.conf | grep -B1 autoconf
+# Disable IPv6 Autoconf
+net.ipv6.conf.default.autoconf = 0
+
+# huh, on centos58 this setting is absent ?
+
+# manual
+echo 0 > /proc/sys/net/ipv6/conf/all/autoconf
+
+
+# ------+++------
+# debian 6
+
+> cat /etc/modprobe.d/aliases.conf | grep -B1 -A1 jdg
+# alias net-pf-10 ipv6
+#jdg
+alias net-pf-10 off ipv6
+
+# ------+++------
+# Ubuntu 10.10
+
+# http://linuxpoison.blogspot.com/2010/10/how-to-disable-ipv6-in-ubuntu-linux.html
+
+> grep -A4 jdg /etc/sysctl.conf
+#jdg
+#disable ipv6
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+
+> grep -A1 jdg /etc/modprobe.d/blacklist.conf 
+#jdg
+blacklist ipv6
+
+# ------+++------
+# IPv6 neighbor discovery
+
+https://blog.philippklaus.de/2012/01/ipv6-tools-on-the-command-line/
+
+# trigger the discovery
+ping6 -c2 -I eth0 ff02::1
+
+# print the results:
+ip -6 neigh
+
+IFACE=eth0
+ping6 -c2 -I $IFACE ff02::1 && echo -e "\nIPv6 Neighbours:\n" && ip -6 neigh
+
+# Disable accepting router advertisements:
+su
+echo 0 > /proc/sys/net/ipv6/conf/eth0/accept_ra
+
+i# Directly discard existing IPv6 addresses:
+ip -6 addr flush scope global dev eth0
+
+
+# ------+++------
+
+# ------+++------
+# Debian IPv6 config
+# ------+++------
+
+> vi /etc/network/interfaces
+# For DHCPv6 (used for IPv6), append also the following iface stanza
+iface eth0 inet6 dhcp
+
+# IPv6 can be autoconfigured using stateless address autoconfiguration, or SLAAC:
+iface eth0 inet6 auto
+
+# 
+iface eth0 inet6 static
+  address 2001:db8::c0ca:1eaf
+  netmask 64
+  gateway 2001:db8::1ead:ed:beef
+
+# https://debian-handbook.info/browse/stable/sect.ipv6.html
+# also enables SLAAC (both "client/server"):
+iface eth0 inet6 auto
+
+# ------+++------
+# DHCPv6 server
+# https://www.sixxs.net/wiki/Configuring_ISC_DHCPv6_Server
+
+default-lease-time 2592000;
+preferred-lifetime 604800;
+option dhcp-renewal-time 3600;
+option dhcp-rebinding-time 7200;
+
+# Enable RFC 5007 support (same than for DHCPv4)
+allow leasequery;
+
+option dhcp6.name-servers 3ffe:501:ffff:100:200:ff:fe00:3f3e;
+option dhcp6.domain-search "test.example.com","example.com";
+option dhcp6.info-refresh-time 21600;
+
+#
+subnet6 2001:ed8:77b5::/64 {
+	range6 2001:ed8:77b5::1 2001:ed8:77b5::ffff:ffff;
+}
+
+# ------+++------
+
+

@@ -1,0 +1,18 @@
+# SecurtCRT-settings.txt
+
+mkdir -pv /Users/jdg/Dropbox/Cloud/SecureCRT-logs/
+
+
+# Session Options
+
+Terminal 					= Close on Disconnect
+Terminal Emulation 			= Terminal:Linux, ANSI Color
+Terminal Emulation 			= Scrollback buffer:123000
+Terminal Appearance 		= Color Scheme:Monochrome, Menlo 11pt, UTF-8
+Terminal Appearance Logfile = Start log upon connect, append file
+
+/Users/jdg/Dropbox/Cloud/SecureCRT-logs/SecureCRT--LOCAL_--Host-%H--d16%M%D%h%m.log.txt
+/Users/jdg/Dropbox/Cloud/SecureCRT-logs/SecureCRT--SSH___--Host-%H--d16%M%D%h%m.log.txt
+/Users/jdg/Dropbox/Cloud/SecureCRT-logs/SecureCRT--TELNET--Host-%H--d16%M%D%h%m.log.txt
+
+

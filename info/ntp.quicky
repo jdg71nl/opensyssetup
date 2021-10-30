@@ -1,0 +1,135 @@
+# ntp.quicky
+# NTP info
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+NOTE: 
+- ntpdate will update the clock at once after consulting the time source
+BUT: it will not skew/slew and that can upset running programs
+SO: only run it at startup
+
+- ntpd will update the clock in small steps and keep it synchronised
+BUT: it will panic exit when encountered with more the 1000s difference
+SO: when ntpd is not running, run ntpdate and restart: ntpd
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# this command to view time-sync with NTP servers
+ntpq -p
+
+# ntp-pool.networkconcepts.nl = load-balanced:
+# ntp1.networkconcepts.nl 89.106.162.2
+# ntp2.networkconcepts.nl 89.106.163.2
+# ntp3.networkconcepts.nl 80.69.65.224
+# ntp4.networkconcepts.nl 84.244.144.194
+
+vi /etc/ntp.conf
+# --++--
+# jdg:
+# ntp-pool.networkconcepts.nl = load-balanced:
+# ntp1.networkconcepts.nl 89.106.162.2
+# ntp2.networkconcepts.nl 89.106.163.2
+# ntp3.networkconcepts.nl 80.69.65.224
+# ntp4.networkconcepts.nl 84.244.144.194
+#
+#server ntp1.networkconcepts.nl
+#server ntp2.networkconcepts.nl
+#server ntp3.networkconcepts.nl
+#server ntp4.networkconcepts.nl
+#
+server 89.106.162.2
+server 89.106.163.2
+server 80.69.65.224
+server 84.244.144.194
+# --++--
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# debian
+> vi /etc/default/ntpdate 
+
+#jdg
+NTPSERVERS="89.106.162.2 89.106.163.2 80.69.65.224 84.244.144.194"
+#
+# ntp-pool.networkconcepts.nl = load-balanced:
+# ntp1.networkconcepts.nl 89.106.162.2
+# ntp2.networkconcepts.nl 89.106.163.2
+# ntp3.networkconcepts.nl 80.69.65.224
+# ntp4.networkconcepts.nl 84.244.144.194
+#
+#jdg
+# -u     Direct  ntpdate  to  use an unprivileged port for outgoing packets.
+NTPOPTIONS="-u"
+#
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# command-line queries (no name-resolve):
+
+ntpq -n -c peers
+ntpq -n -c ass
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# if ntpq gives error:  "Name or service not known"
+
+# it means 'localhost' is not known...
+# do:
+vi /etc/hosts
+127.0.0.1   localhost.localdomain localhost
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# set local clock at stratum 10
+server  127.127.1.0     # local clock
+fudge   127.127.1.0 stratum 10  
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# voyage 0.5.2 time sync issue
+http://www.mail-archive.com/voyage-linux@list.voyage.hk/msg02841.html
+
+adjtimex -> http://packages.debian.org/nl/sid/adjtimex
+
+> apt-get install adjtimex
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following NEW packages will be installed:
+  adjtimex
+0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
+Need to get 55.6kB of archives.
+After this operation, 172kB of additional disk space will be used.
+Get:1 http://ftp.nl.debian.org lenny/main adjtimex 1.26-1 [55.6kB]
+Fetched 55.6kB in 0s (166kB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously deselected package adjtimex.
+(Reading database ... 18048 files and directories currently installed.)
+Unpacking adjtimex (from .../adjtimex_1.26-1_i386.deb) ...
+Setting up adjtimex (1.26-1) ...
+Regulating system clock...done.
+Comparing clocks (this will take 70 sec)...adjtimex: Invalid argument
+done.
+awk: line 1: runaway regular expression /65536.)*.0 ...
+Adjusting system time by  sec/day to agree with CMOS clock...done.
+--[CWD=~]--[15:48:20 Fri 13-Nov-2009 CET]--[root@rmv043-lunet]--[Voyage-0.62]------
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# NTP wont sync (reject) on Alix with voyage 0.6 (Build Date 20090708) kernel 2.6.26-486-voyage
+
+# very large skew due to faulty time source:
+
+# http://www.mail-archive.com/voyage-linux@list.voyage.hk/msg02842.html
+# disabling geode-mfgpt timers (by adding nomfgpt in the kernel cmdline options). 
+
+> cat /sys/devices/system/clocksource/clocksource0/available_clocksource
+jiffies tsc 
+> cat /sys/devices/system/clocksource/clocksource0/current_clocksource  
+jiffies
+
+> grep nomfgpt /boot/grub/menu.lst 
+title voyage-linux-08Oct09-nomfgpt
+kernel /vmlinuz root=LABEL=ROOT_FS  console=ttyS0,9600n8 nomfgpt
+
+# NOT a very nice solution (may break some time-spanning apps):
+> grep ntp /etc/crontab 
+# ntp reject problems, sync every minute:
+*/1 * * * * root /usr/sbin/ntpdate-debian
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

@@ -1,0 +1,31 @@
+# ln.quicky
+Examples:
+---------
+
+ln file link-to-file
+ln /dir/file .        Creates link with same filename in the current directory
+
+----------
+
+Usage: ln [OPTION]... SOURCE [DEST]
+  or:  ln [OPTION]... SOURCE... DIRECTORY
+
+  -b, --backup                 make backups for removed files
+  -d, -F, --directory          hard link directories (super-user only)
+  -f, --force                  remove existing destinations
+  -n, --no-dereference         with --force, remove destination that is a
+                                 symlink to a directory
+  -i, --interactive            prompt whether to remove destinations
+  -s, --symbolic               make symbolic links, instead of hard links
+  -v, --verbose                print name of each file before linking
+  -S, --suffix=SUFFIX          override the usual backup suffix
+  -V, --version-control=WORD   override the usual version control
+      --help                   display this help and exit
+      --version                output version information and exit
+
+The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The
+version control may be set with VERSION_CONTROL, values are:
+
+  t, numbered     make numbered backups
+  nil, existing   numbered if numbered backups exist, simple otherwise
+  never, simple   always make simple backups

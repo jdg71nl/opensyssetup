@@ -1,0 +1,36 @@
+#!/bin/bash
+
+ID=`id -u`
+
+UNISON="unison"
+if grep -qi mac /etc/distro.info ; then 
+	UNISON="/opt/local/bin/unison"
+	# simulate user=root on Mac
+	ID=0
+fi
+
+[[ $ID -ne 0 ]] && echo "Run this command as root" && exit 1
+
+# syssetup.networkconcepts.nl has address 89.106.163.11
+MASTER="syssetup.networkconcepts.nl"
+MASTERIP="89.106.163.11"
+
+CMD="$UNISON -times /usr/local/syssetup ssh://syssetup@$MASTER//usr/local/syssetup -auto" 
+echo "CMD: $CMD"
+
+if grep -qi mac /etc/distro.info ; then 
+	echo "test THISMACHINE==MASTER disabled on MacOS"
+else
+	if test "`ip addr|grep $MASTERIP`" != "" ; then
+		echo "cant sync: you are on the master (IP=$MASTERIP, MASTER=$MASTER)"
+		exit 0;
+	fi
+fi
+
+logger "$0 started"
+$UNISON -times /usr/local/syssetup ssh://syssetup@$MASTER//usr/local/syssetup -auto 
+
+# thought:  unison -perms=0
+# thought:  unison -times
+# thought:  unison -ignore='Path .*' -ignore='Name .*' 
+

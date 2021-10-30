@@ -1,0 +1,40 @@
+# radius.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# radtest is in package: freeradius-utils
+> apt-get install freeradius-utils
+
+> dpkg -l | grep -i radius
+ii  freeradius-common                             2.0.4+dfsg-6~bpo40+1                 FreeRadius common files
+ii  freeradius-utils                              2.0.4+dfsg-6~bpo40+1                 FreeRadius client utilities
+ii  libauthen-radius-perl                         0.12-2                               user authentication against radius
+ii  libfreeradius2                                2.0.4+dfsg-6~bpo40+1                 FreeRADIUS shared library
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# radius test tools:
+
+echo "User-Name=twstest,Password=onc1234onc" | radclient 172.16.12.14:1812 auth testing456 -x
+
+radtest twstest onc1234onc  172.16.12.14:1812 10 testing456
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# EAP test tool: eapol_test from wpa_supplicant package:
+# info: http://deployingradius.com/scripts/eapol_test/
+
+# need build tools:
+yum install gcc gcc-c++ kernel-devel
+# need 
+yum install openssl-devel
+
+# omake eapol_test get tgz from
+http://hostap.epitest.fi/wpa_supplicant/
+
+# set
+cp defconfig .config
+vi .config
+--> CONFIG_EAPOL_TEST=y 
+
+make eapol_test 
+# ---
+

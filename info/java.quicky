@@ -1,0 +1,23 @@
+# java.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# java on debian
+
+# add "non-free" to apt:
+> vi /etc/apt/sources.lst
+#deb http://ftp.nl.debian.org/debian/ lenny main
+deb http://ftp.nl.debian.org/debian/ lenny main non-free
+
+apt-get update
+apt-get install sun-java5-jre 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# Get Java for Ubuntu and Firefox:
+# https://help.ubuntu.com/community/Java
+apt-get install sun-java6-bin sun-java6-jre sun-java6-plugin
+# which is default:
+sudo update-alternatives --config java
+sudo update-alternatives --config jar
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

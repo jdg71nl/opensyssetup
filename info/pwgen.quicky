@@ -1,0 +1,12 @@
+# pwgen.quicky
+
+# generate random secure passwords
+
+# debian
+> apt-get install pwgen
+
+#centos
+> yum install secpwgen
+
+pwgen --ambiguous 8
+

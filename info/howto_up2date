@@ -1,0 +1,40 @@
+# -------------------------------------------------------------------------
+#For all RPM with size>1k (not symbolic links) do
+#- copy to RPMS
+#- create nul-file in /mnt/music/readhet/up2date/
+#- replace RPM with symbolic link
+# MAKE SURE DIRECTORIES ARE OK (IF USED ON ANOTHER COMPUTER)
+
+cd /var/spool/up2date/
+for x in $( find . -iname '*rpm' -size +1k -printf '%f\n' ) ; do cp $x /RPMS/ ; touch /mnt/music/redhat8/up2date/$x ; ln -sf /RPMS/$x . ; done
+
+# -------------------------------------------------------------------------
+# Replace all RPMs with symbolic links
+
+cd /var/spool/up2date/
+for x in *.rpm ; do ln -sf /RPMS/$x $x ; done
+
+# -------------------------------------------------------------------------
+# Check if all updates are in /mnt/music/redhat8/up2date (null-files)
+# EDIT -mtime xxx TO INCLUDE UPDATES BUT NOT ORIGINALS
+
+cd /RPMS/
+find . -iname '*rpm' -mtime -20 -exec ls /mnt/music/redhat8/up2date/{} \;
+
+# -------------------------------------------------------------------------
+# Example procedure to determine which files to install
+
+cd /var/spool/up2date/
+ls *.rpm -1 | sort | sed 's/.rpm/.rpm\ \*\*/' > new
+cp new new2
+cat /rpm-qa.txt >> new2
+cat new2 | sort > new3
+cat new3 | grep '\*\*' -B 1 | sort > new4
+
+joe new4
+
+cat new4 | sed 's/\ \*\*//' > new5
+rpm -Uvh `cat new5`
+
+# -------------------------------------------------------------------------
+

@@ -1,0 +1,280 @@
+# xen.quicky
+#
+# XEN info
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# lessons from xen-adam and xen-alphen (d081001)
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# disc:
+
+* physical server (dom0): partition disk using LVM2, each LogVol will be virtual-HD for client (DomU)
+
+> lvs
+LV         VG   Attr   LSize  Origin Snap%  Move Log Copy%  Convert
+LV_d0_root VG00 -wi-ao  4.88G                                      
+LV_d0_swap VG00 -wi-ao  1.94G                                      
+LV_d1      VG00 -wi-a- 22.00G                                      
+LV_d2      VG00 -wi-a- 12.00G                                      
+LV_d3      VG00 -wi-a- 12.00G                                      
+LV_d4      VG00 -wi-a-  3.00G                                      
+LV_d5      VG00 -wi-a-  3.00G                                      
+LV_d6      VG00 -wi-a-  3.00G                                      
+LV_d7      VG00 -wi-a-  3.00G                                      
+LV_data    VG00 -wi-ao  9.50G               
+
+* DomU will use partition as PHY:
+disk = [ "phy:/dev/VG00/LV_d4,xvda,w" ]
+
+so, Dom0:
+/dev/VG00/LV_d4 ==> /dev/xvda
+in DomU:
+/dev/xvda (formatted, etc), std layout centos5:
+/dev/xvda1 = boot,100M
+/dev/xvda2 = VolGroup00
+VolGroup00/LogVol00 = root
+VolGroup00/LogVol01 = swap
+
+* This way no fragmentation etc delay
+* Also way to scale disk
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# networking
+
+* add briding to all phys.eth in Dom0, so you can always decide to attach domU's
+* manage bridge from distro:
+
+> cat /etc/sysconfig/network-scripts/ifcfg-eth0
+DEVICE=eth0
+BOOTPROTO=none
+HWADDR=00:30:48:71:93:76
+ONBOOT=yes
+TYPE=Ethernet
+BRIDGE=br0
+
+> cat /etc/sysconfig/network-scripts/ifcfg-vlan162 
+VLAN=yes
+VLAN_NAME_TYPE=VLAN_PLUS_VID_NO_PAD
+DEVICE=vlan162
+PHYSDEV=eth0
+BOOTPROTO=static
+ONBOOT=yes
+TYPE=Ethernet
+BRIDGE=br162
+
+> cat /etc/sysconfig/network-scripts/ifcfg-br162 
+DEVICE=br162
+TYPE=Bridge
+BOOTPROTO=static
+ONBOOT=yes
+DELAY=0
+STP=off 
+IPADDR=89.106.162.14
+NETMASK=255.255.255.240
+NETWORK=89.106.162.0
+BROADCAST=89.106.162.15
+
+* do not manage bridging from Xen scripts, disable this:
+
+from: http://albertptobey.blogspot.com/2007/09/xen-networking.html
+-- disable this script, do vlan, bridging, etc on distro-script level, not in Xen
+-- to only thing Xen does is attach vifx.y to the existing bridge
+so:
+* set network-script to /bin/true
+* comment-out vif-script
+
+vi /etc/xen/xend-config.sxp
+ (network-script /bin/true)
+ #(vif-script vif-bridge)
+
+* attach DomU to a bridge of choice (can be bridged to eth0, or to vlan162, etc):
+
+vif = [ "mac=00:16:3e:25:ca:ba,bridge=br1" ]
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# prepare centos install
+
+* setup install-tree on HTTPD
+* get centos install tree:
+
+> cat /var/www/html/centos/update_5.2.sh 
+rsync -avz -Pi --delete --exclude-from=/var/www/html/centos/exclude_file rsync://mirrors.nl.kernel.org/centos/5.2/ /var/www/html/centos/5.2/
+
+> cat /var/www/html/centos/exclude_file 
+# rsync exclude file:
+- *-DVD.iso
+- *-LiveCD.iso
++ addons/
+- centosplus/
+- extras/
++ fasttrack/
+- x86_64/
+- SRPMS/
+- *-langpack-*
+- CentOS-5.2-i386-bin-*.iso
+#
+
+> cat /etc/yum.repos.d/CentOS-Base.repo 
+[base]
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
+#baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
+#baseurl=http://127.0.0.1/centos/$releasever/os/$basearch/
+baseurl=http://89.106.162.14/centos/$releasever/os/$basearch/
+
+[updates]
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=updates
+#baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/
+#baseurl=http://127.0.0.1/centos/$releasever/updates/$basearch/
+baseurl=http://89.106.162.14/centos/$releasever/updates/$basearch/
+
+map: /var/www/html/centos/5.2/os/i386/ on http://172.24.2.15/centos/5.2/os/i386/
+
+# check if firewall needs to be clean (to allow DHCP and networking from DomU to Dom0):
+/etc/init.d/iptables stop
+iptables-save 
+# check if web-server is running:
+/etc/init.d/httpd start
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# to create a new DomU:
+
+* instead of playing with kickstart (failed on CentOS5.2)
+  if you want to try: http://wiki.centos.org/HowTos/Xen/InstallingCentOSDomU
+
+* let CentOS do it automatically for you:
+* run script:
+
+> virt-install 
+What is the name of your virtual machine? helmsdeep.networkconcepts.nl.xen
+ How much RAM should be allocated (in megabytes)? 1024
+ What would you like to use as the disk (file path)? /dev/VG00/LV_d3
+ Would you like to enable graphics support? (yes or no) no
+ What is the install location? http://89.106.162.14/centos/5.3/os/i386/
+ 
+Starting install...
+Retrieving file .treeinfo 100% |=========================|  413 B    00:00     
+Retrieving file vmlinuz.. 100% |=========================| 2.1 MB    00:00     
+Retrieving file initrd.im 100% |=========================| 5.4 MB    00:00     
+...
+
+It will attach (xm console ..) automatically and you will see text-based windows
+guiding you what you want to install.
+Feel free to format the disk entirely.
+After download/install packages it will reboot and stay connected to console.
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# to create a new DomU:
+
+> virt-clone 
+What would you like to use as the cloned disk (file path)? /dev/VG00/LV_d5
+What is the name or uuid of the original virtual machine? alphen-d4.xen
+What is the name for the cloned virtual machine? alphen-d5.xen
+Cloning from /dev/VG00/LV_d4 to /dev/VG00/LV_d5
+Cloning domain...         100% |=========================| 3.0 GB    02:12     
+
+-NOTE: after clone, boot into new DomU and change systemname
+> vi /etc/sysconfig/network
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# operate xen machines (Domu)
+
+# xen machine spec in: (note: machine-name is same as filename)
+> cat /etc/xen/alphen-d4.xen
+
+name = "alphen-d4.xen"
+uuid = "e45d57b3-3e8d-700c-c8d6-9cc4d861ad32"
+maxmem = 256
+memory = 256
+vcpus = 1
+bootloader = "/usr/bin/pygrub"
+on_poweroff = "destroy"
+on_reboot = "restart"
+on_crash = "restart"
+vfb = [  ]
+disk = [ "phy:/dev/VG00/LV_d4,xvda,w" ]
+vif = [ "mac=00:16:3e:25:ca:ba,bridge=br1" ]
+
+# show xen specs:
+xm dmesg
+
+# start machine:
+xm create alphen-d5.xen 
+
+# attach local console to machine (ctrl-] to exit, same as telnet):
+xm console_alphen-d5.xen 
+
+# list running machines:
+xm list
+-NOTE: your console can be limited to 24? lines, use 'reset' to get normal Dom0 console
+
+# reboot machine (like sending 'shutdown -r now'):
+xm reboot alphen-d4.xen
+
+# shutdown machine (like sending 'shutdown -h now'):
+xm shutdown alphen-d4.xen
+
+# kill machine (similar to disconnect power, bios-powerdown:
+xm destroy alphen-d4.xen
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# if console does not work:
+
+> xm console ns1.networkconcepts.nl.xen
+xenconsole: Could not open tty `/dev/pts/1': No such file or directory
+
+> lt /dev/pts/*
+crw--w---- 1 jdg  tty 136, 0 Oct 25 15:20 /dev/pts/0
+
+> /etc/init.d/xend reload
+reload xend:                                               [  OK  ]
+
+> psg xenconsole
+root     22269  0.0  0.0  12212   492 ?        Sl   15:20   0:00 xenconsoled --log none --timestamp none
+
+> lt /dev/pts/*
+crw--w---- 1 root tty 136, 1 Oct 25 15:20 /dev/pts/1
+crw--w---- 1 root tty 136, 2 Oct 25 15:20 /dev/pts/2
+crw--w---- 1 root tty 136, 3 Oct 25 15:20 /dev/pts/3
+crw--w---- 1 jdg  tty 136, 0 Oct 25 15:20 /dev/pts/0
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# Export a partition READ-ONLY to DomU:
+
+disk = [ "phy:/dev/sdb1,xvdc1,r" ]
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# move/migrate LVM disk to different machine:
+
+# machine A:
+cat /dev/VG00/LV_d5 | gzip -c | nc -v 172.30.3.110 52934
+cat /dev/VG00/LV_d5 | nc -v 172.30.3.110 52934
+
+# machine B:
+nc -l 52934 -v | gzip -d -c > /dev/VG00/LV_d1 
+nc -l 52934 -v > /dev/VG00/LV_d1 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+#jdg
+# d091108 problem: Dom0 very slow and bad networking, dmesg many msgs "xen_net: Memory squeeze in netback driver."
+# tip from: http://bugzilla.xensource.com/bugzilla/show_bug.cgi?id=762
+# tip from: http://lists.xensource.com/archives/html/xen-users/2007-01/msg00430.html
+# tip is set: (/boot/grub/grub.conf) dom0_mem = (/etc/xen/xend-config.sxp) dom0-mim-mem
+# so: kernel = /file dom0_mem=256M
+> vi /boot/grub/grub.conf
+title CentOS (2.6.18-164.el5xen) with dom0_mem=256M
+   root (hd0,0)
+   kernel /xen.gz-2.6.18-164.el5 dom0_mem=256M
+   module /vmlinuz-2.6.18-164.el5xen ro root=/dev/VG00/LV_d0_root
+   module /initrd-2.6.18-164.el5xen.img
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# remove XEN kernel (install regular kernel, e.g. for KVM)
+
+# http://zackofalltrades.com/2008/09/changing-to-a-non-xen-kernel-in-centos-5-so-you-can-run-vmware-server/
+yum install kernel
+yum remove xen kernel-xen
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

@@ -1,0 +1,101 @@
+# swap.quicky
+
+# ---
+# create swap-file (instead of swap-partition) (handy for pxe-booted systems)
+# http://www.cyberciti.biz/faq/linux-add-a-swap-file-howto/
+
+# Type following command to create 512MB swap file (1024 * 512MB = 524288 block size):
+dd if=/dev/zero of=/swapfile1 bs=1024 count=524288
+
+# 1024 * 1024MB = 1048576
+> dd if=/dev/zero of=/swapfile1 bs=1024 count=1048576
+1048576+0 records in
+1048576+0 records out
+1073741824 bytes (1.1 GB) copied, 104.523 s, 10.3 MB/s
+
+> mkswap /swapfile1 -L /swapfile1label
+Setting up swapspace version 1, size = 1073737 kB
+LABEL=/swapfile1label, UUID=b638b0c9-b06e-43d3-9a0a-f40e2274e981
+
+> file /swapfile1
+
+> vol_id /swapfile1
+
+> chmod 0600 /swapfile1
+
+> swapon /swapfile1
+# fails ............................... !
+# use method below dphys-swapfile
+
+> cat >> /etc/fstab
+/swapfile1 swap swap defaults 0 0
+
+# ---
+# https://help.ubuntu.com/community/DisklessUbuntuHowto
+
+# will create /var/swap file with size 2x RAM:
+apt-get install dphys-swapfile
+
+# activate:
+losetup /dev/loop0 /var/swap
+swapon /dev/loop0
+
+> swapon -s
+Filename                                Type            Size    Used    Priority
+/dev/loop0                              partition       1034232 0       -1
+
+> free -m
+             total       used       free     shared    buffers     cached
+Mem:           496        486          9          0          0        463
+-/+ buffers/cache:         22        473
+Swap:         1009          0       1009
+
+> cat >> /etc/fstab
+/dev/loop0 swap swap defaults 0 0
+
+# NOTE:
+# package uswsusp needs a swap partition or file, preferably twice the size of the system's physical RAM
+# Then, run: dpkg-reconfigure uswsusp
+
+# ---
+# swap over NFS
+
+# http://www.emanuelis.eu/2010/06/21/how-to-swap-to-nfs-mount/
+
+# 1G swap:
+dd if=/dev/zero of=/mnt/nfs_scratch/printserver-swapfile.bin bs=1024 count=1048576
+losetup /dev/loop0 /mnt/nfs_scratch/printserver-swapfile.bin 
+mkswap /dev/loop0
+swapon /dev/loop0
+
+cd /etc/init.d/
+touch swap-file-nfs
+chmod +x swap-file-nfs 
+update-rc.d swap-file-nfs defaults
+
+cat > swap-file-nfs
+
+#!/bin/sh
+set -e
+case "$1" in
+start)
+losetup /dev/loop0 /mnt/nfs_scratch/printserver-swapfile.bin
+swapon /dev/loop0
+;;
+stop)
+swapoff /dev/loop0
+losetup -d /dev/loop0
+;;
+restart)
+swapoff /dev/loop0
+swapon /dev/loop0
+;;
+*)
+echo "swap-file-nfs: swap { start | stop | restart }" >&2
+exit 1
+;;
+esac
+exit 0
+
+# ---
+

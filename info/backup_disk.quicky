@@ -1,0 +1,39 @@
+# backup_disk.quicky
+# from: http://www.partimage.org/Partimage-manual_Usage
+
+# save the MBR:
+dd if=/dev/hda of=backup-hda.mbr count=1 bs=512
+# save partition table + logical partitions:
+sfdisk -d /dev/hda > backup-hda.sf
+
+# restore MBR
+dd if=backup-hda.mbr of=/dev/hda
+# restore partition table + logical partitions:
+sfdisk /dev/hda < backup-hda.sf
+
+--
+# http://onkarjoshi.wordpress.com/2007/04/03/partitioning-help-for-multi-booting-ubuntu-linux-and-windows-xp-safely/
+
+You can back up your MBR into a 512 byte file under Linux by the dd command. Remember that you need to be root to use dd. Or under Ubuntu, you’ll need to add “sudo” to the beginning of the command -
+
+sudo dd if=/dev/hda of=mbr.backup bs=512 count=1
+
+The backup can be restored by -
+
+sudo dd if=mbr.backup of=/dev/hda bs=512 count=1
+
+If you want to completely overwrite your MBR (needed sometimes when MBR gets corrupted or just doesn’t agree with the way Microsoft thinks it should be) -
+
+sudo dd if=/dev/zero of=/dev/hda bs=512 count=1
+
+The boot code is stored in the first 446 bytes of the MBR and the rest is the partition table and the MBR signature. So if you want to clear out the boot code only and leave the partition table intact -
+
+sudo dd if=/dev/zero of=/dev/hda bs=446 count=1
+
+You can restore the stock Windows boot code by -
+
+fdisk /MBR
+
+(here fdisk is the Windows partitioning tool, not the one in Linux)
+--
+

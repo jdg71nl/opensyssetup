@@ -1,0 +1,25 @@
+# thedude.quicky
+
+# ------+++------------+++------------+++------------+++------------+++------
+# The Dude on Wine
+
+http://wiki.mikrotik.com/wiki/Dude_Linux_Installation
+
+# install Wine
+
+> apt-get install wine 
+
+# test (also creates ~/.wine/ )
+> notepad
+
+# fails
+apt-get install ttf-mscorefonts-installer
+
+
+> wget -c http://download.mikrotik.com/dude-install-3.6.exe
+> wine ~/dude-install-3.6.exe &
+> wine ~/.wine/drive_c/Program\ Files/Dude/dude.exe &
+
+
+# ------+++------------+++------------+++------------+++------------+++------
+

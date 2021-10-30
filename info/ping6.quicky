@@ -1,0 +1,8 @@
+# ping6.quicky
+
+# you can link-local addresses (fe80::/16) IF you specify the interface:
+ping6 -I eth0 fe80::230:48ff:fe73:6bbc
+
+# good summary on ipv6 setup:
+http://www.generationip.com/documentation/system-documentation/73-ipv6-configuration-on-redhat-centos-fedora
+

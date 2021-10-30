@@ -1,0 +1,10 @@
+
+Alias /go /var/www/go
+<Directory "/var/www/go">
+	Options -Indexes -ExecCGI -Includes 
+	Order allow,deny
+	Allow from all
+</Directory>
+<Directory "/var/www/go/*/">
+	Options +Indexes +ExecCGI +Includes +FollowSymLinks
+</Directory>

@@ -1,0 +1,170 @@
+*** Targets ***
+probe = FPing
+menu = Top
+title = Network Latency Grapher
+remark = Welcome to the SmokePing website of ONC (RMV by Networkconcepts BV)
+
++ Microwave
+menu = Microwave
+title = Microwave
+
+++ ONC-PD-CL
+menu = ONC-PD-CL
+title = ONC-PD-CL
+host = 172.20.150.20
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-CL-BW
+menu = ONC-PD-CL-BW
+title = ONC-PD-CL-BW
+host = 172.20.150.30
+#alerts = bigloss,someloss,startloss
+
++ Switches
+
+menu = Switches
+title = Switches
+
+++ ONC-BW-R1-CORE1
+menu = ONC-BW-R1-CORE1
+host = 172.18.14.1
+title = ONC-BW-R1-CORE1 (172.18.14.1)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-BW-R1-DIST2
+menu = ONC-BW-R1-DIST2
+host = 172.18.14.12
+title = ONC-BW-R1-DIST2 (172.18.14.12)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R1-AC2
+menu = ONC-CL-R1-AC2
+host = 172.17.14.12
+title = ONC-CL-R1-AC2 (172.17.14.12)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R1-AC3
+menu = ONC-CL-R1-AC3
+host = 172.17.14.13
+title = ONC-CL-R1-AC3 (172.17.14.13)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R1-CORE1
+menu = ONC-CL-R1-CORE1
+host = 172.17.14.1
+title = ONC-CL-R1-CORE1 (172.17.14.1)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R2-AC3
+menu = ONC-CL-R2-AC3
+host = 172.17.14.23
+title = ONC-CL-R2-AC3 (172.17.14.23)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R2-AC4
+menu = ONC-CL-R2-AC4
+host = 172.17.14.24
+title = ONC-CL-R2-AC4 (172.17.14.24)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R2-DIST1
+menu = ONC-CL-R2-DIST1
+host = 172.17.14.21
+title = ONC-CL-R2-DIST1 (172.17.14.21)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R2-DIST2
+menu = ONC-CL-R2-DIST2
+host = 172.17.14.22
+title = ONC-CL-R2-DIST2 (172.17.14.22)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R3-AC2
+menu = ONC-CL-R3-AC2
+host = 172.17.14.32
+title = ONC-CL-R3-AC2 (172.17.14.32)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R3-AC3
+menu = ONC-CL-R3-AC3
+host = 172.17.14.33
+title = ONC-CL-R3-AC3 (172.17.14.33)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R3-AC4
+menu = ONC-CL-R3-AC4
+host = 172.17.14.34
+title = ONC-CL-R3-AC4 (172.17.14.34)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-CL-R3-DIST1
+menu = ONC-CL-R3-DIST1
+host = 172.17.14.31
+title = ONC-CL-R3-DIST1 (172.17.14.31)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R1-AC2
+menu = ONC-PD-R1-AC2
+host = 172.16.14.12
+title = ONC-PD-R1-AC2 (172.16.14.12)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R1-AC3
+menu = ONC-PD-R1-AC3
+host = 172.16.14.13
+title = ONC-PD-R1-AC3 (172.16.14.13)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R1-AC4
+menu = ONC-PD-R1-AC4
+host = 172.16.14.14
+title = ONC-PD-R1-AC4 (172.16.14.14)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R1-AC5
+menu = ONC-PD-R1-AC5
+host = 172.16.14.15
+title = ONC-PD-R1-AC5 (172.16.14.15)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R1-AC6
+menu = ONC-PD-R1-AC6
+host = 172.16.14.16
+title = ONC-PD-R1-AC6 (172.16.14.16)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R1-AC7
+menu = ONC-PD-R1-AC7
+host = 172.16.14.17
+title = ONC-PD-R1-AC7 (172.16.14.17)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R1-AC8
+menu = ONC-PD-R1-AC8
+host = 172.16.14.18
+title = ONC-PD-R1-AC8 (172.16.14.18)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R1-CORE1
+menu = ONC-PD-R1-CORE1
+host = 172.16.14.1
+title = ONC-PD-R1-CORE1 (172.16.14.1)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R1-DIST9
+menu = ONC-PD-R1-DIST9
+host = 172.16.14.19
+title = ONC-PD-R1-DIST9 (172.16.14.19)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R2-AC2
+menu = ONC-PD-R2-AC2
+host = 172.16.14.22
+title = ONC-PD-R2-AC2 (172.16.14.22)
+#alerts = bigloss,someloss,startloss
+
+++ ONC-PD-R2-AC3
+menu = ONC-PD-R2-AC3
+host = 172.16.14.23
+title = ONC-PD-R2-AC3 (172.16.14.23)
+#alerts = bigloss,someloss,startloss

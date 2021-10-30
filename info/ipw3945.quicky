@@ -1,0 +1,256 @@
+# ipw3945.quicky
+--
+d070328
+HP nc6320 WLAN Intel werkt niet op Fedora Core 6
+
+solution:
+http://ipw3945.sourceforge.net/
+
+--[CWD=/etc/yum.repos.d]--[15:37:31 Wed Mar 28]--[root@jdgbvhp3]------
+> cat /etc/yum.repos.d/atrpms.repo
+#
+#
+[atrpms]
+name=Fedora Core 6 - i386 - ATrpms
+baseurl=http://dl.atrpms.net/fc6-i386/atrpms/stable
+failovermethod=priority
+#jdg
+enabled=0
+
+#
+# requires stable
+#
+[atrpms-testing]
+name=Fedora Core 6 - i386 - ATrpms testing
+baseurl=http://dl.atrpms.net/fc6-i386/atrpms/testing
+failovermethod=priority
+enabled=0
+
+#
+# requires stable and testing
+#
+[atrpms-bleeding]
+name=Fedora Core 6 - i386 - ATrpms bleeding
+baseurl=http://dl.atrpms.net/fc6-i386/atrpms/bleeding
+failovermethod=priority
+enabled=0
+
+--[CWD=/etc/yum.repos.d]--[15:38:21 Wed Mar 28]--[root@jdgbvhp3]------
+
+--[CWD=/etc/yum.repos.d]--[15:36:26 Wed Mar 28]--[root@jdgbvhp3]------
+> yum --enablerepo=atrpms install ipw3945
+Loading "installonlyn" plugin
+Setting up Install Process
+Setting up repositories
+Reading repository metadata in from local files
+Parsing package install arguments
+Resolving Dependencies
+--> Populating transaction set with selected packages. Please wait.
+---> Downloading header for ipw3945 to pack into transaction set.
+ipw3945-1.2.0-18.2.fc6.at 100% |=========================| 3.3 kB    00:00
+---> Package ipw3945.i386 0:1.2.0-18.2.fc6.at set to be updated
+--> Running transaction check
+--> Processing Dependency: ipw3945-kmdl-1.2.0-18.2.fc6.at for package: ipw3945
+--> Restarting Dependency Resolution with new changes.
+--> Populating transaction set with selected packages. Please wait.
+---> Downloading header for ipw3945-kmdl-2.6.20-1.2933.fc6 to pack into transaction set.
+ipw3945-kmdl-2.6.20-1.293 100% |=========================| 4.1 kB    00:00
+---> Package ipw3945-kmdl-2.6.20-1.2933.fc6.i686 0:1.2.0-18.2.fc6.at set to be updated
+--> Running transaction check
+--> Processing Dependency: ipw3945-ucode >= 1.13 for package: ipw3945-kmdl-2.6.20-1.2933.fc6
+--> Processing Dependency: ieee80211-kmdl-2.6.20-1.2933.fc6 >= 1.1.11 for package: ipw3945-kmdl-2.6.20-1.2933.fc6
+--> Processing Dependency: ipw3945d >= 1.7.18 for package: ipw3945-kmdl-2.6.20-1.2933.fc6
+--> Restarting Dependency Resolution with new changes.
+--> Populating transaction set with selected packages. Please wait.
+---> Downloading header for ipw3945-ucode to pack into transaction set.
+ipw3945-ucode-1.14.2-4.at 100% |=========================| 2.9 kB    00:00
+---> Package ipw3945-ucode.noarch 0:1.14.2-4.at set to be updated
+---> Downloading header for ieee80211-kmdl-2.6.20-1.2933.fc6 to pack into transaction set.
+ieee80211-kmdl-2.6.20-1.2 100% |=========================| 4.9 kB    00:00
+---> Package ieee80211-kmdl-2.6.20-1.2933.fc6.i686 0:1.2.16-17.fc6.at set to be updated
+---> Downloading header for ipw3945d to pack into transaction set.
+ipw3945d-1.7.22-4.at.i386 100% |=========================| 2.9 kB    00:00
+---> Package ipw3945d.i386 0:1.7.22-4.at set to be updated
+--> Running transaction check
+
+Dependencies Resolved
+
+=============================================================================
+ Package                 Arch       Version          Repository        Size
+=============================================================================
+Installing:
+ ipw3945                 i386       1.2.0-18.2.fc6.at  atrpms             35 k
+Installing for dependencies:
+ ieee80211-kmdl-2.6.20-1.2933.fc6  i686       1.2.16-17.fc6.at  atrpms             40 k
+ ipw3945-kmdl-2.6.20-1.2933.fc6  i686       1.2.0-18.2.fc6.at  atrpms             86 k
+ ipw3945-ucode           noarch     1.14.2-4.at      atrpms             67 k
+ ipw3945d                i386       1.7.22-4.at      atrpms             35 k
+
+Transaction Summary
+=============================================================================
+Install      5 Package(s)
+Update       0 Package(s)
+Remove       0 Package(s)
+
+Total download size: 263 k
+Is this ok [y/N]: y
+Downloading Packages:
+(1/5): ipw3945-1.2.0-18.2 100% |=========================|  35 kB    00:00
+(2/5): ipw3945-ucode-1.14 100% |=========================|  67 kB    00:00
+(3/5): ieee80211-kmdl-2.6 100% |=========================|  40 kB    00:00
+(4/5): ipw3945d-1.7.22-4. 100% |=========================|  35 kB    00:00
+(5/5): ipw3945-kmdl-2.6.2 100% |=========================|  86 kB    00:00
+Running Transaction Test
+Finished Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Installing: ipw3945d                     ######################### [1/5]
+  Installing: ieee80211-kmdl-2.6.20-1.2933 ######################### [2/5]
+  Installing: ipw3945-ucode                ######################### [3/5]
+  Installing: ipw3945-kmdl-2.6.20-1.2933.f ######################### [4/5]
+  Installing: ipw3945                      ######################### [5/5]
+
+Installed: ipw3945.i386 0:1.2.0-18.2.fc6.at
+Dependency Installed: ieee80211-kmdl-2.6.20-1.2933.fc6.i686 0:1.2.16-17.fc6.at ipw3945-kmdl-2.6.20-1.2933.fc6.i686 0:1.2.0-18.2.fc6.at ipw3945-ucode.noarch 0:1.14.2-4.at ipw3945d.i386 0:1.7.22-4.at
+Complete!
+--[CWD=/etc/yum.repos.d]--[15:37:31 Wed Mar 28]--[root@jdgbvhp3]------
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+rpm -q ipw3945d ieee80211-kmdl-2.6.20-1.2933.fc6 ipw3945-ucode ipw3945-kmdl-2.6.20-1.2933.fc6 ipw3945 -il >> ipw3945.quicky
+
+Name        : ipw3945d                     Relocations: (not relocatable)
+Version     : 1.7.22                            Vendor: ATrpms.net
+Release     : 4.at                          Build Date: Thu 01 Feb 2007 11:58:30 PM CET
+Install Date: Wed 28 Mar 2007 03:37:15 PM CEST      Build Host: octopus.physik.fu-berlin.de
+Group       : System Environment/Daemons    Source RPM: ipw3945d-1.7.22-4.at.src.rpm
+Size        : 80536                            License: distributable
+Signature   : DSA/SHA1, Thu 01 Feb 2007 11:58:30 PM CET, Key ID 508ce5e666534c2b
+Packager    : ATrpms <http://ATrpms.net/>
+URL         : http://bughost.org/ipw3945/
+Summary     : Regulatory Daemon for the Intel PRO/Wireless 3945ABG Network Connection
+Description :
+The regulatory daemon is responsible for controlling and configuring
+aspects of the hardware required to operate the device within
+compliance of various regulatory agencies.  This includes controlling
+which channels are allowed to do active/passive scanning, transmit
+power levels, which channels are allowed to be transmitted on, and
+support for IEEE 802.11h (DFS and TPC).
+/sbin/LICENSE.ipw3945d
+/sbin/ipw3945d
+/usr/share/doc/ipw3945d-1.7.22
+/usr/share/doc/ipw3945d-1.7.22/LICENSE.ipw3945d
+/usr/share/doc/ipw3945d-1.7.22/README.ipw3945d
+
+
+Name        : ieee80211-kmdl-2.6.20-1.2933.fc6  Relocations: (not relocatable)
+Version     : 1.2.16                            Vendor: ATrpms.net
+Release     : 17.fc6.at                     Build Date: Sat 24 Mar 2007 01:47:45 AM CET
+Install Date: Wed 28 Mar 2007 03:37:16 PM CEST      Build Host: octopus.physik.fu-berlin.de
+Group       : System Environment/Kernel     Source RPM: ieee80211-1.2.16-17.fc6.at.src.rpm
+Size        : 107536                           License: GPL
+Signature   : DSA/SHA1, Sat 24 Mar 2007 01:47:47 AM CET, Key ID 508ce5e666534c2b
+Packager    : ATrpms <http://ATrpms.net/>
+URL         : http://ieee80211.sourceforge.net/
+Summary     : Kernel module for ieee80211
+Description :
+This package contains kernel drivers for ieee80211.
+
+
+This package contains the ieee80211-kmdl-2.6.20-1.2933.fc6 kernel modules for the Linux kernel package:
+kernel-2.6.20-1.2933.fc6.i686.rpm.
+/lib/modules/2.6.20-1.2933.fc6/updates
+/lib/modules/2.6.20-1.2933.fc6/updates/net
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/.tmp_versions
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/.tmp_versions/ieee80211.mod
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/.tmp_versions/ieee80211_crypt.mod
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/.tmp_versions/ieee80211_crypt_ccmp.mod
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/.tmp_versions/ieee80211_crypt_tkip.mod
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/.tmp_versions/ieee80211_crypt_wep.mod
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/Module.symvers
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/ieee80211.ko
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/ieee80211_crypt.ko
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/ieee80211_crypt_ccmp.ko
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/ieee80211_crypt_tkip.ko
+/lib/modules/2.6.20-1.2933.fc6/updates/net/ieee80211/ieee80211_crypt_wep.ko
+
+
+Name        : ipw3945-ucode                Relocations: (not relocatable)
+Version     : 1.14.2                            Vendor: ATrpms.net
+Release     : 4.at                          Build Date: Thu 01 Feb 2007 11:56:21 PM CET
+Install Date: Wed 28 Mar 2007 03:37:26 PM CEST      Build Host: octopus.physik.fu-berlin.de
+Group       : System Environment/Kernel     Source RPM: ipw3945-ucode-1.14.2-4.at.src.rpm
+Size        : 124921                           License: distributable
+Signature   : DSA/SHA1, Thu 01 Feb 2007 11:56:23 PM CET, Key ID 508ce5e666534c2b
+Packager    : ATrpms <http://ATrpms.net/>
+URL         : http://bughost.org/ipw3945/
+Summary     : Microcode for the Intel® PRO/Wireless 3945 Driver
+Description :
+The file ipw3945.ucode provided in this package is required to be
+present on your system in order for the Intel PRO/Wireless 3945ABG
+Network Connection Adapater driver for Linux (ipw3945) to be able to
+operate on your system.
+
+On adapter initialization, and at varying times during the uptime of
+the adapter, the microcode is loaded into the RAM on the network
+adapter.  The microcode provides the low level MAC features including
+radio control and high precision timing events (backoff, transmit,
+etc.) while also providing varying levels of packet filtering which
+can be used to keep the host from having to handle packets that are
+not of interest given the current operating mode of the device.
+/lib/firmware/LICENSE.ipw3945-ucode
+/lib/firmware/ipw3945.ucode
+/usr/share/doc/ipw3945-ucode-1.14.2
+/usr/share/doc/ipw3945-ucode-1.14.2/LICENSE.ipw3945-ucode
+/usr/share/doc/ipw3945-ucode-1.14.2/README.ipw3945-ucode
+
+
+Name        : ipw3945-kmdl-2.6.20-1.2933.fc6  Relocations: (not relocatable)
+Version     : 1.2.0                             Vendor: ATrpms.net
+Release     : 18.2.fc6.at                   Build Date: Sat 24 Mar 2007 02:03:36 AM CET
+Install Date: Wed 28 Mar 2007 03:37:26 PM CEST      Build Host: octopus.physik.fu-berlin.de
+Group       : System Environment/Kernel     Source RPM: ipw3945-1.2.0-18.2.fc6.at.src.rpm
+Size        : 221048                           License: GPL2/BSD
+Signature   : DSA/SHA1, Sat 24 Mar 2007 02:03:37 AM CET, Key ID 508ce5e666534c2b
+Packager    : ATrpms <http://ATrpms.net/>
+URL         : http://ipw3945.sourceforge.net/
+Summary     : Kernel module for the Intel® PRO/Wireless 3945.
+Description :
+This package contains kernel drivers for the Intel® PRO/Wireless 3945.
+
+
+This package contains the ipw3945-kmdl-2.6.20-1.2933.fc6 kernel modules for the Linux kernel package:
+kernel-2.6.20-1.2933.fc6.i686.rpm.
+/lib/modules/2.6.20-1.2933.fc6/updates
+/lib/modules/2.6.20-1.2933.fc6/updates/drivers
+/lib/modules/2.6.20-1.2933.fc6/updates/drivers/net
+/lib/modules/2.6.20-1.2933.fc6/updates/drivers/net/wireless
+/lib/modules/2.6.20-1.2933.fc6/updates/drivers/net/wireless/ipw3945.ko
+
+
+Name        : ipw3945                      Relocations: (not relocatable)
+Version     : 1.2.0                             Vendor: ATrpms.net
+Release     : 18.2.fc6.at                   Build Date: Mon 08 Jan 2007 09:51:18 AM CET
+Install Date: Wed 28 Mar 2007 03:37:29 PM CEST      Build Host: octopus.physik.fu-berlin.de
+Group       : System Environment/Kernel     Source RPM: ipw3945-1.2.0-18.2.fc6.at.src.rpm
+Size        : 94775                            License: GPL2/BSD
+Signature   : DSA/SHA1, Mon 08 Jan 2007 09:51:21 AM CET, Key ID 508ce5e666534c2b
+Packager    : ATrpms <http://ATrpms.net/>
+URL         : http://ipw3945.sourceforge.net/
+Summary     : Intel® PRO/Wireless 3945ABG/3945BG driver for Linux
+Description :
+The Intel® PRO/Wireless 3945ABG Network Connection driver for Linux is
+a unified driver that works on both hardware adapters listed above.
+/usr/share/doc/ipw3945-1.2.0
+/usr/share/doc/ipw3945-1.2.0/CHANGES
+/usr/share/doc/ipw3945-1.2.0/ISSUES
+/usr/share/doc/ipw3945-1.2.0/LICENSE
+/usr/share/doc/ipw3945-1.2.0/LICENSE.BSD
+/usr/share/doc/ipw3945-1.2.0/LICENSE.GPL
+/usr/share/doc/ipw3945-1.2.0/README.ipw3945
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+

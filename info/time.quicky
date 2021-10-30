@@ -1,0 +1,26 @@
+# time.quicky
+
+# print time up
+uptime
+
+# also:
+stat --printf='%Y' /proc/1
+who -b
+last reboot | head -1.
+
+# print date of startup:
+date -d "`cut -f1 -d. /proc/uptime` seconds ago"
+
+# ---
+# convert date to epoch:
+> date --date="2011-10-10 10:00:00" +%s    
+1318233600
+
+> now.pl 1318233600
+Now::    Epoch seconds: 1318233600, Time-tag: d111010-100000, Local time: Mon Oct 10 10:00:00 2011
+0h00 yesterday:: Epoch: 1318111200
+0h00 today::     Epoch: 1318197600
+0h00 tomorrow::  Epoch: 1318284000
+
+# ---
+

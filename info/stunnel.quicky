@@ -1,0 +1,24 @@
+# stunnel.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# from: http://www.onsight.com/faq/stunnel/stunnel-faq-a.html
+
+How does stunnel check certificates?
+
+Stunnel has 3 methods for checking certificates, which are controlled by the '-v' option:
+* Don't Verify Certificates
+If no -v # argument is given, then stunnel will ignore any certificates offered and will allow all connections. 
+* -v 1
+Verify the certificate, if present.
+o If no certificate is presented by the remote end, accept the connection.
+o If a certificate is presented, then
++ If the certificate valid, it will log which certificate is being used, and continue the connection.
++ If the certificate is invalid, it will drop the connection. 
+* -v 2
+Require and verify certificates
+Stunnel will require and verify certificates for every SSL connection. If no certificate or an invalid certificate is presented, then it will drop the connection. 
+* -v 3
+Require and verify certificates against locally installed certificates.
+Stunnel will look in the directory /usr/local/ssl/certs/trusted (or whatever you specify with the -a parameter) for appropriate certificates. 
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

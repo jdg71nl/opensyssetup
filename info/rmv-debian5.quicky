@@ -1,0 +1,216 @@
+# rmv-debian5.quicky
+
+# ------+++------
+# basis Debian5 install
+
+# ------+++------
+# ssh 
+
+apt-get install ssh
+# add Port 2221
+vi /etc/ssh/sshd_config 
+/etc/init.d/ssh reload
+
+# ------+++------
+# disable ipv6
+
+vi /etc/modprobe.d/aliases.conf
+alias net-pf-10 off ipv6
+
+# ------+++------
+# syssetup
+
+apt-get install rsync
+
+# remove voyage shit:
+apt-get remove dnsmasq resolvconf atftpd nfs-kernel-server nfs-common portmap pptpd libnfsidmap2 libevent1 dnsmasq-base librpcsecgss3 bcrelay libgssglue1
+
+# get keys for Lenny:
+apt-get update
+apt-get install apt debian-archive-keyring
+
+# enable distro 'testing':
+vi /etc/apt/sources.list
+deb http://mirrors.nl.kernel.org/debian/ squeeze main
+# with squeeze/6.0:
+deb http://mirrors.nl.kernel.org/debian/ stable main
+
+apt-get update
+apt-get install unison 
+# disable testing, then:
+apt-get update
+
+syssetup-sync.sh
+
+# ------+++------
+# packages
+
+# set: root / sbc4560log
+apt-get install mysql-server 
+
+# not: vim-tiny
+apt-get install vim dialog libterm-readline-perl-perl apt-utils htop usbutils minicom wvdial rrdtool host mtr rsync openvpn redir iperf nmap tshark subversion arping arp-scan telnet sudo libgd-gd2-perl ntp ntpdate librrds-perl syslog-ng apache2 snmpd snmp php5-snmp libnet-snmp-perl libnet-telnet-cisco-perl atftpd telnetd vlan bridge-utils less lsof
+
+# ------+++------
+# cacti
+
+# set cacti SQL-user pwd: cacti4560
+# set in WebUI: admin / admin4560
+apt-get install cacti
+
+# ------+++------
+# serial
+
+echo -e "\n# serial console on COM1:\nT0:23:respawn:/sbin/getty -L ttyS0 9600 vt100\n" >> /etc/inittab
+kill -HUP 1
+
+# ------+++------
+# iptables
+
+cp -a /usr/local/syssetup/debian/etc/iptables.conf_minimal /etc/iptables.conf
+cp /usr/local/syssetup/debian/etc/init.d/iptables /etc/init.d/iptables
+chmod +x /etc/init.d/iptables
+update-rc.d iptables defaults
+/etc/init.d/iptables start
+
+# ------+++------
+# openvpn
+
+update-rc.d -f openvpn remove
+mv /etc/init.d/openvpn /etc/init.d/openvpn.ori
+cp /usr/local/syssetup/debian/etc/init.d/openvpn /etc/init.d/
+chmod +x /etc/init.d/openvpn
+cp /usr/local/syssetup/bin/start_and_restart.sh /etc/init.d/
+chmod +x /etc/init.d/start_and_restart.sh 
+
+# ------+++------
+# ntp
+
+# !!! on ALIX force time after boot: 
+cp /usr/local/syssetup/debian/etc/init.d/date-set-1jan2011 /etc/init.d/
+chmod +x /etc/init.d/date-set-1jan2011
+update-rc.d date-set-1jan2011 defaults
+
+cp /etc/ntp.conf /etc/ntp.conf.ori
+cp /usr/local/syssetup/debian/etc/ntp.conf.debian5 /etc/ntp.conf
+/etc/init.d/ntp restart
+
+# add in crontab:
+cat /etc/crontab
+*/5 * * * * root /usr/local/syssetup/bin/check_restart_ntp.sh
+
+
+# ------+++------
+# check hostname
+
+vi /etc/hostname 
+# remove 127.0.1.1, add local-IP:
+vi /etc/hosts
+# check mailname
+vi /etc/mailname 
+
+# ------+++------
+# set email (remove exim automatically):
+
+apt-get install postfix
+# set 'Internet with smarthost', SMTP relay=2.1.01, no procmail
+dpkg-reconfigure postfix
+
+# ------+++------
+# set interfaces:
+
+cp -a /etc/network/interfaces /etc/network/interfaces.ori
+cp /usr/local/syssetup/debian/etc/network/interfaces.rmv-debian5 /etc/network/interfaces 
+vi /etc/network/interfaces
+
+# ------+++------
+# install RMV code
+
+svn checkout svn+ssh://svn@subversion.networkconcepts.nl/var/svn_repos/rmvuv35/ /opt/rmvuv35/
+# - NOTE:
+# - subversion.networkconcepts.nl = helmsdeep.networkconcepts.nl = 89.106.163.11 = 172.30.3.103 = 2.2.2.1 = 10.222.100.2
+# - on running, can update SVN by adding:
+# echo "2.2.2.1 subversion.networkconcepts.nl" >> /etc/hosts
+
+ln -s /opt/rmvuv35/rmv/ /rmv
+touch /var/log/openvpn-rmv_hub1.log.local
+touch /var/log/openvpn-rmv_hub2.log.local
+#ln -s /dev/null /var/log/openvpn-rmv_hub1.log
+#ln -s /dev/null /var/log/openvpn-rmv_hub2.log
+ln -s /var/log/openvpn-rmv_hub1.log.local /var/log/openvpn-rmv_hub1.log
+ln -s /var/log/openvpn-rmv_hub2.log.local /var/log/openvpn-rmv_hub2.log
+mkdir /etc/openvpn/rmv_hub1
+mkdir /etc/openvpn/rmv_hub2
+cp -av /opt/rmvuv35/rmv/root/etc/openvpn/rmv_hub1/[rc]?* /etc/openvpn/rmv_hub1/
+cp -av /opt/rmvuv35/rmv/root/etc/openvpn/rmv_hub2/[rc]?* /etc/openvpn/rmv_hub2/
+cat /etc/openvpn/rmv_hub1/rmv_hub1.conf.example | sed 's/rmvu003/rmvu051/' > /etc/openvpn/rmv_hub1/rmv_hub1.conf
+cat /etc/openvpn/rmv_hub2/rmv_hub2.conf.example | sed 's/rmvu003/rmvu051/' > /etc/openvpn/rmv_hub2/rmv_hub2.conf
+cd /etc/init.d/
+# does not work in Debain6 LSB:
+#ln -s openvpn openvpn-rmv_hub1
+#ln -s openvpn openvpn-rmv_hub2
+cp -av /opt/rmvuv35/rmv/root/etc/init.d/openvpn-rmv_hub? .
+update-rc.d openvpn-rmv_hub1 defaults
+update-rc.d openvpn-rmv_hub2 defaults
+cd /etc/openvpn/
+ssh -p2221 root@89.106.162.9 'cd /var/rmv/certs/keys/ ; tarbase64.sh rmvu051.vpncert.rmv2.[ck][re][ty]' | untarbase64.sh 
+cd /etc/openvpn/rmv_hub1/
+ln -sf ../rmvu051.vpncert.rmv2.* .
+cd /etc/openvpn/rmv_hub2/
+ln -sf ../rmvu051.vpncert.rmv2.* .
+
+# ------+++------
+# snmp
+
+apt-get install snmpd
+
+cp -a /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.ori
+echo "rocommunity public" > /etc/snmp/snmpd.conf 
+
+# ------+++------
+# syslog collection
+
+mkdir /var/log/HOSTS
+
+> vi /etc/syslog-ng/syslog-ng.conf 
+
+# syslog-collector:
+source s_udp {
+ udp( ip("0.0.0.0") port(514) );
+};
+destination d_file_rem {
+ file( "/var/log/HOSTS/$HOST.log.txt"
+  template("$YEAR-$MONTH-$DAY-$HOUR:$MIN:$SEC HOST:$FULLHOST FAC:$FACILITY PRIO:$PRIORITY MSG: $MESSAGE\n")
+  create_dirs(yes)
+ );
+};
+log {
+ source(s_udp);
+ destination(d_file_rem);
+};
+
+
+> cat /var/log/HOSTS/compress-hosts.sh 
+#!/bin/bash
+# ---
+# compress syslog-collect-file
+# ---
+# cat /etc/crontab
+# # every sunday 03:00am
+# 0 3 * * 2 root /var/log/HOSTS/compress-hosts.sh
+
+# Example: d101102-0300
+D=`date +d%y%m%d-%H%M`
+
+F="HOSTS.log.txt"
+cd /var/log/HOSTS/
+cat $F | gzip > $F.$D.gz
+echo '' > $F
+# ---
+
+# ------+++------
+# TODO
+
+# adduser networktest
+
+# ------+++------

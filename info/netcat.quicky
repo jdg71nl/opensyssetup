@@ -1,0 +1,8 @@
+# netcat.quicky
+
+# source:
+tar czf - * | openssl base64 | nc 172.16.0.198 1212
+
+# target:
+nc -l -p 1212 | openssl base64 -d | tar xvzf -
+

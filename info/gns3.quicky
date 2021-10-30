@@ -1,0 +1,48 @@
+# gns3.quicky
+
+# http://www.gns3.net/
+
+# ---
+# install GNS3 on Debian:
+
+# include 'non-free' in /etc/apt/sources.list:
+> cat /etc/apt/sources.list | egrep '^deb .* main' | egrep -v '(security|volatile)'
+deb http://ftp.nl.debian.org/debian/ lenny main non-free
+
+> apt-get update
+
+> apt-get install gns3
+The following NEW packages will be installed:
+	dynamips gns3 libaudio2 libqt4-assistant libqt4-dbus libqt4-designer libqt4-help libqt4-network libqt4-qt3support libqt4-script libqt4-sql libqt4-sql-mysql
+	libqt4-svg libqt4-test libqt4-webkit libqt4-xml libqt4-xmlpatterns libqtcore4 libqtgui4 python-qt4 python-qt4-common python-sip4 python2.4 python2.4-minimal
+	qt4-qtconfig
+# ---
+
+
+Support:
+http://www.gns3.net/hardware-emulated
+
+Cisco 1700 Series
+Cisco 2600 Series
+Cisco 3600 Series
+Cisco 3700 Series
+Cisco 7200 Series
+Cisco PIX firewalls
+Cisco ASA firewalls
+Juniper routers
+Hosts
+* Linux Microcore (command line)
+* Linux Tinycore (small graphical interface) http://distro.ibiblio.org/pub/linux/distributions/tinycorelinux/
+
+Tips:
+* Use c36xx, c37xx or c7200 IOS images. They are usually more stable with Dynamips.
+* Run Dynamips/GNS3 on Linux or Mac OS X if you can, performance is better and Dynamips is far more stable.
+* Try to not use the latest IOS images, for instance versions >= 12.4, depending of the IOS features you want, running 12.3 or 12.2 versions requires a lot less memory and CPU.
+
+
+http://rednectar.net/gns3-workbench/
+
+
+/Users/jdgraaff/Documents/JDG-BACK/Products/Cisco/ios/IOS_software/3745/c3745-advipservicesk9-mz.124-15.T13.bin 
+
+

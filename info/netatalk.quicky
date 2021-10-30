@@ -1,0 +1,98 @@
+# netatalk.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# lessons
+
+when moving a dir which was visited by a Mac, there was a connect error.
+/var/log/syslog told me: error with: .AppleDB
+I deleted (moved first) this dir: .AppleDB
+And at next connect, this dir was recreated
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+Info: http://www.kremalicious.com/2008/06/ubuntu-as-mac-file-server-and-time-machine-volume/
+JDG: got this working on d090111
+
+Summary:
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+1. Modify and install Netatalk (Open Source AFP implementation)
+
+apt-get build-dep netatalk
+apt-get install cracklib2-dev fakeroot libssl-dev sudo
+apt-get source netatalk
+cd netatalk-2*
+DEB_BUILD_OPTIONS=ssl dpkg-buildpackage -rfakeroot
+dpkg -i ~/netatalk_2*.deb
+echo "netatalk hold" | dpkg --set-selections
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+2. Configure Netatalk
+
+vi /etc/default/netatalk
+
+loopup this section and change:
+
+ATALKD_RUN=no
+PAPD_RUN=no
+CNID_METAD_RUN=yes
+AFPD_RUN=yes
+TIMELORD_RUN=no
+A2BOOT_RUN=no
+
+vi /etc/netatalk/afpd.conf
+
+Add/replace this line at the bottom:
+
+- -transall -uamlist uams_randnum.so,uams_dhx.so -nosavepassword -advertise_ssh
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+3. Configure shared volumes (and Time Machine volume)
+
+vi /etc/netatalk/AppleVolumes.default
+
+add this line to the bottom:
+
+~/ "$u" allow:username1,username2 cnidscheme:cdb
+/home/username/TimeMachine TimeMachine allow:username1,username2 cnidscheme:cdb options:usedots,upriv
+/samba/ "samba volume" allow:samba cnidscheme:cdb options:usedots,upriv
+
+/etc/init.d/netatalk restart
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+4. Install Avahi (Open Source Bonjour implementation)
+
+apt-get install avahi-daemon
+apt-get install libnss-mdns
+
+vi /etc/nsswitch.conf
+
+replace this line (add mdns at end):
+hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4 mdns
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+5. Configure Avahi and advertise services
+
+vi /etc/avahi/services/afpd.service
+(new file)
+
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+<name replace-wildcards="yes">%h</name>
+<service>
+<type>_afpovertcp._tcp</type>
+<port>548</port>
+</service>
+<service>
+<type>_device-info._tcp</type>
+<port>0</port>
+<txt-record>model=Xserve</txt-record>
+</service>
+</service-group>
+
+/etc/init.d/avahi-daemon restart
+
+DONE!
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

@@ -1,0 +1,103 @@
+
+# ssh.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+Overview:
+- user1@client connects using ssh to user2@server
+- on client this config is used: /etc/ssh/ssh_config
+- on client the server-pub-key is stored in: ~/.ssh/known_hosts
+- on client the private/public key are stored in: ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub
+- on server this config is used: /etc/ssh/sshd_config
+- on server the client-pub-key is searched in: ~/.ssh/authorized_keys
+
+
+Notes:
+- warning when using alt-port-numbers for ssh: the ~/.ssh/known_hosts will only store 1 pub-key per host
+  so: conflicts with multiple ssh-ports on 1 host, of which one ssh-port is a redir-process to another host
+  seen this with: subversion (alt-port)
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# port-forward
+
+# ssh options for port forwarding:
+-L lport1:rhost2:rport2
+read like this: on Local=ssh-clients; open port lport1; connect this on remote host rhost2:rport2|
+So: this is port-forward from sshclient:lport1 --to--> sshserver:(rhost2:rport2)
+
+-R rport1:lhost2:lport2
+read like this: on Remote=ssh-server; open port rport1; connect this to lhost2:lport2|
+So: this is port-forward from sshserver:rport1 --to--> sshclient:(lhost2:lport2)
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# port-forwarding (vnc)
+host1> ssh -p 2221 -L 5910:127.0.0.1:5901 jdg@host2
+SSH:host2>
+# NOTE: you can break CLI session, but KEEP port-forwarding with ~/tilde ctrl-Z
+~^Z         (stop it and return to local prompt)
+host1> bg   (let it run in background)
+host1> vncviewer 127.0.0.1:10
+# this will connect on host2:1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+The supported escapes (assuming the default ‘~’) are:
+~.      Disconnect.
+~^Z     Background ssh.
+~#      List forwarded connections.
+~&      Background ssh at logout when waiting for forwarded connection / X11 sessions to terminate.
+~?      Display a list of escape characters.
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+"ssh.quicky" 203L, 7420C                                                                                                                                                         1,1           Top
+# show logins with command:
+last
+lastb
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# OpenSSH
+
+# check config:
+> /usr/sbin/sshd -t
+/etc/ssh/sshd_config: line 124: Bad configuration option: Match
+/etc/ssh/sshd_config: line 126: Bad configuration option: ForceCommand
+/etc/ssh/sshd_config: terminating, 2 bad configuration options
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# simple example SSH Public Key:
+
+# on client-host (from where you want access) do:
+# first log in via regular ssh to create proper .ssh dir in homedir
+# use blank-pwd:
+ssh-keygen -t dsa
+# copy-paste key:
+cat .ssh/id_dsa.pub
+
+# note: key shows user@host that want access:
+> cat .ssh/id_dsa.pub
+ssh-dss QU.....U= root@samba.de-graaff.lan
+
+# on server-host (to which you want accces) do:
+# first log in via regular ssh to create proper .ssh dir in homedir
+touch ~/.ssh/authorized_keys
+chmod 0700 ~/.ssh/authorized_keys
+cat >> ~/.ssh/authorized_keys
+
+# now from client you can login without pwd:
+ssh -p2221 jdgncnl@172.24.2.250
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# how to regen SSH server/host keys after hostname change:
+
+# debian
+rm /etc/ssh/ssh_host_*
+dpkg-reconfigure openssh-server
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# allow only certain users to login via SSH:
+
+> cat /etc/ssh/sshd_config  | grep ^AllowUsers
+AllowUsers jdg jdgncnl mdjncnl moncnl
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

@@ -1,0 +1,227 @@
+# subversion.svn.quicky
+# subversion
+
+# other Software Control Management (SCM) package: mercurial
+
+> grep subv /var/log/rpmpkgs
+subversion-1.1.1-2.1.i386.rpm
+subversion-devel-1.1.1-2.1.i386.rpm
+subversion-perl-1.1.1-2.1.i386.rpm
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# create repository on server:
+svnadmin create --fs-type fsfs /var/svn_repos/scanweb
+ssh svn@subversion.networkconcepts.nl svnadmin create --fs-type fsfs /var/svn_repos/rmvuv35
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# send tree to SVN (import)
+svn import  svn+ssh://jdg@172.28.2.9/var/svn_repos/webstat-rws/
+# NOTE: sometimes fails...
+# can also:
+# * make empty repo on server (above)
+# * dont make working-copy-dir (/usr/local/smsalarm/)
+# * checkout revision-0 with svn checkout svn+ssh://jdg@172.28.2.9/var/svn_repos/smsalarm/ /usr/local/smsalarm/
+# * then add/move files in this tree and "svn add ..."
+# * upload revision-1 with svn commit
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# checkout (create working copy) on client
+# local
+svn checkout file:///var/svn_repos/scanweb /var/scanweb
+# remote (SSH)
+svn checkout svn+ssh://172.28.2.9/var/svn_repos/webstat-rws/ /var/projects/rws_projects/webstat
+svn checkout svn+ssh://jdg@172.28.2.9/var/svn_repos/webstat-rws/ /var/projects/rws_projects/webstat
+svn checkout svn+ssh://jdg@172.28.2.9/var/svn_repos/smsalarm/ /usr/local/smsalarm/
+svn checkout svn+ssh://svn@subversion.networkconcepts.nl/var/svn_repos/rmvuv35/ /opt/rmvuv35/
+svn checkout svn+ssh://svn@subversion.networkconcepts.nl/var/svn_repos/flexvpn/ /opt/flexvpn/
+svn checkout svn+ssh://svn@subversion.networkconcepts.nl/var/svn_repos/flexmon/ /opt/flexmon/
+svn checkout svn+ssh://svn@10.222.0.2/var/svn_repos/flexmon/ /opt/flexmon/
+svn checkout svn+ssh://svn@subversion.networkconcepts.nl/var/svn_repos/iptransmon /opt/iptransmon
+
+# quickly find out REPO-names
+ssh svn@subversion.networkconcepts.nl 'ls -altr /var/svn_repos/'
+
+#
+svn checkout svn+ssh://syssetup@vps3.de-graaff.net:/var/svn/repos/ingosur-webapp /home/jdg/SSHFS/INGOSUR/ 
+ssh syssetup@vps3.de-graaff.net 'ls -altr /var/svn/repos/'
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# howto handle alternative port numbers (subversion cannot by itself)
+mkdir -pv ~/.subversion/
+vi ~/.subversion/config
+# Add this line to the [tunnels] section:
+[tunnels]
+sshalt= /usr/bin/ssh -p 8222
+
+svn checkout svn+sshalt://jdg@80.69.65.224/var/svn_repos/flexvpn/ /opt/flexvpn/
+
+Notes:
+- WARNING when using alt-port-numbers for ssh: the ~/.ssh/known_hosts will only store 1 pub-key per host
+  so: conflicts with multiple ssh-ports on 1 host, of which one ssh-port is a redir-process to another host
+  seen this with: subversion (alt-port)
+- BETER: choose new IP with std-port-22 and do redir on this host to alt-host/alt-port
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# HTTPS
+svn checkout https://www.ictree.nl/svn-rmv4/  /var/projects/rmvv4_3es_svn/
+# dialog:
+#Authentication realm: <https://www.ictree.nl:443> SVN authentification for rmv4
+#Password for 'root':
+#Authentication realm: <https://www.ictree.nl:443> SVN authentification for rmv4
+#Username: john
+#Password for 'john':
+#A  /var/projects/rmvv4_3es_svn/Overeenkomst
+#...
+# NOTE: it created:
+#./.subversion/auth/svn.ssl.server/25e3f183c6be4182a970c0a552ac0267
+#./.subversion/auth/svn.simple/07522ab26807f0856e13e3cacac7554c
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# usage
+svn add README 
+svn add src/
+svn add *
+svn del file
+svn mv README README.txt
+
+# commit (also need to update!, this will update local DB)
+svn commit -m 'my first file!'
+
+# !!
+svn update
+
+svn diff					# changes since last update
+svn diff -r 2:3
+svn revert -R .
+
+# show a file from specific revision: 
+svn cat -r2 file
+
+# check changed files:
+svn status
+# check changed files, only show files under version-control:
+svn -q status
+# check all files with revisions
+svn -v status
+
+svn log
+svn log -v -r 1
+svn help
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# clean SVN dirs
+
+find . -type d -name '.svn' -exec echo 'rm -rf "{}"' \;
+# or
+/usr/local/bin/syssetup/clean_svn.sh
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+> grep svn .svn/entries 
+svn+ssh://jdg@172.28.2.9/var/svn_repos/ingosur-webapp
+svn+sshalt://jdg@80.69.65.224/var/svn_repos/flexvpn
+
+#i change IP adrs server:
+find -type f -iwholename '*.svn/entries' -fprnt /dev/stderr -print0 | xargs -0i perl -pi -e 's/172.24.2.10/172.28.2.9/' {}
+
+# beter:
+svn switch --relocate svn+ssh://jdg@172.28.2.9/var/svn_repos/ingosur-webapp svn+ssh://jdg@89.106.163.2/var/svn_repos/ingosur-webapp
+# switch for flexvpn-project:
+svn switch --relocate svn+sshalt://jdg@80.69.65.224/var/svn_repos/flexvpn svn+ssh://jdg@89.106.163.2/var/svn_repos/flexvpn
+svn switch --relocate svn+ssh://jdg@89.106.163.2/var/svn_repos/flexvpn svn+ssh://svn@subversion.networkconcepts.nl/var/svn_repos/flexvpn
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# howto to move a repository:
+
+1.  Shut down svnserve, Apache, and anything else that might be accessing the repository.
+2. svnadmin dump /path/to/repository > dumpfile.txt , using version X of svnadmin.
+3. mv /path/to/repository /path/to/saved-old-repository
+4. Now upgrade to Subversion Y (i.e., build and install Y, replacing X).
+5. svnadmin create /path/to/repository, using version Y of svnadmin.
+6. svnadmin load /path/to/repository < dumpfile.txt , again using version Y of svnadmin.
+7. Copy over hook scripts, etc, from the old repository to the new one.
+8. Restart svnserve, Apache, etc.
+
+# jdg
+# on source:
+svnadmin dump /var/svn_repos/flexvpn/ | gzip -c > d090201.flexvpn.svndump.gz
+
+# on target:
+svnadmin create /var/svn_repos/flexvpn/
+zcat d090201.flexvpn.svndump.gz | svnadmin load /var/svn_repos/flexvpn/
+
+# automated:
+find . -maxdepth 1 -type d | grep './' | sed 's/.\///' | xargs -i /usr/local/syssetup/bin/create_svndump_scripts.sh {}
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# how to exclude a file/dir in a svn-folder:
+
+# NOTE: only 1 propset per dir (next one will overwrite first):
+
+# files:
+svn propset svn:ignore flexvpn-gw.config.ini .
+svn propset svn:ignore '*.rrd' .
+svn propset svn:ignore '*.png' .
+# dir:
+svn propset svn:ignore dirname .
+
+# http://stackoverflow.com/questions/116074/how-to-ignore-a-directory-with-svn
+# If you have multiple things to ignore, separate by newlines in the property value.
+# In that case it's easier to edit the property value using an external editor:
+svn propedit svn:ignore .
+
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# how to revert/downgrade:
+
+# downgrade to release 189:
+svn update -r 189
+
+# note: 'svn revert" is only revert to local (uncomitted) changes
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# print lines changed per commit
+
+svn diff -r $P:$R | egrep -v '^[+|-]{3} ' | egrep '^[+|-]' | wc -l
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# print commit dates:
+
+svn log | perl -ne 'print if /^r\d+ \|/' | awk '{print $1 " " $5}'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# change log/date of a revision:
+
+# http://svn.haxx.se/users/archive-2004-03/1333.shtml
+
+> svn propset -r181 --revprop svn:date "2010-04-20T11:21:11.465004Z"
+> svn propset -r181 --revprop svn:log "iets"
+
+# if error like this:
+svn: Repository has not been enabled to accept revision propchanges;
+ask the administrator to create a pre-revprop-change hook
+# then add hook:
+> cp hooks/pre-revprop-change.tmpl hooks/pre-revprop-change
+> chmod +x hooks/pre-revprop-change
+> vi hooks/pre-revprop-change
+add:
+if [ "$ACTION" = "M" -a "$PROPNAME" = "svn:date" ]; then exit 0; fi
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# print svn version of working dir:
+
+> svnversion
+
+# perl script to get version (without trailing 'M' for modified):
+
+my $svnver = qx{ cd /home/jdgncnl/SSHFS/NETADMIN/ ; svnversion };
+chomp $svnver;
+$svnver =~ s/^(\d*).*$/$1/;
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

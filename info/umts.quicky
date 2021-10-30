@@ -1,0 +1,190 @@
+# umts.quiky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# check if kernel found UMTS-USB-modem and connected 'usbserial' to it (instead of a HD-driver):
+
+> lsmod | grep usb
+usbserial              24368  1 option
+usb_storage            35456  0 
+usbcore               103996  6 option,usbserial,usb_storage,ohci_hcd,ehci_hcd
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# usbserial should give these files:
+
+> lt /dev/ttyUSB*
+crw-rw---- 1 root dialout 188, 0 Aug  7 16:44 /dev/ttyUSB0
+crw-rw---- 1 root dialout 188, 1 Aug  7 16:44 /dev/ttyUSB1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# use lsusb to check presence of modem:
+
+apt-get install usbutils
+
+> lsusb 
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 001 Device 003: ID 12d1:1003 Huawei Technologies Co., Ltd. E220 HSDPA Modem / E270 HSDPA/HSUPA Modem
+Bus 001 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# check which USB-device/driver is which /dev/ttyUSB*
+
+> dmesg | grep ttyUSB 
+[   12.941529] usb 1-2: pl2303 converter now attached to ttyUSB0
+[   17.360297] usb 1-1: GSM modem (1-port) converter now attached to ttyUSB1
+[   17.360737] usb 1-1: GSM modem (1-port) converter now attached to ttyUSB2
+
+> cat /var/log/messages | grep ttyUSB
+Dec 22 14:53:15 rmv035-noorderzijlvest kernel: [   12.941529] usb 1-2: pl2303 converter now attached to ttyUSB0
+Dec 22 14:53:15 rmv035-noorderzijlvest kernel: [   17.360297] usb 1-1: GSM modem (1-port) converter now attached to ttyUSB1
+Dec 22 14:53:15 rmv035-noorderzijlvest kernel: [   17.360737] usb 1-1: GSM modem (1-port) converter now attached to ttyUSB2
+
+# (not verified)
+# line 'If#= n' gives device /dev/ttyUSBn:
+
+> cat /proc/bus/usb/devices | egrep '(^$|If#=|Driver|Manufacturer|Product)'
+
+S:  Manufacturer=Linux 2.6.26-486-voyage ehci_hcd
+S:  Product=EHCI Host Controller
+I:* If#= 0 Alt= 0 #EPs= 1 Cls=09(hub  ) Sub=00 Prot=00 Driver=hub
+
+S:  Manufacturer=Linux 2.6.26-486-voyage ohci_hcd
+S:  Product=OHCI Host Controller
+I:* If#= 0 Alt= 0 #EPs= 1 Cls=09(hub  ) Sub=00 Prot=00 Driver=hub
+
+S:  Manufacturer=HUAWEI Technologies
+S:  Product=HUAWEI Mobile
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:* If#= 2 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=usb-storage
+
+S:  Manufacturer=Prolific Technology Inc.
+S:  Product=USB-Serial Controller
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=pl2303
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# use minicom to connect to modem (manual testing):
+
+apt-get install minicom
+
+> cat > /etc/minicom/minirc.ttyUSB0 
+# /etc/minicom/minirc.ttyUSB0
+# example: minicom ttyUSB0
+pu port             /dev/ttyUSB0
+pu baudrate         230400
+pu bits             8
+pu parity           N
+pu stopbits         1
+pu minit            ATZ
+
+# NOTE: with multiple USB-devices, the USDB-port can change!
+> cat /etc/minicom/minirc.ttyUSB1.modem 
+# /etc/minicom/minirc.ttyUSB1.modem
+# example: minicom ttyUSB1.modem
+...
+
+# start minicom using this config file:
+> minicom ttyUSB0
+
+# exit without hangup
+minicom> ctrl-A Q
+
+# show registers:
+minicom> AT&V
+
+# show hw-info:
+minicom> ATI
+
+# provice PIN-code:
+minicom> at+cpin="0000"
+OK
+
+# disable PIN-entry (provide PIN again):
+minicom> AT+CLCK="SC",0,"0000"
+OK
+
+# check if PIN entry is disabled (0=disabled, 1=enabled)
+minicom> AT+CLCK="SC",2
++CLCK: 0
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# use wvdial to automatically connect to internet:
+
+apt-get install wvdial
+
+> cp -a /etc/wvdial.conf /etc/wvdial.conf.ori
+> cat > /etc/wvdial.conf
+[Dialer Defaults]
+Phone = 
+Username = 
+Password = 
+New PPPD = yes
+
+[Dialer VodafoneNL]
+Modem = /dev/ttyUSB0
+Baud = 460800
+Init1 = ATZ
+Init2 = ATQ0 V1 E1 S0=0 &C1 &D2
+Init3 =
+Area Code =
+Phone = *99#
+Username = ppp
+Password = ppp
+Ask Password = 0
+Dial Command = ATDT
+Compuserve = 0
+Force Address =
+Idle Seconds = 0
+DialMessage1 =
+DialMessage2 =
+ISDN = 0
+Auto DNS = 1 
+Auto Reconnect = 1
+Dial Attempts = 0
+
+
+# manual test:
+> wvdial VodafoneNL
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# automaticall connect using Debian interface:
+
+> cat >> /etc/network/interfaces
+
+auto ppp0
+iface ppp0 inet wvdial
+ provider VodafoneNL
+ # NOTE: "provider VodafoneNL" will call 'wvdial VodafoneNL'
+ # and this uses the section [Dialer VodafoneNL] in /etc/wvdial.conf 
+
+ifup ppp0
+ifdown ppp0
+
+> ifc
+ppp0      Link encap:Point-to-Point Protocol  
+          inet addr:10.7.232.205  P-t-P:10.64.64.64  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+>
+> route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         0.0.0.0         0.0.0.0         U     0      0        0 ppp0
+>
+> cat /etc/resolv.conf
+nameserver 62.140.138.237
+nameserver 62.140.140.250
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# lights on Huawei-E220
+# see: E220 USB Modem Indicator Lights.png
+# see: Vodafone Mobile Connect - Quick Installation Guide - Huawei_E220 - V100R001_02 - dev_002538.pdf
+
+Light colour		Explanation
+Green blinking		A GPRS network has been found and the modem is ready to connect
+Green solid		Connected to a GPRS network - data being sent and received
+Blue blinking		A 3G network has been found and the modem is ready to connect
+Blue solid		Connector to 3G network
+Light blue solid	Connected to a HASDPA network
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

@@ -1,0 +1,9 @@
+# serial-console.quicky
+
+> vi /etc/inittab 
+# found on: http://www.vanemery.com/Linux/Serial/serial-console.html
+s0:12345:respawn:/sbin/agetty -L -f /etc/issueserial 9600 ttyS0 vt100
+s1:12345:respawn:/sbin/agetty -L -f /etc/issueserial 9600 ttyS1 vt100
+
+> kill -HUP 1
+

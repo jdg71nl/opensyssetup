@@ -1,0 +1,13 @@
+# openvpn-dqlstudio-info.txt
+
+# in LB21: traffice to 10.220/16 goes via samba:10.21.10.50
+# route and allow-policy on: SRX220
+
+# on Mac do:
+sudo /sbin/route add 10.220.0.0/16 10.21.10.50
+# or permanently:
+networksetup -listallnetworkservices
+sudo networksetup -setadditionalroutes Ethernet 10.220.0.0 255.255.0.0 10.21.10.50
+networksetup -getadditionalroutes Ethernet
+#
+

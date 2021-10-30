@@ -1,0 +1,6 @@
+# camera.quicky
+# d0704
+# Import pictures photos from camera
+gthumb --import-photos
+
+

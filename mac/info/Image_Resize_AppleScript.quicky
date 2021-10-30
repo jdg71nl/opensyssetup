@@ -1,0 +1,53 @@
+# Image_Resize_AppleScript.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# idea from:
+# http://www.macosxhints.com/article.php?story=2004092804461334
+
+# resulting file: Image Resize AppleScript.app
+
+Open Script Editor, and create the following new script:
+
+-- save in Script Editor as Application
+-- drag files to its icon in Finder
+
+on open some_items
+  repeat with this_item in some_items
+    try
+      rescale_and_save(this_item)
+    end try
+  end repeat
+end open
+
+
+to rescale_and_save(this_item)
+  tell application "Image Events"
+    launch
+    set the target_width to 120
+    -- open the image file
+    set this_image to open this_item
+    
+    set typ to this_image's file type
+    
+    copy dimensions of this_image to {current_width, current_height}
+    if current_width is greater than current_height then
+      scale this_image to size target_width
+    else
+      -- figure out new height
+      -- y2 = (y1 * x2) / x1
+      set the new_height to (current_height * target_width) / current_width
+      scale this_image to size new_height
+    end if
+    
+    tell application "Finder" to set new_item to ¬
+    (container of this_item as string) & "scaled." & (name of this_item)
+    save this_image in new_item as typ
+    
+  end tell
+end rescale_and_save
+
+Save this as an application, and then place its icon somewhere easy to reach (dock, desktop, whatever). Drag and drop an image, or a number of images, onto the icon, and a few moments later, you'll have a file named scaled.Original_File_Name sitting in the same folder as the source image(s). It doesn't get much easier than that!
+
+You can, of course, pick another width other than 120 pixels (just change the noted line in the source). With a bit more work, you could have this script prompt for the width, or set the scale based on height targets, etc. Thanks to Sal and Doug for this very useful script; I'll actually use it a fair bit when I just have a simple resize need!
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

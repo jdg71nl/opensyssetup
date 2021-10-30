@@ -1,0 +1,14 @@
+# pdns-nameserver.quicky
+# pdns
+
+# on centos5:
+yum install pdns-recursor
+
+> chkconfig --level 345 pdns-recursor  on
+
+> vi /etc/pdns-recursor/recursor.conf 
+local-address=0.0.0.0
+
+
+
+

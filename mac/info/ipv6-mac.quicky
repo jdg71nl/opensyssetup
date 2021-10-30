@@ -1,0 +1,8 @@
+# ipv6-mac.quicky
+
+# https://blog.philippklaus.de/2012/01/ipv6-tools-on-the-command-line/
+
+# show neighbor cache:
+ndp -a -n 
+
+

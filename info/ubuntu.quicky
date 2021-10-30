@@ -1,0 +1,98 @@
+# ubuntu.quicky
+# ubuntu info (some also debian)
+
+# ---
+# d210617 how to change/edit the network config ip address gateway via commandline on ubuntu focal:
+# https://linuxconfig.org/how-to-configure-static-ip-address-on-ubuntu-20-04-focal-fossa-desktop-server
+
+vi /etc/netplan/00-installer-config.yaml 
+netplan apply
+netplan --debug apply
+
+#---------------------------
+# Remove NetworkManager, manual network config:
+
+/etc/init.d/NetworkManager stop
+update-rc.d -f NetworkManager remove
+/etc/init.d/networking stop
+vi /etc/network/interfaces 
+/etc/init.d/networking start
+
+#---------------------------
+# Disable GUI (X) and start in CLI:
+
+systemctl set-default multi-user.target
+
+# d2101 OLD !!!!!
+
+update-rc.d -f gdm remove
+/etc/init.d/gdm stop
+
+# NOTE !!!! this only works on initv systems, not on upstart systems:
+# see: http://www.linux.com/archive/feature/125977?theme=print
+
+#---------------------------
+# Disable GUI (X) and start in CLI:
+# upstart in ubuntu: http://www.linux.com/archive/feature/125977?theme=print
+
+# d2101 OLD !!!!!
+
+# method 2:
+# http://ubuntuforums.org/showthread.php?t=1322949
+# Disable gdm at start-up (Karmic Koala 9.10)
+#
+# Edit /etc/init/gdm.conf, and change:
+stop on runlevel [016]
+# to:
+stop on runlevel [0216]
+#
+# Better to manipulate the runlevels correctly, as in the long-term other services will probably start to use Upstart 
+
+# method 3:
+vi /etc/default/grub
+# change this line:
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+# to 
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash text"
+# then 
+update-grub
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Ubuntu uses DASH instead of BASH
+# See: https://wiki.ubuntu.com/DashAsBinSh
+
+> lt /bin/sh
+lrwxrwxrwx 1 root root 4 2008-12-14 12:49 /bin/sh -> dash
+
+replace:
+#!/bin/sh
+with:
+#!/bin/bash
+
+perl -pi -e 's/\/bin\/sh/\/bin\/bash/' *.sh
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# check ubunti version
+
+> cat /etc/lsb-release
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=9.10
+DISTRIB_CODENAME=karmic
+DISTRIB_DESCRIPTION="Ubuntu 9.10"
+
+> lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 9.10
+Release:	9.10
+Codename:	karmic
+
+> cat /etc/issue
+Ubuntu 9.10 \n \l
+
+See also: http://en.wikipedia.org/wiki/List_of_Ubuntu_releases
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

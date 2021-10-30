@@ -1,0 +1,21 @@
+# gestioip.quicky
+
+# http://www.gestioip.net/docu/GestioIP-IPAM-Quickstart.txt
+
+# ---
+# d110809 install on monitor2 / CentOS5.5
+
+# These were installed either automatically with install.sh or manually (after install.sh said to do so):
+
+yum install mod_perl perl-Net-IP perl-DBI perl-DBD-mysql perl-DateManip net-snmp-perl perl-Date-Calc perl-TimeDate perl-MailTools perl-Net-DNS perl-Crypt-RC4 yum-utils
+
+cpan> install Parallel::ForkManager
+cpan> install Net::Ping::External
+cpan> install Spreadsheet::ParseExcel
+cpan> install OLE-Storage_Lite
+cpan> install SNMP::Info
+cpan> install Digest::Perl::MD5
+cpan> install IO::Scalar
+
+# ---
+

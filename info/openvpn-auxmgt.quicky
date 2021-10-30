@@ -1,0 +1,11 @@
+# openvpn-auxmgt.quicky
+#
+
+> scp -P2221 root@80.69.65.224:/etc/openvpn/auxmgt.ncbv/client/client.auxmgt.ncbv.tgz /etc/openvpn/
+
+# ---
+export http_proxy=http://10.4.0.1:3128/
+export ftp_proxy=http://10.4.0.1:3128/
+nameserver 10.4.0.1
+
+# ---

@@ -1,0 +1,3 @@
+
+watch --interval=1 'cat /etc/openvpn/rmv_gw/rmv_gw.status.txt  | sort -n | pr -e,25'
+

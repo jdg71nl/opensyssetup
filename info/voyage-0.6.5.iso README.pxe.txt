@@ -1,0 +1,109 @@
+README.pxe
+=============================================================================
+                     __  __
+                     \ \/ /___ __  __ ___  ___  ___
+                      \  // _ \\ \/ /,-_ |/ _ |/ -_)
+                       \/ \___/ \  / \___,\_  |\___|
+                               _/_/        _'_|
+                         { V o y a g e } - L i n u x
+                          < http://linux.voyage.hk >
+==============================================================================
+
+This README.pxe provide information on how to start a PXE+NFS server for 
+network booting environment using Voyage Live CD. This is useful to install 
+voyage from Live CD over the network.
+
+==============================================================================
+Starting the Live CD as PXE server
+==============================================================================
+
+To start PXE environment from live-cd, after login root (password: voyage) ,
+type:
+
+	# /etc/init.d/voyage-pxe start <serial rate>
+
+where <serial rate> is the serial console speed.  Without this parameter, the 
+default is 9600.  Hence, to start PXE server for WRAP/ALIX board, you should:
+
+	# /etc/init.d/voyage-pxe start 38400
+	
+You can also set <serial rate> to 0 to disable serial console.  This is useful 
+for booting generic PC.
+
+The PXE enviroment on the Live CD assumes eth0 is connected to the network.  
+/etc/init.d/voyage-pxe will set 192.168.1.200 to eth0, start a TFTP and NFS
+sevice, also start dnsmasq to offer DHCP lease of 192.168.1.10-20 for netboot.
+
+To shutdown PXE server environment, 
+
+	# /etc/init.d/voyage-pxe stop
+
+==============================================================================
+Booting a PXE client and starting automated installation
+==============================================================================
+
+Start your WRAP/Soekric board or PC to boot from network. When the bootloader 
+is loaded, you have several options:
+	
+	1. PXE Boot Voyage Linux with a login shell
+	2. Start automated install for WRAP (/dev/hda and 38400 serial console)
+	3. Start automated install for ALIX (/dev/hda and 38400 serial console)
+	4. Start automated install for 45/48xx (/dev/hda and 19200 serial console)
+	5. Start automated install for 55xx (/dev/hda and 19200 serial console)
+	6. Start automated install for gerenic PC (/dev/hda and no serial console)
+
+The boot prompt will wait for 5 seconds.  After the timeout, option 1 (login
+shell) will be started automatically. 
+
+*** Please note that option 2-6 for automated install will erase your disk on
+    /dev/hda and install a fresh copy of Voyage Linux.  Make sure you know what 
+    it is going to do before choosing option 2-6.
+
+==============================================================================
+Installing Voyage Linux on a PXE booted environment
+==============================================================================
+
+If you want to go through all the steps for manual install, select option 1.
+After boot with a login shell, you can login as root.  To install voyage under 
+netboot environment, you can follow the below procedures:
+
+1. Create distribution directory for installation
+
+	# mkdir /tmp/root
+	# mount -o loop /live/image/live/filesystem.squashfs  /tmp/root
+	# cd /tmp/root
+
+2. Make a mount point for installation disk
+
+	# mkdir /tmp/cf
+
+3. Format target disk device
+
+	# /usr/local/sbin/format-cf.sh /dev/hda    
+	
+This will create /dev/hda1 ext2 partition on /dev/hda disk device. 
+** Note that this operation is very dangerous since it will erase your disk! 
+   Make sure what you are doing and must do it right!
+   
+4. Start voyage.update installation script
+	
+	# /usr/local/sbin/voyage.update
+
+Following the instruction to select /tmp/root as distribution directory, and 
+/tmp/cf as mount point.  After the installation complete, simple reboot the
+board and Voyage will be started!
+
+There are some additional packages installed for PXE and NFS server.  After
+starting Voyage, you can safely remove them by:
+
+	# remountrw
+	# apt-get remove syslinux atftpd nfs-kernel-server \
+                     bzip2 sg3-utils minicom
+
+After all, remove the last line in /etc/dnsmasq.more.conf:
+	conf-file=/etc/dnsmasq.pxe.conf
+
+Important Note:
+The current NFS server and client code is unstable for long time use.  Hence,
+it is not recommended to use PXE+NFS environment for real production.  It is
+only good for installing Voyage Linux at the moment.

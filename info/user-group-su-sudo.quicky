@@ -1,0 +1,54 @@
+# user-group-su-sudo.quicky
+#
+# HOWTO maintain user, groups and su/sudo:
+
+# add user 'jdg' to 'sudo' group (which grants access to sudo command):
+> adduser jdg sudo
+
+# show user in which groups:
+> groups jdg
+jdg : jdg sudo
+
+> adduser jdg adm
+Adding user `jdg' to group `adm' ...
+Adding user jdg to group adm
+Done.
+
+# remove user from group
+> groups ubuntu
+ubuntu : ubuntu adm dialout cdrom floppy sudo audio dip video plugdev lxd netdev
+
+# add user to all groups listed, and also removed from any group not listed:
+> usermod -G ubuntu ubuntu
+
+> groups ubuntu     
+ubuntu : ubuntu
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# This is what Ubuntu has: some users are 'admin' and can do 'root' things using their own password.
+# NOTE: do NOT do this on a public machine. With "su-" you force everybody to use 2 password levels
+
+# check that the "admin" group does not yet exist:
+> cat /etc/group | grep admin
+
+# add a new group 'admin'
+> groupadd admin
+
+# Add existing user to supplementary/secondary group:
+> usermod -a -G admin jdg
+
+# check that user is in group:
+> groups jdg
+# or:
+> cat /etc/group | grep jdg
+# or:
+> id jdg
+uid=500(jdg) gid=500(jdg) groups=500(jdg),501(admin)
+
+# Add admin-group to sudoers file:
+> visudo
+#jdg: members of the admin group may gain root privileges:
+%admin ALL=(ALL) ALL
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

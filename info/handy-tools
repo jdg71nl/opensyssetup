@@ -1,0 +1,13 @@
+
+alias hg='history | grep'
+alias ng='lsof -i -n -P | grep'
+alias psg='ps aux | grep'
+alias fm='find \( -path '*.svn*' -prune \) -o \( -type f -printf "%010T@ [%Tc] %p\n" \) | sort -n | tail'
+alias ifc='ifconfig | grep -A 1 HWaddr | grep -v "\-\-"'
+alias ifca='ifconfig -a | grep -A 1 HWaddr | grep -v "\-\-"'
+alias cdp='echo "change dir to: `pwd -P`";cd `pwd -P`'
+alias dusort='du -sbx * | convertsize.pl | sort'
+
+find -type f -size +20000k -printf "%s %p\n" | sortsize.pl  | sort
+
+

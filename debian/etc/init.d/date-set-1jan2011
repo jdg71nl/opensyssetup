@@ -1,0 +1,36 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:        date-set-1jan2011
+# Required-Start:  $local_fs $remote_fs $syslog
+# Required-Stop:   $local_fs $remote_fs $syslog
+# X-Start-Before:  $time $ntp
+# Default-Start:   1 2 3 4 5
+# Default-Stop:    0 6
+# Short-Description: set date/time to 1-jan-2011 00:00 for ALIX without HW-clock
+### END INIT INFO
+
+# info about INIT INFO: http://wiki.debian.org/LSBInitScripts
+
+. /lib/lsb/init-functions
+
+start()
+{
+
+	#date MMDDhhmm[[CC]YY][.ss]]
+	# set to: 1 jan 2011 00:00
+	/bin/date 010100002011
+
+}
+
+case "$1" in
+restart|start)
+        start
+        ;;
+stop)
+        ;;
+*)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0

@@ -1,0 +1,199 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+#jdg-default
+#allow-hotplug enp1s0
+#iface enp1s0 inet dhcp
+
+auto enp1s0
+iface enp1s0 inet manual
+
+auto enp2s0
+iface enp2s0 inet manual
+
+auto enp3s0
+iface enp3s0 inet manual
+
+auto br1
+#iface br1 inet manual
+iface br1 inet static
+	#bridge_ports enp1s0 vlan10
+	#bridge_ports enp1s0 enp3s0 wlan0
+	bridge_ports enp1s0 enp3s0 
+	bridge_stp off
+	address 10.21.10.75
+	netmask 255.255.255.0
+	broadcast 10.21.10.255
+	gateway 10.21.10.254
+
+#auto br2
+#iface br2 inet static
+#iface br2 inet manual
+#       bridge_ports enp2s0 vlan99
+#       #bridge_ports enp2s0 enp3s0
+#       bridge_stp off
+
+#auto vlan10
+#iface vlan10 inet static
+#       vlan-raw-device enp3s0
+
+auto vlan99
+#iface vlan99 inet static
+iface vlan99 inet manual
+	vlan-raw-device enp3s0
+	#vlan-raw-device br1
+
+# d200413 JDG this works on cmdline:
+# brctl addbr br99
+# ip link set br99 up
+# brctl addif br99 vlan99
+# brctl addif br99 enp2s0
+
+auto br2
+#iface br2 inet manual
+iface br2 inet static
+	bridge_ports enp2s0 
+	bridge_stp off
+	address 192.168.178.75
+	netmask 255.255.255.0
+	broadcast 192.168.178.255
+	#pre-up ...
+	post-up brctl addif br2 vlan99
+
+#allow-hotplug wlan0
+auto wlan0
+iface wlan0 inet manual
+ 
+# ------+++------------+++------------+++------------+++------------+++------
+# interfaces.sysetup
+# ------+++------------+++------------+++------------+++------------+++------
+#
+# Used by ifup(8) and ifdown(8). See the interfaces(5) manpage or
+# /usr/share/doc/ifupdown/examples for more information.
+#
+# jdg:
+# Debian reference:
+# http://www.debian.org/doc/manuals/reference/ch-gateway.en.html
+#
+# MAN pages:
+# man interfaces
+# man vlan-interfaces
+# man bridge-utils-interfaces
+#
+# ---------------------------------------------------------------------------
+#auto lo
+#iface lo inet loopback
+#
+# ---------------------------------------------------------------------------
+# DHCP
+#
+#allow-hotplug eth0
+#iface eth0 inet dhcp
+#
+# ---------------------------------------------------------------------------
+#auto eth0
+#iface eth0 inet static
+#	address 192.168.1.1
+#	netmask 255.255.255.0
+#	broadcast 192.168.1.255
+#	gateway 192.168.1.254
+#
+# ---------------------------------------------------------------------------
+#jdg - MAC address jdgbvhp3 nc6320 -- needed for Casema Kabel Internet
+#ifconfig eth0 hw ether 00:17:A4:D3:3F:67
+#
+#auto eth0
+#iface eth0 inet dhcp
+#	#pre-up ifconfig eth0 hw ether 00:17:A4:D3:3F:67
+#	hwaddress ether 00:17:A4:D3:3F:67
+#	up   route add -net 83.80.0.0 netmask 255.255.0.0 gw 83.85.184.1 dev $IFACE
+#	down route add -net 83.80.0.0 netmask 255.255.0.0 gw 83.85.184.1 dev $IFACE
+#
+# ---------------------------------------------------------------------------
+# hinsts for scripting:
+#
+#iface eth2 inet dhcp
+#	up   route del default gw 192.168.1.254 dev eth2
+#	up   cat /etc/resolv.conf.ok > /etc/resolv.conf
+#
+#
+# ---------------------------------------------------------------------------
+# VLAN trunk internal
+#auto eth1
+#iface eth1 inet static
+#	address 172.24.2.254
+#	netmask 255.255.255.0
+#	broadcast 172.24.2.255
+#	
+# ---------------------------------------------------------------------------
+# interface alias
+#
+#auto eth1:1
+#iface eth1:1 inet static
+#	address 172.0.2.1
+#	netmask 255.255.255.0
+#	broadcast 172.0.2.255
+#
+# ---------------------------------------------------------------------------
+# vlan interface
+# apt-get install vlan
+#
+#auto vlan2
+#iface vlan2 inet static
+#	vlan_raw_device eth1
+#	address 172.16.2.254
+#	netmask 255.255.255.0
+#	broadcast 172.16.2.255
+#
+# ---------------------------------------------------------------------------
+# CAPTURE port, interface up, no ip address
+#
+#auth eth1
+#iface eth1 inet manual
+#	up ifconfig eth1 0.0.0.0 up
+#	down ifconfig eth1 down
+#
+# ---------------------------------------------------------------------------
+# bridge interface (the physical/vlan-interface have no config 'bridge_ports')
+# apt-get install bridge-utils
+#
+#auto br0
+#iface br0 inet static
+#   bridge_ports eth0 eth1
+#   bridge_stp off
+#   address 91.198.178.10
+#   netmask 255.255.255.0
+#   broadcast 91.198.178.255
+#   gateway 91.198.178.1
+#
+# ---------------------------------------------------------------------------
+#auto wlan0
+#iface wlan0 inet static
+#        address 10.1.10.1
+#        netmask 255.255.255.0
+#        broadcast 10.1.10.255
+#       network 192.168.1.0
+#       broadcast 192.168.1.255
+#       gateway 192.168.1.1
+#       pre-up iwpriv ath1 wds 1
+#       up iwpriv ath0 mode 3
+#			up nat.sh wlan0 eth0 "10.1.10.0/24"
+#       post-down wlanconfig ath0 destroy
+#
+# ---------------------------------------------------------------------------
+# Ipv6
+#iface eth0 inet6 static
+#        address 2a00:1bc8:1:1::2
+#        netmask 64
+#        gateway 2a00:1bc8:1:1::1
+#        #up ip -6 route add ::/0 via 2a00:1bc8:1:1::1
+#        up ip addr add 2a00:1bc8:1:1::3/64 dev eth0
+#        down ip addr del 2a00:1bc8:1:1::3/64 dev eth0
+# ---------------------------------------------------------------------------

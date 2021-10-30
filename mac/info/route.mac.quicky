@@ -1,0 +1,22 @@
+# route.mac.quicky
+
+sudo -i
+/sbin/route add 10.53.0.0/20 10.52.0.253
+/sbin/route delete 80.69.0.0/16 172.16.0.10
+
+sudo /sbin/route add 10.53.0.0/20 10.52.0.253
+
+# show route table:
+sudo netstat -nr
+
+# openvpn-dqlstudio
+sudo /sbin/route add 10.220.0.0/16 10.21.10.50
+
+# [tested] add permanent routes in macOS:
+#
+networksetup -listallnetworkservices
+networksetup -getadditionalroutes Ethernet
+sudo networksetup -setadditionalroutes Ethernet 10.220.0.0 255.255.0.0 10.21.10.50
+networksetup -getadditionalroutes Ethernet
+#
+

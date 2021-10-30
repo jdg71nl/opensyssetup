@@ -1,0 +1,85 @@
+# timezone.quicky
+#
+
+# info on: 
+# http://www.debian-administration.org/articles/213
+# http://www.debian.org/doc/manuals/system-administrator/ch-sysadmin-time.html
+
+#  ----++++----++++----++++----++++----++++----++++----++++----++++----++++----
+# change timezone on Debian:
+
+# note: on Voyage Linux, I had to reinstall:
+apt-get --reinstall install tzdata
+
+# prefered way for Debian5: 
+> dpkg-reconfigure tzdata
+  (menu.... settings...aplly...)
+Current default timezone: 'Europe/Amsterdam'
+Local time is now:      Sun Aug 16 23:18:22 CEST 2009.
+Universal Time is now:  Sun Aug 16 21:18:22 UTC 2009.
+Run 'dpkg-reconfigure tzdata' if you wish to change it.
+
+#  ----++++----++++----++++----++++----++++----++++----++++----++++----++++----
+> tzselect 
+Please identify a location so that time zone rules can be set correctly.
+Please select a continent or ocean.
+ 1) Africa
+ 2) Americas
+ 3) Antarctica
+ 4) Arctic Ocean
+ 5) Asia
+ 6) Atlantic Ocean
+ 7) Australia
+ 8) Europe
+ 9) Indian Ocean
+10) Pacific Ocean
+11) none - I want to specify the time zone using the Posix TZ format.
+#? 8
+Please select a country.
+ 1) Aaland Islands	  18) Greece		    35) Norway
+ 2) Albania		  19) Guernsey		    36) Poland
+ 3) Andorra		  20) Hungary		    37) Portugal
+ 4) Austria		  21) Ireland		    38) Romania
+ 5) Belarus		  22) Isle of Man	    39) Russia
+ 6) Belgium		  23) Italy		    40) San Marino
+ 7) Bosnia & Herzegovina  24) Jersey		    41) Serbia
+ 8) Britain (UK)	  25) Latvia		    42) Slovakia
+ 9) Bulgaria		  26) Liechtenstein	    43) Slovenia
+10) Croatia		  27) Lithuania		    44) Spain
+11) Czech Republic	  28) Luxembourg	    45) Sweden
+12) Denmark		  29) Macedonia		    46) Switzerland
+13) Estonia		  30) Malta		    47) Turkey
+14) Finland		  31) Moldova		    48) Ukraine
+15) France		  32) Monaco		    49) Vatican City
+16) Germany		  33) Montenegro
+17) Gibraltar		  34) Netherlands
+#? 34
+
+The following information has been given:
+
+	Netherlands
+
+Therefore TZ='Europe/Amsterdam' will be used.
+Local time is now:	Sat Dec 20 10:35:35 CET 2008.
+Universal Time is now:	Sat Dec 20 09:35:35 UTC 2008.
+Is the above information OK?
+1) Yes
+2) No
+#? 1
+
+You can make this change permanent for yourself by appending the line
+	TZ='Europe/Amsterdam'; export TZ
+to the file '.profile' in your home directory; then log out and log in again.
+
+Here is that TZ value again, this time on standard output so that you
+can use the /usr/bin/tzselect command in shell scripts:
+Europe/Amsterdam
+
+#  ----++++----++++----++++----++++----++++----++++----++++----++++----++++----
+
+> tzconfig 
+Your current time zone is set to Europe/Amsterdam
+Do you want to change that? [n]: 
+Your time zone will not be changed
+
+#  ----++++----++++----++++----++++----++++----++++----++++----++++----++++----

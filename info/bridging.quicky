@@ -1,0 +1,22 @@
+# bridging.quicky
+
+bridge-utils-1.0.4-4.i386.rpm
+bridge-utils-devel-1.0.4-4.i386.rpm
+sysfsutils-1.2.0-1.i386.rpm
+sysfsutils-devel-1.2.0-1.i386.rpm
+
+# Zero IP the interfaces. The bridge needs the network devices to be operational, but without TCP/IP running on them.
+# Keep UP, remove IP
+ifconfig eth0 up 0.0.0.0
+ifconfig eth1 up 0.0.0.0
+
+brctl addbr bri1
+brctl addif bri1 eth0
+brctl addif bri1 eth1
+
+ifconfig bri1 up 135.159.200.50
+
+brctl delif bri1 eth1
+brctl delbr bri1
+brctl showmacs bri1
+

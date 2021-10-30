@@ -1,0 +1,10 @@
+# EPEL repo
+
+https://fedoraproject.org/wiki/EPEL
+CAREFULL - these are Fedora pcks, may not be compatible with CentOS
+
+See for latest version:
+http://download.fedora.redhat.com/pub/epel/5/i386/repoview/epel-release.html
+==>
+rpm -Uvh http://download.fedora.redhat.com/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+

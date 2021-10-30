@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# redir          runs redir-wrapper which will can start/stop
+#                several TCP redirectors.
+#
+# See manual of 'chkconf..' how the next lines work.
+# <levels> <start-priority> <stop-priority>
+# Also note that high start priority starts the service relatively late.
+# And that low stop priority stops the service relatively early.
+#
+# chkconfig: 345 99 01
+# description: redir run redir-wrapper which is a script to automatically \
+#              start and stop a list of TCP redirectors
+# processname: redir
+
+### BEGIN INIT INFO
+# Provides:          redir-wrapper
+# Required-Start:    $remote_fs
+# Required-Stop:     $remote_fs
+# Should-Start:      $network $syslog
+# Should-Stop:       $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start and stop redir-wrapper
+# Description:       some
+### END INIT INFO
+
+# Source function library.
+#. /etc/rc.d/init.d/functions
+
+NAME="redir"
+PROG="/usr/local/syssetup/bin/redir-wrapper.sh"
+
+statusredir() {
+	echo "Process list of redir:"
+	ps ax | grep redir | grep lport
+	echo
+}
+
+# See how we were called.
+case "$1" in
+	start)
+		echo "Starting $NAME: "
+		$PROG start
+		statusredir
+	;;
+  stop)
+		echo -n "Stopping $NAME: "
+		$PROG stop
+		statusredir
+	;;
+  restart)
+		echo -n "Restarting $NAME: "
+		$PROG start
+		statusredir
+	;;
+  status)
+		statusredir
+	;;
+  *)
+	echo "Usage: $NAME {start|stop|restart|status}"
+	exit 1
+esac
+
+exit 0
+

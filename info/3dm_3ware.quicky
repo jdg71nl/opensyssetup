@@ -1,0 +1,88 @@
+# 3dm_3ware.quicky
+
+overview:
+- get: 3dm_linux.tgz
+- extract
+- ./install.3dm
+- copy /etc/init.d/3dm
+
+latest version:
+http://www.3ware.com/support/download_7.7.1.asp?SNO=369
+
+since kernel 2.6:
+3dm complains in /var/log/messages:
+kernel: program 3dmd is using a deprecated SCSI ioctl, please convert it to SG_IO
+
+website says: for v2.6 kernel engineering version
+-> but is only driver, not 3dm mgt-tool
+
+
+
+--[CWD=~/web_v771]--[18:45:55]--[root@helmsdeep2]------
+> tar xvfz 3dm_linux.tgz
+3dm-lnx.tgz
+install.3dm
+--[CWD=~/web_v771]--[18:46:13]--[root@helmsdeep2]------
+> ./install.3dm
+
+3ware 3DM installation, configuration and removal script.
+(c) 2001 3ware, Inc. All rights reserved.
+
+Script version: v1.00.00.027
+
+***************************************
+*** Important RPM related question. ***
+***************************************
+* Answer N if you are using the install.3dm script to install 3dm.
+  If you answer N install.3dm will install all 3dm components.
+* Answer Y if RPM was used for installing the driver/3dm software.
+  3ware RPM packages install all 3dm components and only need to have
+  the configuration portion of this script run.
+
+Was RPM used to install the Escalade driver and/or 3dm? (Y/N) [N]
+
+**** 3DM version being installed is: 1.13.00.029 ****
+
+Please enter the location of the help documentation. [/usr/local/doc/3dm]
+
+Would you like to have email notification enabled? (Y/N) [Y]
+Please enter the name of your mail server. [helmsdeep2.smallbizconcepts.nl]:
+Please enter the name of the user you want sending email notification. [root]:
+Please enter the name of the user you want receiving email notification. [3ware_admin]:
+Please enter the port number you would like to use for web monitoring. [1080]:
+Would you like 3DM connection security to limit connections to localhost only? (Y/N) [Y] n
+
+******************************************************************************************
+**** Automatic configuration is only supported for the Red Hat and SuSE distributions. ***
+
+*** Note: 3ware tests and supports Red Hat and SuSE distributions only. ***
+
+You will need to configure the following manually on other systems.
+
+You will need to create kill script links to init.d/3dm
+Kill scripts should be setup in all run levels that don't support full user functionality.
+(example rc0.d, rc1.d, rc2.d, rc6.d, rcS.d)
+
+You will need to create start script links to init.d/3dm
+Start scripts should be setup in all run levels that support full user functionality.
+(example rc3.d, rc4.d, rc5.d)
+
+If your release supports chkconfig you can use it as follows to setup the runlevel scripts.
+chkconfig --add 3dm
+chkconfig --level 345 3dm on
+
+*** Note: To remove 3dm run level info use chkconfig --del 3dm ***
+
+Run level scripts are only provided for Red Hat and SuSE Linux.
+You may need to make changes to enable them under other distributions.
+cp -f 3w-xxxx.rc.* /etc/rc.d/init.d/3dm
+chmod 755  /etc/rc.d/init.d/3dm
+
+The 3dm binary was copied to /usr/sbin/3dmd
+3dmd.conf was created and placed in /etc
+******************************************************************************************
+
+
+--[CWD=~/web_v771]--[18:46:41]--[root@helmsdeep2]------
+
+

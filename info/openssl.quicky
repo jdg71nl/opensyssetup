@@ -1,0 +1,394 @@
+# openssl.quicky
+# openssl
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# overview of OpenSSL commands:
+
+# Certificate Authority commands:
+openssl ca
+# Certificate commands:
+openssl x509
+# Certificate Signing Request commands:
+openssl req
+# Private Key (RSA) commands:
+openssl rsa
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# commands used in flexvpn:
+
+# Generate CA cert/key
+cd $tls_cert_dir/ ;
+	/usr/bin/openssl req            \
+	-days 3650 -nodes -new -x509  \
+	-keyout "$tls_ca_CN.key"      \
+	-out "$tls_ca_CN.crt"         \
+	-config $tls_cert_dir/openssl.cnf \
+	-batch                        \
+	-subj "/C=$tls_country/ST=$tls_province/L=$tls_city/O=$tls_organization/CN=$tls_ca_CN/emailAddress=$tls_email" \
+;
+/bin/chmod 0600 "$tls_ca_CN.key" ;
+
+# Generate Server cert/key
+cd $tls_cert_dir/  ;
+/usr/bin/openssl req -days 3650 -nodes -new \
+	-keyout $tls_server_CN.key                    \
+	-out $tls_server_CN.csr                       \
+	-extensions server                        \
+	-config $tls_cert_dir/openssl.cnf             \
+	-batch                                    \
+	-subj "/C=$tls_country/ST=$tls_province/L=$tls_city/O=$tls_organization/CN=$tls_server_CN/emailAddress=$tls_email"
+/usr/bin/openssl ca -days 3650  \
+	-out $tls_server_CN.crt           \
+	-in $tls_server_CN.csr            \
+	-extensions server            \
+	-config $tls_cert_dir/openssl.cnf \
+	-batch
+/bin/chmod 0600 $tls_server_CN.key
+
+# Generate Client cert/key
+# NOTE: this code is the same as the Server above, except the paramter “extension server”
+cd $tls_cert_dir/  ;
+/usr/bin/openssl req -days 3650 -nodes -new \
+	-keyout $tls_client_CN.key                    \
+	-out $tls_client_CN.csr                       \
+	-config $tls_cert_dir/openssl.cnf             \
+	-batch                                    \
+	-subj "/C=$tls_country/ST=$tls_province/L=$tls_city/O=$tls_organization/CN=$tls_client_CN/emailAddress=$tls_email"
+/usr/bin/openssl ca -days 3650  \
+	-out $tls_client_CN.crt           \
+	-in $tls_client_CN.csr            \
+	-config $tls_cert_dir/openssl.cnf \
+	-batch
+/bin/chmod 0600 $tls_client_CN.key
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# commands used in rmv_v3 (is from openvpn easy-rsa package):
+
+# copy "easy-rsa" scripts for local CA usage:
+mkdir -pv /etc/openvpn/vpnmodule/easy-rsa
+# CentOS
+cp -a /usr/share/doc/openvpn-2.0.9/easy-rsa/* /etc/openvpn/vpnmodule/easy-rsa/
+rm -rf /etc/openvpn/vpnmodule/easy-rsa/2.0
+# Debian:
+cp -a /usr/share/doc/openvpn/examples/easy-rsa/1.0/* /etc/openvpn/vpnmodule/easy-rsa/
+
+cd $KEY_DIR && \
+openssl req -days 3650 -nodes -new -keyout $1.key -out $1.csr -config $KEY_CONFIG && \
+openssl ca -days 3650 -out $1.crt -in $1.csr -config $KEY_CONFIG && \
+chmod 0600 $1.key
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# make 2048-key:
+
+# use '-newkey rsa:2048' instead of '-new'
+
+# example:
+openssl req -newkey rsa:2048 -nodes -keyout mail.brederocollege.nl.d110119.key -out mail.brederocollege.nl.d110119.csr
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# commands used to create HTTPS/web certs:
+
+
+# create KEY + CSR :
+openssl req -newkey rsa:1024 -keyout flexvpn.networkconcepts.nl.1.key -keyform PEM -out flexvpn.networkconcepts.nl.1.csr -outform PEM -nodes
+# note: Xolphin requires min 2048 bits:
+openssl req -newkey rsa:2048 -keyout flexvpn.networkconcepts.nl.1.key -keyform PEM -out flexvpn.networkconcepts.nl.1.csr -outform PEM -nodes
+
+
+Country Name (2 letter code) [GB]:NL
+State or Province Name (full name) [Berkshire]:Overijssel
+Locality Name (eg, city) [Newbury]:Deventer
+Organization Name (eg, company) [My Company Ltd]:Networkconcepts BV
+Organizational Unit Name (eg, section) []:Web Services
+Common Name (eg, your name or your server's hostname) []:flexvpn.networkconcepts.nl
+Email Address []:support@networkconcepts.nl
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
+
+# sign it with private-CA :
+openssl ca -config /certs/sbc/sbc-CA-RemoteMgt/openssl.cnf -in mail.brederocollege.nl.csr -notext -out mail.brederocollege.nl.crt -days 1095
+
+Using configuration from /certs/sbc/sbc-CA-RemoteMgt/openssl.cnf
+Enter pass phrase for /certs/sbc/sbc-CA-RemoteMgt/private/cakey.pem:
+Check that the request matches the signature
+Signature ok
+The Subject's Distinguished Name is as follows
+countryName           :PRINTABLE:'NL'
+stateOrProvinceName   :PRINTABLE:'Noord-Holland'
+localityName          :PRINTABLE:'Amsterdam'
+organizationName      :PRINTABLE:'Bredero College'
+organizationalUnitName:PRINTABLE:'IT afdeling'
+commonName            :PRINTABLE:'mail.brederocollege.nl'
+emailAddress          :IA5STRING:'h.hillebrand@brederocollege.nl'
+Certificate is to be certified until Dec 22 13:55:49 2007 GMT (1095 days)
+Sign the certificate? [y/n]:y
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# old info
+
+# make CA
+mkdir CA
+mkdir CA/certs
+mkdir CA/crl
+mkdir CA/newcerts
+mkdir CA/private
+touch CA/index.txt
+echo "01" > CA/serial
+copy <template> CA/openssl.cnf
+
+# GENERAL
+# Make certifcate
+openssl req -new -out cert.pem -keyout key.pem
+# -x509		Self-signed
+# -nodes	No password-protection for key
+# -days XX	Days until expiration
+# -config XX	Default config (edit first)
+
+# make root certificate (self issued) (10 years)
+openssl req -new -x509 -days 3650 -config ./openssl.cnf -keyout private/cakey.pem -out cacert.pem
+
+# make regular certificate (Cert Signing Request) (nodes)
+openssl req -new -nodes -days 365 -config ./openssl.cnf -keyout private/appl.key.pem -out appl.csr.pem
+
+# sign a certificate:
+openssl ca -config ./openssl.cnf -out appl.cert.pem -infiles appl.csr.pem
+
+# Display contents of certificate:
+openssl x509 -text		-noout -in cert.pem
+openssl x509 -subject 		-noout -in cert.pem
+openssl x509 -dates 		-noout -in cert.pem
+openssl x509 -fingerprint	-noout -in cert.pem
+
+# Importable certificate (.crt)
+# this is the same as copy-paste only the -CERTIFICATE- section
+openssl x509 -in cacert.pem -out cacert.crt
+
+# Make DER format for IE
+openssl x509 -in ca.pem -outform DER -out ca.der 
+
+#view csr
+openssl req -text -noout -in mail.brederocollege.nl.csr
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+Hoe ik een SSL certificaat maak?
+
+1) op Linux genereer ik een "Certificate Signing Request" met dit commando:
+
+openssl req -newkey rsa:1024 -keyout secure.ingosur.be.1.key -keyform PEM -out secure.ingosur.be.1.req -outform PEM -nodes
+
+Daar moet je gegevens invullen, zoals dit voorbeeld hieronder.
+Het belangrijkste is de "Common Name", die MOET hetzelfde zijn als de server/hostname waar je hem gebruikt, anders krijgt de gebruiker een foutmelding.
+In dit voorbeeld is het certificaat bedoelt voor:  https://secure.smallbizconcepts.nl/
+
+Country Name (2 letter code) [GB]:NL
+State or Province Name (full name) [Berkshire]:Zuid-Holland
+Locality Name (eg, city) [Newbury]:Den Haag
+Organization Name (eg, company) [My Company Ltd]:Ingosur BV
+Organizational Unit Name (eg, section) []:
+Common Name (eg, your name or your server's hostname) []:secure.ingosur.be
+Email Address []:ingosur@ingosur.nl
+
+Er worden 2 bestanden gegenereerd:
+* secure.ingosur.be.1.key --> dit is de private key, die moet je apart (geheim) houden en later op de webserver plaatsten
+* secure.ingosur.be.1.req  --> dit is de public key in CSR vorm, die moet je sturen naar degene die het gaat tekenen.
+
+Bekijk de inhoud van de CSR met het commando:
+
+openssl req -text -noout -in secure.ingosur.be.1.req
+
+2) ik vraag een certificaat aan bij die bedrijf Xolphin op http://www.sslcertificaten.nl/
+
+Daar moet je de CSR heensturen en gegevens invullen (online!)
+Ik koop daar altijd "Comodo InstantSSL"
+
+3) Xolphin stuurt dan het SSL certificaat op en die moet je op de webserver plaatsen.
+
+Het certificaat heeft meestal een .crt extentie, soms iets anders.
+Het interne formaat heet "PEM" en ziet er als volgt uit:
+
+-----BEGIN CERTIFICATE-----
+MIIFSTCCBDGgAwIBAgIRANiAxozPGSS15Po0fcxSoMIwDQYJKoZIhvcNAQEFBQAw
+pv2rveGVLtxkRRi5q7H7UY3ms2qpru9icPG53TTejIXbopbHIIkHxFM5WuVz57ua
+y9NPuahBEm5QLVfcgA==
+-----END CERTIFICATE-----
+
+Bekijk de inhoud van de CRT met het commando:
+
+openssl x509 -text -noout -in secure.ingosur.be.1.crt
+
+Op Apache maal ik een bestand aan dat heet:
+secure.ingosur.be.1.key-crt-root.xolphin.pem
+
+Met daarin achtereenvolgens:
+1) de private key
+2) het certificaat
+3) de CA of Root certificaat
+
+Zie voorbeeld:
+
+-----BEGIN RSA PRIVATE KEY-----
+MIICWwIBAAKBgQC5ZJi6N0+htjhUZ87HaBY2rkLLzOf1qPIlS1xhTOMAGeeQq2/N
+7IN+8ZATV3ZI6my3WQJAJgrWGQvoRe0bMZnBgYilJkcPZfIw/3ZId1effZt7DF7X
+j6UNLwcOTdPKB5PQy4tsPH2OGUyBHlBAtGvBGHU/9w==
+-----END RSA PRIVATE KEY-----
+-----BEGIN CERTIFICATE-----
+MIIFSTCCBDGgAwIBAgIRANiAxozPGSS15Po0fcxSoMIwDQYJKoZIhvcNAQEFBQAw
+pv2rveGVLtxkRRi5q7H7UY3ms2qpru9icPG53TTejIXbopbHIIkHxFM5WuVz57ua
+y9NPuahBEm5QLVfcgA==
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIIEczCCA1ugAwIBAgIQJiEb9SrrUbAL+p/djTbanjANBgkqhkiG9w0BAQUFADBv
+HfiMTvLIQ9asjk31Q7Ea9qszqpkG50XcjgmyCdOdcTxCJrbpoKDdU3XN3pYLPAVU
+F9UCjiJE/JDErEafSDkqqQ5qlwYgPz9a+qyVI3rchsjq2Tt4jCZE
+-----END CERTIFICATE-----
+
+In Apache doe ik de volgende settings:
+
+<VirtualHost 84.244.144.197:443>
+ ServerName secure.ingosur.be:443
+ DocumentRoot "/www/ingosur.be"
+ SSLEngine on
+ SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP
+ SSLCertificateFile      /www/ingosur/project/secure.ingosur.be.1.key-crt-root.xolphin.pem
+ SSLCertificateKeyFile   /www/ingosur/project/secure.ingosur.be.1.key-crt-root.xolphin.pem
+ SSLCertificateChainFile /www/ingosur/project/secure.ingosur.be.1.key-crt-root.xolphin.pem
+ SSLCACertificateFile    /www/ingosur/project/secure.ingosur.be.1.key-crt-root.xolphin.pem
+</VirtualHost>
+
+That is it!
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# check that private/public key pair go together:
+
+# Certificate: o
+oppenssl x509 -noout -modulus -in server.crt | openssl md5
+# Private Key: 
+openssl rsa -noout -modulus -in server.key | openssl md5
+# CSR: 
+openssl req -noout -modulus -in server.csr | openssl md5
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# SSL HOWTO: using openssl to get keys into PKCS#12 format
+# http://blog.palantirtech.com/2008/06/23/pkcs12/
+
+* Generate the key
+    # openssl genrsa -out  example-key.pem 2048
+* Generate the Certificate Signing Request (CSR)
+    # openssl req -new -key example-key.pem -out example.csr
+* This CSR is sent of to your CA of choice and you get back a certificate, essentially a signature for your public key by the CA.
+* Create the PKCS#12 key
+* Concatenate the cert with the key file and then have OpenSSL convert it to PKCS#12
+    # cat example-key.pem example.crt > example.pem
+    # openssl pkcs12 -export -in example.pem -out example.pkcs12 -name “example”
+    Enter Export Password: (password is not echoed here, but you must enter something)
+    Verifying - Enter Export Password: (password is not echoed here, but you must enter something) 
+* Verify it worked
+* GET http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/keytool.html
+* INFO keytool - Key and Certificate Management Tool
+* As they say: if you didn’t test it, it doesn’t work. So now we verify that another tool that claims to ingest PCKS#12, verify that it worked with a different tool. Here I use Java’s keytool:
+    # keytool -v -list -storetype pkcs12 -keystore example.pkcs12
+    Enter keystore password:  password (whatever you set it to above)
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+Check SSL HTTPS connection:
+
+> HEAD https://127.0.0.1/
+200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Cache-Control: post-check=0, pre-check=0
+Connection: close
+Date: Sat, 20 Dec 2008 14:54:12 GMT
+Pragma: no-cache
+Server: Apache/2.2.3 (Debian) PHP/4.4.4-8+etch6 mod_ssl/2.2.3 OpenSSL/0.9.8c
+Content-Type: text/html; charset=UTF-8
+Expires: Fri, 19 Dec 2008 14:54:12 GMT
+Last-Modified: Fri, 19 Dec 2008 14:54:12 GMT
+Client-Date: Sat, 20 Dec 2008 14:54:12 GMT
+Client-Peer: 127.0.0.1:443
+Client-Response-Num: 1
+Client-SSL-Cert-Issuer: /C=NL/ST=Overijssel/L=Deventer/O=Networkconcepts BV/OU=Networkconcepts Remote Management/CN=ca.remote-mgt.networkconcepts.nl/emailAddress=support@networkconcepts.nl
+Client-SSL-Cert-Subject: /C=NL/ST=Overijssel/O=Networkconcepts BV/OU=Web Services/CN=flexvpn.networkconcepts.nl/emailAddress=support@networkconcepts.nl
+Client-SSL-Cipher: DHE-RSA-AES256-SHA
+Client-SSL-Warning: Peer certificate not verified
+X-Powered-By: PHP/4.4.4-8+etch6
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+Check SSL / TLS connection, and do telnet-style session through SSL/TLS:
+
+openssl s_client -verify 1 -showcerts -connect 87.253.135.10:2525
+openssl s_client -verify 3 -showcerts -connect 87.253.135.10:2525
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# quick and dirty generate CA-SSL for Apache/SSL/HTTPS:
+
+openssl req -new -x509 -days 3650 -nodes -config ./openssl.cnf -keyout https-vhl.cakey.pem -out https-vhl.cacert.pem
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# read P7C files
+
+openssl pkcs7 -inform DER -in d101129\ jdgraaff\ -\ cert.p7c 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# PFX
+
+PKCS#12 evolved from the PFX (Personal inFormation eXchange) standard and is used to exchange public and private objects in a single file.
+
+# create: 
+cat example-key.pem example.crt > example.pem
+openssl pkcs12 -export -in example.pem -out example.pkcs12 -name "example"
+Enter Export Password:             (password is not echoed here, but you must enter something)
+Verifying - Enter Export Password: (password is not echoed here, but you must enter 
+
+# verify:
+> openssl pkcs12 -in Tribase.pfx -info
+Enter Import Password:
+MAC Iteration 1
+MAC verified OK
+PKCS7 Data
+Shrouded Keybag: pbeWithSHA1And3-KeyTripleDES-CBC, Iteration 2000
+Bag Attributes
+    Microsoft Local Key set: <No Values>
+    localKeyID: 01 00 00 00 
+    friendlyName: WMSvc Certificate Key Container
+    Microsoft CSP Name: Microsoft RSA SChannel Cryptographic Provider
+Key Attributes
+    X509v3 Key Usage: 10 
+Enter PEM pass phrase:
+Verifying - Enter PEM pass phrase:
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: DES-EDE3-CBC,0CE8B176242814D8
+
+ulIigT6YSCBdNUantjknO28/YSMKTrtIAQClGNtXg7FK6naOI1fOpoFDb3xUsAOJ
+...
+kYDVmyvcTkoTtWqHvoD9SEysdSKUIRj3nLmHSq4FopzEJXFPoJFMm3n+iDzBPmeR
+-----END RSA PRIVATE KEY-----
+PKCS7 Encrypted data: pbeWithSHA1And40BitRC2-CBC, Iteration 2000
+Certificate bag
+Bag Attributes
+    localKeyID: 01 00 00 00 
+subject=/CN=WMSvc-TRIBSV016
+issuer=/CN=WMSvc-TRIBSV016
+-----BEGIN CERTIFICATE-----
+MIIC5TCCAc2gAwIBAgIQWKiEVeIZao5JRZxs+5fDpjANBgkqhkiG9w0BAQUFADAa
+...
+LqImfsMM/NVziFen54Tye7PDlr3fvOUkIr0rRWZZLDiQUBB1/F1UPK6IXmfUgM8T
+qJmM4UO8xViuPLUFHdZaIX+C0Fp/ZLqTKw==
+-----END CERTIFICATE-----
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+

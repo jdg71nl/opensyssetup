@@ -1,0 +1,161 @@
+# encrypted-filesystem.quicky 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# dm-crypt / cryptsetup on Debian
+
+# d120404: as installed on tdata/EFS
+apt-get install cryptsetup
+
+# CREATE
+dd of=/data/tdata.efs.bin bs=512M count=0 seek=1
+chmod 600 /data/tdata.efs.bin
+losetup /dev/loop0 /data/tdata.efs.bin
+cryptsetup -y luksFormat /dev/loop0
+cryptsetup luksOpen /dev/loop0 efs
+cryptsetup status efs
+mkfs.ext3 -j -m 1 -O dir_index,filetype,sparse_super /dev/mapper/efs
+tune2fs -l /dev/mapper/efs
+mkdir /mnt/efs
+mount /dev/mapper/efs /mnt/efs
+
+# MOUNT
+> cat open_crypt_fs.sh 
+#!/bin/bash
+losetup /dev/loop0 /data/tdata.efs.bin
+cryptsetup luksOpen /dev/loop0 efs
+cryptsetup status efs
+mount -v /dev/mapper/efs /mnt/efs
+
+# UNMOUNT:
+> cat close_crypt_fs.sh 
+#!/bin/bash
+umount /mnt/efs
+cryptsetup luksClose efs
+losetup -d /dev/loop0
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# d0905: setup dm-crypt/LUKS on xen-haarlem-01 (host, to be used on guest: smartbackup)
+
+# NOTE: disk was created on d0902 (see below), where the crypt_FS was mounted on host, and used on guest
+# Sincs d0905 the disk with data is without loss used RAW on guest (not mounted on host)
+
+# scripts:
+
+# --
+> cat open_crypt_LV_d5.sh 
+#!/bin/bash
+cryptsetup luksOpen /dev/VG00/LV_d5 crypt_LV_d5
+cryptsetup status crypt_LV_d5
+# --
+
+# --
+> cat close_crypt_LV_d5.sh 
+#!/bin/bash
+cryptsetup luksClose /dev/mapper/crypt_LV_d5
+cryptsetup status crypt_LV_d5
+# NOTE: partition is not mounted here - is used raw in Xen:
+# > cat /etc/xen/smartbackup.networkconcepts.nl.xen 
+# disk = [ "phy:/dev/VG00/LV_d4,xvda,w", "phy:/dev/mapper/crypt_LV_d5,xvdb,w"]
+# --
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# d0902: jdg setup dm-crypt/LUKS on smartbackup (guest on xen-haarlem-01):
+
+yum install cryptsetup-luks
+
+# CREATE
+# test complete blockdevice and write randaom data at same time:
+badblocks -c 10240 -s -w -t random -v /dev/xvdb 
+#
+cryptsetup --verbose --verify-passphrase luksFormat /dev/xvdb
+cryptsetup luksOpen /dev/xvdb crypt_xvdb
+cryptsetup status crypt_xvdb
+mkfs.ext3 -j -m 1 -O dir_index,filetype,sparse_super /dev/mapper/crypt_xvdb
+tune2fs -l /dev/mapper/crypt_xvdb
+mkdir /mnt/crypt_xvbd
+mount /dev/mapper/crypt_xvdb /mnt/crypt_xvdb
+
+# UNMOUNT
+umount /mnt/crypt_xvdb
+cryptsetup luksClose /dev/mapper/crypt_xvdb
+
+# REMOUNT
+cryptsetup luksOpen /dev/xvdb crypt_xvdb
+cryptsetup status crypt_xvdb
+mount /dev/mapper/crypt_xvdb /mnt/crypt_xvdb
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# OLD info
+http://www.securityforest.com/wiki/index.php/Loopback_Encrypted_Filesystem
+
+test:
+modprobe cryptoloop && lsmod | grep cryptoloop
+modinfo /lib/modules/2.6.5-1.358/kernel/crypto/*
+
+make:
+dd if=/dev/zero bs=1M count=10 of=/root/.mycryptofs
+losetup -e serpent /dev/loop0 /root/.mycryptofs
+mkfs.ext3 /dev/loop0
+mkdir -p /mnt/crypto
+mount -t ext3 /dev/loop0 /mnt/crypto/
+
+unmount:
+umount /mnt/crypto
+losetup -d /dev/loop0
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# setup encrypted filesystem with dm-crypt + LUKS
+# done on: smartbackup/xen-haarlem-01
+# idea from: http://www.hermann-uwe.de/blog/howto-disk-encryption-with-dm-crypt-luks-and-debian
+
+# test complete blockdevice and write randaom data at same time:
+badblocks -c 10240 -s -w -t random -v /dev/xvdb 
+
+# create
+apt-get install cryptsetup hashalot
+cryptsetup --verbose --verify-passphrase luksFormat /dev/sdb1
+cryptsetup luksOpen /dev/sdb1 samsung300gb
+mkfs.ext3 -j -m 1 -O dir_index,filetype,sparse_super /dev/mapper/samsung300gb
+mkdir /mnt/samsung300gb
+mount /dev/mapper/samsung300gb /mnt/samsung300gb
+
+# unmount
+umount /mnt/samsung300gb
+cryptsetup luksClose /dev/mapper/samsung300gb 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# CentOS-5 howto use dm-crypt with LUKS on loop-device
+# example from http://wiki.centos.org/HowTos/EncryptedFilesystem
+
+# create 
+dd of=/path/to/secretfs bs=1G count=0 seek=8
+chmod 600 /path/to/secretfs
+losetup /dev/loop0 /path/to/secretfs
+cryptsetup -y luksFormat /dev/loop0
+cryptsetup luksOpen /dev/loop0 secretfs
+cryptsetup status secretfs
+#dd if=/dev/zero of=/dev/mapper/secretfs
+mke2fs -j -O dir_index /dev/mapper/secretfs
+tune2fs -l /dev/mapper/secretfs
+mkdir /mnt/cryptofs/secretfs
+mount /dev/mapper/secretfs /mnt/cryptofs/secretfs
+
+# unmount:
+umount /mnt/cryptofs/secretfs
+cryptsetup luksClose secretfs
+losetup -d /dev/loop0
+
+# remount:
+losetup /dev/loop0 /path/to/secretfs
+cryptsetup luksOpen /dev/loop0 secretfs
+mount /dev/mapper/secretfs /mnt/cryptofs/secretfs
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# http://code.google.com/p/cryptsetup/wiki/FrequentlyAskedQuestions
+head -c 100M /dev/zero > luksfile  # create empty file
+losetup /dev/loop0 luksfile        # map luksfile to /dev/loop0
+cryptsetup luksFormat /dev/loop0   # create LUKS on loop device
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

@@ -1,0 +1,8 @@
+#
+
+# These scripts come from: http://wiki.centos.org/TipsAndTricks/EncryptedFilesystem/Scripts
+
+create_encrypted_fs.sh
+remount_encrypted_fs.sh
+umount_encrypted_fs.sh
+

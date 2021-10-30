@@ -1,0 +1,36 @@
+# udev.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# ubuntu auto-renames eth0/1 etc in a new machine:
+> dmesg | grep rename
+[   14.276857] udev: renamed network interface eth0 to eth1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# 
+cat /etc/udev/rules.d/70-persistent-net.rules | grep -B1 SUBSYSTEM
+
+# PCI device 0x10ec:0x8168 (r8169)
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:1c:c0:a8:f5:44", ATTR{type}=="1", KERNEL=="eth*", NAME="eth0"
+
+# PCI device 0x10ec:0x8168 (r8169)
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:17:31:83:0c:8b", ATTR{type}=="1", KERNEL=="eth*", NAME="eth1"
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# CentOS: if eth0 is gone and replaced by eth5 or alike (ifconfig -a)
+
+# do:
+# http://alexcline.net/2011/11/15/reconfiguring-network-interfaces-in-centosrhel-systems-cloned-with-vcenter/
+
+service network stop
+rm /etc/udev/rules.d/70-persistent-net.rules
+Then remove the HWADDRESS from the ifcfg-ethX file all together as it appears to work without it.
+start_udev
+service network start
+
+# NOTE (jdg):
+# start_udev will base the new config file on the current interface names.
+# if that is eth5 etc. then beter remove the 70-persistent-net.rules and just reboot.
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

@@ -1,0 +1,33 @@
+# serial.quicky
+
+attempt to create serial port on Mac OS
+
+--[CWD=/dev]--[13:08:01 Sun 24-Oct-2010 CEST]--[jdgraaff@jdgncnl-macbook-glan]--[MacOS-10.6.2]------
+> stat -x tty.Bluetooth-Modem 
+  File: "tty.Bluetooth-Modem"
+  Size: 0            FileType: Character Device
+  Mode: (0666/crw-rw-rw-)         Uid: (    0/    root)  Gid: (    0/   wheel)
+Device: 7,2077828   Inode: 603    Links: 1
+Access: Mon Oct 11 08:43:22 2010
+Modify: Mon Oct 11 08:43:22 2010
+Change: Mon Oct 11 08:43:22 2010
+--[CWD=/dev]--[13:08:04 Sun 24-Oct-2010 CEST]--[jdgraaff@jdgncnl-macbook-glan]--[MacOS-10.6.2]------
+>
+--[CWD=/dev]--[13:11:41 Sun 24-Oct-2010 CEST]--[jdgraaff@jdgncnl-macbook-glan]--[MacOS-10.6.2]------
+> sudo mknod /dev/tty.Serial-VM c 188 0
+Password:
+--[CWD=/dev]--[13:11:50 Sun 24-Oct-2010 CEST]--[jdgraaff@jdgncnl-macbook-glan]--[MacOS-10.6.2]------
+> lt /dev/tty.Serial-VM 
+crw-r--r--  1 root  wheel  188,   0 Oct 24 13:11 /dev/tty.Serial-VM
+--[CWD=/dev]--[13:11:58 Sun 24-Oct-2010 CEST]--[jdgraaff@jdgncnl-macbook-glan]--[MacOS-10.6.2]------
+> stat -x /dev/tty.Serial-VM 
+  File: "/dev/tty.Serial-VM"
+  Size: 0            FileType: Character Device
+  Mode: (0644/crw-r--r--)         Uid: (    0/    root)  Gid: (    0/   wheel)
+Device: 7,2077828   Inode: 5150    Links: 1
+Access: Sun Oct 24 13:11:50 2010
+Modify: Sun Oct 24 13:11:50 2010
+Change: Sun Oct 24 13:11:50 2010
+--[CWD=/dev]--[13:12:01 Sun 24-Oct-2010 CEST]--[jdgraaff@jdgncnl-macbook-glan]--[MacOS-10.6.2]------
+> 
+

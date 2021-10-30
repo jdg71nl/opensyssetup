@@ -1,0 +1,7 @@
+# gpg.quicky
+
+Howto check GPG signature 'file.gz.sig' of file 'file.gz'
+- import GPG key
+  gpg --import wietse.pgp
+- verify (this will open 'file.gz' automatically)
+  gpg --verify file.gz.sig

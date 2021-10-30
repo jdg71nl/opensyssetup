@@ -1,0 +1,7 @@
+#
+
+d091201
+
+# job on source (centos53 twsserver):
+tar --one-file-system --sparse -C / -cf - .
+

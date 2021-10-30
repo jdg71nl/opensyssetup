@@ -1,0 +1,96 @@
+# bash_script.quicky
+#!/bin/bash
+#
+#  make_snapshot
+#  Seann Herdejurgen
+#  July, 2002
+#
+#  This script makes rotating backup-snapshots of $DIR to the directory
+#  $SNAPSHOT.  This script is called with two parameters, the name of the
+#  snapshot and the number of snapshots to keep.  You can use the following
+#  crontab entries to keep 6 days of daily snapshots and 4 weeks of weekly
+#  snapshots:
+#
+#     0 0 * * 0 /usr/local/sbin/make_snapshot weekly 4
+#     0 0 * * 1-6 /usr/local/sbin/make_snapshot daily 6
+#
+#  If you use this script to mirror your entire hard drive, it may take
+#  several hours.  If this is the case, it is recommended that you make
+#  snapshots daily instead of hourly.
+#
+#  This script is based on an original script from Mike Rubel.
+#
+
+error() {
+   echo "$0: $@" 1>&2
+   exit 1
+}
+
+# Make sure we're running as root
+if [ `id -u` != 0 ]; then error "You must be root to use this script"; fi
+
+# Check command line parameters
+if [ "$1" = "" -o "$2" != ""  ]; then
+   echo "usage: $0 <config file>"
+   exit 1
+fi
+
+# Execute config file
+. $1
+
+(( max = $number - 1 ))
+
+# Remount the snapshot as read-write
+mount -o remount,rw $SNAPSHOT || error "could not remount $SNAPSHOT read-write"
+
+# Delete the oldest snapshot in the background
+if [ -d $SNAPSHOT/${type}.${max} ]; then
+   mv $SNAPSHOT/${type}.${max} $SNAPSHOT/.delete
+   nice /bin/rm -rf $SNAPSHOT/.delete &
+fi
+
+# rsync source files into the latest snapshot (notice that rsync deletes/unlinks
+# destination file prior to writing the file if the file has changed)  This
+# behavior is desired as it preserves the integrity of our other snapshot(s).
+time rsync -va --delete --delete-excluded --exclude=/dev --exclude=/proc --exclude=$SNAPSHOT --exclude=$VERSIONDIR $DIR $SNAPSHOT/.latest
+
+# Make the snapshot read-only
+chmod a-w $SNAPSHOT/.latest
+
+# Shift the middle snapshots(s) back by one, if they exist
+while [ $max -ge 1 ]; do
+   (( newer = max - 1 ))
+   if [ -d $SNAPSHOT/${type}.${newer} ]; then
+      mv $SNAPSHOT/${type}.${newer} $SNAPSHOT/${type}.${max}
+   fi
+   (( max = newer ))
+done
+
+# Update the mtime of ${type}.0 to reflect the snapshot time
+mv $SNAPSHOT/.latest $SNAPSHOT/${type}.0
+touch $SNAPSHOT/${type}.0
+
+# Make a hard-link-only (except for dirs) copy of the latest snapshot
+# to prepare for next snapshot.
+nice cp -al $SNAPSHOT/${type}.0 $SNAPSHOT/.latest
+
+# Wait for rm to finish if still running
+wait
+
+# Remount the snapshot as read-only
+mount -o remount,ro $SNAPSHOT || error "could not remount $SNAPSHOT read-only"
+
+# Make Versions tree
+mkversiondir $SNAPSHOT $VERSIONDIR
+# Informational only
+echo ""
+df -k
+echo ""
+ls -al $SNAPSHOT
+echo ""
+echo Finished `date`
+
+# can use RE in bash:
+# see: man 7 regex
+[[ $lines =~ ^[1-9][0-9]*$ ]]        || errorusage "Error: '$lines' not a number greater than 0!"
+

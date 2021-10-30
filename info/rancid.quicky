@@ -1,0 +1,431 @@
+# rancid.quicky
+
+# main site: http://www.shrubbery.net/rancid/
+
+# howto: http://homepage.mac.com/duling/halfdozen/RANCID-Howto.html
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# rancid info
+
+# see manufactorer's table:
+/usr/local/rancid/bin/rancid-fe 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install/upgrade on CentOS
+
+wget -c ftp://ftp.shrubbery.net/pub/rancid/rancid-2.3.6.tar.gz
+tar xvfz rancid-2.3.6.tar.gz 
+cd rancid-2.3.6
+# NOTE: default working dir is: /usr/local/rancid/  :
+./configure 
+make install
+/usr/local/rancid/bin/rancid -V
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+<rancid setup on Debian>
+
+# RANCID on Debian: http://www.prolixium.com/mynews?id=659
+
+# install (debian):
+apt-get install rancid-core cvs sudo
+
+# home dir on Debian:
+cd /var/lib/rancid/
+
+cd /etc/rancid/
+cp -a rancid.conf rancid.conf.ori
+ln -s /var/lib/rancid/ .
+
+cat >> rancid.conf
+LIST_OF_GROUPS="switches"
+FILTER_PWDS=NO; export FILTER_PWDS
+NOCOMMSTR=NO; export NOCOMMSTR
+
+# check 'hostname' is in /etc/hosts
+
+# adduser rancid
+# man cloginrc
+cat > ~rancid/.cloginrc 
+
+chown rancid:rancid ~rancid/.cloginrc
+chmod 640 ~rancid/.cloginrc
+
+# note: if CVS-errors in log (d1008 VHL) then reinstall rancid-core
+# maybe also relevant::
+# run rancid-cvs AFTER defining the group and BEFORE creating router.db:
+sudo -u rancid -H /var/lib/rancid/bin/rancid-cvs
+# the command rancid-cvs should return cmdline-output with success
+# note: the 'switches' dir (group) will be cteated with this cmd, also empty router.db
+
+cd /var/lib/rancid/
+cat > switches/router.db
+10.10.10.1:cisco:up
+10.10.10.2:hp:up
+10.10.10.3:netscreen:up
+
+# test login:
+sudo -u rancid -H /usr/lib/rancid/bin/clogin 172.16.14.251
+
+# test full-run with CVS:
+sudo -u rancid -H /usr/bin/rancid-run
+# or:
+rancid-run-debian.sh
+
+sudo -u rancid -H crontab -e
+0 3 * * * /usr/bin/rancid-run
+# is installed here:
+# cat /var/spool/cron/crontabs/rancid 
+
+cat >> /etc/aliases
+# rancid:
+rancid-switches: rancid-lunet.support@networkconcepts.nl
+rancid-admin-switches: rancid-lunet.support@networkconcepts.nl
+#
+newaliases
+echo test | sendmail rancid-switches
+# if problem check postfix
+dpkg-reconfigure postfix
+
+
+</rancid setup on Debian>
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+<rancid setup on CentOS-manual-package>
+
+# home dir:
+/usr/local/rancid/
+
+# adduser rancid
+> cat ~rancid/.cloginrc 
+
+# cron settings:
+
+# sudo -u rancid -H crontab -e
+> cat /var/spool/cron/rancid 
+# run config differ every day at 3:00 AM
+0 3 * * * /usr/local/rancid/bin/rancid-run
+
+# rancid main config:
+
+> cat /usr/local/rancid/etc/rancid.conf 
+LIST_OF_GROUPS="switches"
+FILTER_PWDS=NO; export FILTER_PWDS
+NOCOMMSTR=NO; export NOCOMMSTR
+
+# create dirs and CVS (after edit rancid.conf !)
+sudo -u rancid -H /usr/local/rancid/bin/rancid-cvs
+
+# rancid per-group config:
+
+> cat /usr/local/rancid/var/core/router.db 
+alticom-alphen-s100.mgt.networkconcepts.nl:cisco:up
+alticom-adam-s101.mgt.networkconcepts.nl:cisco:up
+
+cat >> /etc/aliases
+# rancid:
+rancid-switches: rancid-lunet.support@networkconcepts.nl
+rancid-admin-switches: rancid-lunet.support@networkconcepts.nl
+#
+newaliases
+
+# check manually
+sudo -u rancid -H crontab -e
+sudo -u rancid -H /usr/local/rancid/bin/rancid-run 
+sudo -u rancid -H /usr/local/rancid/bin/clogin 172.30.1.110
+
+</rancid setup on CentOS-manual-package>
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+<rancid setup on CentOS-RPM>
+
+# home dir:
+cd /var/rancid/
+
+adduser rancid
+cat ~rancid/.cloginrc 
+
+cat >> /etc/rancid/rancid.conf 
+#jdg add:
+LIST_OF_GROUPS="switches"
+FILTER_PWDS=NO; export FILTER_PWDS
+NOCOMMSTR=NO; export NOCOMMSTR
+
+# create dirs and CVS (after edit rancid.conf !)
+sudo -u rancid -H /usr/bin/rancid-cvs
+
+cat /var/rancid/switches/router.db 
+
+cat >> /etc/aliases
+# rancid:
+rancid-switches: rancid-lunet.support@networkconcepts.nl
+rancid-admin-switches: rancid-lunet.support@networkconcepts.nl
+#
+newaliases
+
+# check manually
+sudo -u rancid -H /usr/bin/rancid-run 
+sudo -u rancid -H /usr/bin/rancid 172.30.1.110
+
+# sudo -u rancid -H crontab -e
+> cat /var/spool/cron/rancid 
+# run config differ every day at 3:00 AM
+0 3 * * * /usr/bin/rancid-run
+
+</rancid setup on CentOS-RPM>
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# manual run rancid:
+
+sudo -u rancid -H /usr/bin/rancid-run 
+# or:
+rancid-run-debian.sh
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# if rancid reports 'Routers changed to down' with no real changes:
+
+# NOTE: already correct in 2.3.6
+
+# http://www.shrubbery.net/pipermail/rancid-discuss/2008-April/003004.html
+# The "diff" program is executed with the flags "-u -4", and
+# that appears to be obselete. When I modify it in the control_rancid
+#script, so that it's "-U 4", it seems to now work as god intended.
+
+# centos:
+perl -i.ori -pe 's/^diff -u -4/diff -U 4/g' /usr/local/rancid/bin/control_rancid
+# debian:
+perl -i.ori -pe 's/^diff -u -4/diff -U 4/g' /usr/lib/rancid/bin/control_rancid
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# also on VLAN changes (caused by line-wrapping when some VLAN gets more/less ports)
+# http://www.shrubbery.net/pipermail/rancid-discuss/2008-May/003086.html
+# add 'terminal width 0'
+
+# NOTE: already correct in 2.3.6
+
+# centos
+cd /usr/local/rancid/bin
+# debian
+> cd /usr/lib/rancid/bin
+diff -bur clogin.ori clogin
+--- clogin.ori	2008-11-15 12:53:51.000000000 +0100
++++ clogin	2011-05-01 10:23:17.000000000 +0200
+@@ -638,6 +638,13 @@
+ 	    set command "set logging session disable;$command"
+ 	} else {
+ 	    send "term length 0\r"
++		# jdg
++		expect {
++			-re $prompt   {}
++			-re "\[\n\r]+"   { exp_continue }
++		}
++		send "term width 0\r"
++		#/jdg
+ 	}
+ 	# escape any parens in the prompt, such as "(enable)"
+ 	regsub -all {[)(]} $prompt {\\&} reprompt
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# extract info from cisco rancid config:
+
+# list name/ip/serial from cisco rancid.config files:
+fif 'Model number'              | perl -pe 's/^\.\/([\d\.]+)\:.*?\: (.*)$/\1\t\2/i'
+fif 'Motherboard serial number' | perl -pe 's/^\.\/([\d\.]+)\:.*?\: (.*)$/\1\t\2/i'
+fif 'hostname'                  | perl -pe 's/^\.\/([\d\.]+)\:.*? (.*)$/\1\t\2/i'
+
+# list device/ap-serial/port from cisco rancid.config files:
+cat d101013\ ncbv\ -\ onc\ -\ cdp\ wlan\ aps.txt  | perl -ne '$line=$_;chomp($line);if ($line=~/^([\w\-\d]+)#/) {$device=$1}; if ($line=~/^([A-Z0-9-]{10})\W+(Gig \d\/\d+)\W+/) {print "$device\t$1\t$2\n"};'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# CVS mini howto
+
+# CVS uses per-file revisions, SVN uses per-repository revisions
+
+# check current version with commit-date:
+cvs stat file
+cvs status | egrep '(File:|Working|Repos)'
+
+# check previous versions with commit-date:
+cvs log file
+
+# look at changes between any 2 revs:
+cvs diff -r1.5 -r1.6 10.99.200.251
+
+# print/cat/view file contents from specific revision (update -p):
+cvs update -p -r1.2 10.99.200.251
+
+# quick overview of changes:
+last=10;first=4;name="10.99.200.251";for new in `seq $first $last`; do old=$[$new-1]; echo "cvs diff -U2 -r1.$old -r1.$new $name"; done
+last=10;first=4;name="10.99.200.251";for new in `seq $first $last`; do old=$[$new-1]; echo; echo "cvs diff -U2 -r1.$old -r1.$new $name"; cvs diff -U2 -r1.$old -r1.$new $name; done
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# juniper: change jrancid to get set-config
+
+# see: http://www.gossamer-threads.com/lists/rancid/users/4339
+
+# CentOS location:
+cd /usr/local/rancid/bin/
+# Debian
+cd /usr/lib/rancid/bin/
+
+> diff -bur jrancid.ori jrancid
+--- jrancid.ori 2008-11-15 12:53:51.000000000 +0100
++++ jrancid     2011-08-15 20:36:50.000000000 +0200
+@@ -655,7 +655,9 @@
+        {'show system boot-messages'    => 'ShowSystemBootMessages'},
+        {'show system core-dumps'       => 'ShowSystemCoreDumps'},
+        {'show version detail'          => 'ShowVersion'},
+-       {'show configuration'           => 'ShowConfiguration'}
++#      {'show configuration'           => 'ShowConfiguration'}
++#jdg
++       {'show configuration | display set' => 'ShowConfiguration'}
+ );
+ # Use an array to preserve the order of the commands and a hash for mapping
+ # commands to the subroutine and track commands that have been completed.
+@@ -663,7 +665,10 @@
+ %commands = map(%$_, @commandtable);
+ 
+ $jnx_commands=join(";",@commands);
+-$cmds_regexp=join("|",@commands);
++#jdg
++#$cmds_regexp=join("|",@commands);
++$cmds_regexp = join("|", map quotemeta($_), @commands);
++
+ 
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# add CDP in Cisco:
+
+# centos:
+/usr/local/rancid/bin
+
+# debian:
+cd /usr/lib/rancid/bin
+
+# create patch file:
+> cd /usr/lib/rancid/bin ; cp -a rancid rancid.ori
+> cd /usr/lib/rancid/bin ; diff -bur rancid.ori rancid > rancid.patch
+
+> head -n2 rancid.patch 
+--- rancid.ori  2013-08-25 10:05:48.000000000 +0200
++++ rancid      2013-08-29 19:29:02.000000000 +0200
+
+# update 'rancid' using patch file:
+> cd /usr/lib/rancid/bin ; patch -b -p0 < /usr/local/syssetup/info/rancid.patch
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# rancid does not run ?
+
+# check logs -- says /dev/null is not writeable ...
+# do:
+
+chmod 777 /dev/null 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# cvsweb
+
+# debian:
+apt-get install cvsweb
+man cvsweb
+cd /etc/cvsweb/
+cp -a cvsweb.conf cvsweb.conf.ori
+vi /etc/cvsweb/cvsweb.conf
+
+# note: @CVSrepositories expects a CVS-root-dir where this subdir is present: CVSROOT
+
+# debian:
+> cat /etc/cvsweb/cvsweb.conf | grep -A7 ^@CVSrepositories
+@CVSrepositories = (
+#       'local'   => ['Local Repository', '/var/lib/cvs'],
+#       'freebsd' => ['FreeBSD',          '/var/ncvs'],
+#       'openbsd' => ['OpenBSD',          '/var/ncvs'],
+#       'netbsd'  => ['NetBSD',           '/var/ncvs'],
+#       'ruby'    => ['Ruby',             '/var/anoncvs/ruby'],
+       'rancid'    => ['RANCID',             '/var/lib/rancid/CVS'],
+);
+
+# web ui:
+http://172.20.15.1/cgi-bin/cvsweb/
+http://172.20.15.1/cgi-bin/cvsweb/switches/configs/
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# .cloginrc:
+
+# netscreen ssg5:
+add user       194.151.225.77 ncbvadmin
+add password   194.151.225.77 pwd
+add noenable   194.151.225.77 1
+add method     194.151.225.77 ssh
+# juniper srx:
+add user       194.151.225.74 rmvscript
+add password   194.151.225.74 pwd
+add noenable   194.151.225.74 1
+add method     194.151.225.74 ssh
+# cisco
+add autoenable * 1
+add user       * rmvscript
+add password   * pwd
+add method     * telnet
+# hp 2626
+add user       172.30.1.114 ncbvadmin
+add password   172.30.1.114 pwd
+
+add autoenable *.mgt.networkconcepts.nl 1
+add user       *.mgt.networkconcepts.nl uname
+add password   *.mgt.networkconcepts.nl pwd123
+
+# NOTE: ssh does not work on netscreen(?), use telnet
+# NOTE: on hp-procurve: use manager pwd as pwd (not: operator-pwd manager-pwd)
+# NOTE: Juniper SSG -> type = netscreen
+
+# PIX 
+> cat /var/lib/rancid/switches/router.db | grep 192.168.254.2
+192.168.254.2:cisco:up
+> cat /var/lib/rancid/.cloginrc | grep 192.168.52.254
+add autoenable 192.168.52.254 0
+add user       192.168.52.254 admin
+add password   192.168.52.254 pwd pwd
+add method     192.168.52.254 ssh:22
+add cyphertype 192.168.52.254 des
+
+# ASA
+add autoenable 192.168.53.254 0
+add user       192.168.53.254 admin
+add password   192.168.53.254 pwd pwd
+add method     192.168.53.254 ssh:22
+
+# HP procurve:
+192.168.10.161:hp:up
+add password    192.168.10.161 manager-pwd
+add noenable    192.168.10.161 1
+
+# other
+add method 172.20.150.251 telnet:23023
+add method 172.20.150.252 ssh:23022
+add password hp.procurve.switch manager-pwd
+
+# Cisco catalyst with login/enable
+add password 192.168.200.*  pwd1 pwd2
+
+# JunOS/Juniper (SRX/EX):
+add user       172.30.101.252 rmvscript
+add password   172.30.101.252 pwd
+add noenable   172.30.101.252 1
+add method     172.30.101.252 ssh
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# CVS errors
+
+# if Rancid does not correctly commit new versions into CVS
+# you get this error in the logs:
+> cat /var/log/rancid/switches.20120127.030002  | grep failed
+cvs commit: Up-to-date check failed for `configs/172.16.14.101'
+
+# do an CVS-update (overwrite changes from last CVS version) as the 'rancid' user in the group-dir:
+cd /var/lib/rancid/switches
+sudo -u rancid -H cvs update   
+
+# the re-run rancid
+> rancid-run.sh 
+Found OS-Type: Debian
+Running cmd: sudo -u rancid -H /usr/bin/rancid-run
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

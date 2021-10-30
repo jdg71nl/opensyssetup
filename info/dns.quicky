@@ -1,0 +1,107 @@
+# dns.quicky
+
+# tag: bind, named
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# form zone file for easy viewing:
+> cat editie50090online.nl.zone | egrep -v '^;' | egrep -v '^\s*$' | perl -pe 's/\s+/\t/o'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+you can download DNS zone in BIND format (zone transfer) using:
+> dig -t AXFR asgaard.nl  @ns1.worldnet.nl.
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# show iterative trace with:
+
+dig +trace domain.com
+dig +trace 1.0.0.0.1.0.0.0.8.c.b.1.0.0.a.2.ip6.arpa PTR
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# in DNS zone files update serial (date)
+for file in $( find . -name '*zone' -mtime -1 ); do
+	echo "$file";
+	perl -pi -e 's/^(\s+)\d{6,}\s*;.*?serial.*$/${1}0801212103 ; serial in YYMMDDHHMM/' *.zone
+#perl -pi -e 's/^(\s+)\d{6,}\s*;.*?serial.*$/${1}2008012105 ; serial/' "$file" ;
+done
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# tip (maxes / sidn domeinaanvraag / named):
+
+vermeld in de zone file alle NS-entries (NS1, NS2, NS3) die je ook invult als je een domein aanvraagt (maxes tool, via SIDN)
+
+# voorbeeld zone:
+> cat /var/named/named/twsinfra.nl.zone 
+$TTL 86400 ; 1D
+;SOA
+@				1D IN SOA ns1.networkconcepts.nl. hostmaster.networkconcepts.nl. (
+2010010601 ; serial in YYYYMMDDnn (last edit: d100106-14h40m52s) 
+4H          ; refresh
+1H          ; retry
+1W          ; expiry
+1D )        ; minimum
+;NS
+@				1D IN NS ns1.networkconcepts.nl.
+@				1D IN NS ns2.networkconcepts.nl.
+@				1D IN NS ns3.networkconcepts.nl.
+;MX
+@				1D IN MX 10 mail.networkconcepts.nl.
+@				1D IN MX 20 mail2.networkconcepts.nl.
+;A domain
+localhost	1D IN A 127.0.0.1
+@				1D IN A 80.69.65.224
+mail			1D IN A 80.69.65.224
+mail2			1D IN A 84.244.144.194
+;A web
+www			1D IN A 80.69.65.224
+ftp			1D IN A 80.69.65.224
+;A catchall
+;*				1D IN A 80.69.65.224
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# voorbeeld private-IP forward zone:
+
+>  cat /var/named/named/mgt.networkconcepts.nl.zone |  egrep -v '^\s*$' | perl -pe 's/\s+/\t/o'
+
+$TTL	86400 ; 1D
+@	1D IN SOA ns1.networkconcepts.nl. hostmaster.networkconcepts.nl. (
+2010021501 ; serial in YYYYMMDDnn (last edit: d100215-16h52m11s) 
+4H          ; refresh
+1H          ; retry
+1W          ; expiry
+1D )        ; minimum
+@	1D IN NS ns1.networkconcepts.nl.
+@	1D IN NS ns2.networkconcepts.nl.
+ns1	1D IN A 89.106.162.2
+ns2	1D IN A 89.106.163.2
+@	1D IN A 172.30.1.1
+*	1D IN A 172.30.1.1
+unnamed	1D IN A 172.30.1.1
+;	cat 30.172.in-addr.arpa.zone | awk '{print $4 "\t 1D IN A " $1}' | grep .mgt.networkconcepts.nl. | sed 's/.mgt.networkconcepts.nl.//' | grep 172.30
+wortell-inet-switch	1D IN A 172.20.180.20
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# voorbeeld private-IP reverse zone:
+
+>  cat /var/named/named/20.172.in-addr.arpa.zone |  egrep -v '^\s*$' | perl -pe 's/\s+/\t/o'
+
+$TTL	86400 ; 1D
+@	1D IN SOA ns1.networkconcepts.nl. hostmaster.networkconcepts.nl. (
+2010021501 ; serial in YYYYMMDDnn (last edit: d100215-16h54m04s) 
+4H          ; refresh
+1H          ; retry
+4W          ; expiry
+1D )        ; minimum
+@	1D IN NS ns1.networkconcepts.nl.
+@	1D IN NS ns2.networkconcepts.nl.
+*	1D PTR private.address.rfc1918.arpa.
+;foward=	wortell-inet-switch  1D IN A 172.20.180.20
+20.180	1D PTR wortell-inet-switch.mgt.networkconcepts.nl.
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+
+
+
+

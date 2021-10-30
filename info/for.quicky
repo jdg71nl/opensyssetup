@@ -1,0 +1,27 @@
+# for.quicky
+
+example:
+for a in Fr* ; do /bin/cp /dev/null "$a" ; done
+
+Do not use '$a', because it will literally create $a.
+But do use "$a" because space's in $a need to be included.
+
+Instead of file-pattern, can also use contents of a file, use: `cat file`
+Example:
+ rm -rf file.adr ; for x in `cat file` ; do echo -n "$x " >> file.adr \
+  ; host -ta $x >> file.adr ; done
+
+--
+#      for (( expr1 ; expr2 ; expr3 )) ; do list ; done
+#              First, the arithmetic expression expr1 is evaluated according to
+#              the rules described  below  under  ARITHMETIC  EVALUATION.   The
+#              arithmetic  expression  expr2 is then evaluated repeatedly until
+#              it evaluates to zero.  Each time expr2 evaluates to  a  non-zero
+#              value,  list  is executed and the arithmetic expression expr3 is
+#              evaluated.  If any expression is omitted, it behaves  as  if  it
+#              evaluates to 1.  The return value is the exit status of the last
+#              command in list that is executed, or false if any of the expres-
+#              sions is invalid.
+--
+print 1,2,3,4,5,6,7,8,9 :
+> for (( x=1 ; x<=9 ; x=x+1 )) ; do echo $x ; done

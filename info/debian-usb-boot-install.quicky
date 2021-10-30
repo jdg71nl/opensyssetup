@@ -1,0 +1,25 @@
+# debian-usb-boot-install.quicky
+
+Debian USB
+
+http://wiki.debian.org/BootUsb
+http://linux.simple.be/debian/usb
+http://www.debian-administration.org/article/Boot_Debian_from_an_USB_device
+http://www.linuxconfig.org/install-debian-linux-from-usb-boot-memory-stick
+
+# create bootable USB stick with latest standard netinst debian ISO for easy system install:
+
+# http://www.debian-administration.org/article/Boot_Debian_from_an_USB_device
+fdisk -l
+umount /dev/sdb
+wget http://ftp.debian.org/debian/dists/stable/main/installer-i386/current/images/hd-media/boot.img.gz
+# sudo sh -c 'zcat boot.img.gz > /dev/sdb' 
+zcat boot.img.gz > /dev/sdb
+mkdir /mnt/sdb
+mount /dev/sdb /mnt/sdb
+wget http://cdimage.debian.org/debian-cd/5.0.7/i386/iso-cd/debian-507-i386-netinst.iso
+cp debian-507-i386-netinst.iso /mnt/sdb
+sync
+umount /dev/sdb
+
+

@@ -1,0 +1,9 @@
+# find-replace.quicky
+
+# can use PERL to do search-replace of all occurances in file
+# will save backup with file~
+perl -pi~ -e 's/foo/bar/' file
+
+# recursively
+find -type f -print0 | xargs -0 perl -pi~ -e 's/foo/bar/'
+

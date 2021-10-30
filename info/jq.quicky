@@ -1,0 +1,147 @@
+# jq.quicky
+
+#
+https://stedolan.github.io/jq/manual/
+
+# ---
+> man jq
+JQ(1)                                                                                                                                                                                                                                          JQ(1)
+NAME
+       jq - Command-line JSON processor
+
+# ---
+> jq --help
+jq - commandline JSON processor [version 1.6]
+
+Usage:  jq [options] <jq filter> [file...]
+        jq [options] --args <jq filter> [strings...]
+        jq [options] --jsonargs <jq filter> [JSON_TEXTS...]
+
+jq is a tool for processing JSON inputs, applying the given filter to
+its JSON text inputs and producing the filter's results as JSON on
+standard output.
+
+The simplest filter is ., which copies jq's input to its output
+unmodified (except for formatting, but note that IEEE754 is used
+for number representation internally, with all that that implies).
+
+For more advanced filters see the jq(1) manpage ("man jq")
+and/or https://stedolan.github.io/jq
+
+Example:
+
+        $ echo '{"foo": 0}' | jq .
+        {
+                "foo": 0
+        }
+
+Some of the options include:
+  -c               compact instead of pretty-printed output;
+  -n               use `null` as the single input value;
+  -e               set the exit status code based on the output;
+  -s               read (slurp) all inputs into an array; apply filter to it;
+  -r               output raw strings, not JSON texts;
+  -R               read raw strings, not JSON texts;
+  -C               colorize JSON;
+  -M               monochrome (don't colorize JSON);
+  -S               sort keys of objects on output;
+  --tab            use tabs for indentation;
+  --arg a v        set variable $a to value <v>;
+  --argjson a v    set variable $a to JSON value <v>;
+  --slurpfile a f  set variable $a to an array of JSON texts read from <f>;
+  --rawfile a f    set variable $a to a string consisting of the contents of <f>;
+  --args           remaining arguments are string arguments, not files;
+  --jsonargs       remaining arguments are JSON arguments, not files;
+  --               terminates argument processing;
+
+Named arguments are also available as $ARGS.named[], while
+positional arguments are available as $ARGS.positional[].
+
+See the manpage for more options.
+
+# ---
+# Debian:
+sudo apt install jq
+
+# ---
+# Mac:
+brew install jq
+
+# ---
+# example
+
+> jq .network https--www.bigdatacloud.com--ip-geolocation--37.140.249.1.json
+{
+  "registry": "RIPE",
+  "registryStatus": "assigned",
+  "registeredCountry": "NL",
+  "registeredCountryName": "Kingdom of the Netherlands",
+  "organisation": "QAM Wireless B.V.",
+  "isReachableGlobally": true,
+  "isBogon": false,
+  "bgpPrefix": "37.140.249.0/24",
+  "bgpPrefixNetworkAddress": "37.140.249.0",
+  "bgpPrefixLastAddress": "37.140.249.255",
+  "totalAddresses": 256,
+  "carriers": [
+    {
+      "asn": "AS211031",
+      "asnNumeric": 211031,
+      "organisation": "TriIdentity B.V. trading as Zappa Internet BV",
+      "name": "ZAPPA-INFRA-AS",
+      "registry": "RIPE",
+      "registeredCountry": "NL",
+      "registeredCountryName": "Kingdom of the Netherlands",
+      "registrationDate": "2021-07-15",
+      "registrationLastChange": "2021-07-29",
+      "totalIpv4Addresses": 512,
+      "totalIpv4Prefixes": 2,
+      "totalIpv4BogonPrefixes": 0,
+      "rank": 53922,
+      "rankText": "#53,922 out of 73,444"
+    }
+  ],
+  "viaCarriers": [
+    {
+      "asn": "AS8455",
+      "asnNumeric": 8455,
+      "organisation": "Schuberg Philis B.V.",
+      "name": "ATOM86-AS",
+      "registry": "RIPE",
+      "registeredCountry": "NL",
+      "registeredCountryName": "Kingdom of the Netherlands",
+      "totalIpv4Addresses": 24832,
+      "rank": 5711,
+      "rankText": "#5,711 out of 73,444"
+    }
+  ]
+}
+
+> jq .network.carriers https--www.bigdatacloud.com--ip-geolocation--37.140.249.1.json
+[
+  {
+    "asn": "AS211031",
+    "asnNumeric": 211031,
+    "organisation": "TriIdentity B.V. trading as Zappa Internet BV",
+    "name": "ZAPPA-INFRA-AS",
+    "registry": "RIPE",
+    "registeredCountry": "NL",
+    "registeredCountryName": "Kingdom of the Netherlands",
+    "registrationDate": "2021-07-15",
+    "registrationLastChange": "2021-07-29",
+    "totalIpv4Addresses": 512,
+    "totalIpv4Prefixes": 2,
+    "totalIpv4BogonPrefixes": 0,
+    "rank": 53922,
+    "rankText": "#53,922 out of 73,444"
+  }
+]
+
+> jq .network.carriers[0].organisation https--www.bigdatacloud.com--ip-geolocation--37.140.249.1.json 
+"TriIdentity B.V. trading as Zappa Internet BV"
+
+# from root:
+> jq .network https--www.bigdatacloud.com--ip-geolocation--37.140.249.1.json
+
+# ---
+#-EOF

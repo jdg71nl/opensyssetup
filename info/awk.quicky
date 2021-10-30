@@ -1,0 +1,14 @@
+# awk.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+echo 'Internet  192.168.48.11           0   0030.4884.c563  ARPA   Vlan1' | awk '{ print $4, $2 }'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# example use of awk (found in: /usr/share/doc/locate/README.Debian  )
+
+> awk "/^#/ {next}; /$EXCLUDE_MOINT_POINTS/ {print \$2}" < /etc/fstab | tr '\012' ' '
+/proc /tmp /mnt/sda2 /mnt/sda2/boot /mnt/sda5 
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

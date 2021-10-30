@@ -1,0 +1,1 @@
+../../bin/syssetup-sync.sh

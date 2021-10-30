@@ -1,0 +1,37 @@
+# tplink-wifi.quicky.txt
+
+TP-Link 150Mbps Wireless N Nano USB Adapter
+Model nr TL-WN725N
+
+Download for TL-WN725N V2
+http://www.tp-link.com/en/download/TL-WN725N.html
+
+Datasheet
+http://static.tp-link.com/resources/document/TL-WN725N_V2_Datasheet.pdf
+
+# ---
+Ubuntu Linux TL-WN725N TP-Link version 2 WiFi driver install
+http://brilliantlyeasy.com/ubuntu-linux-tl-wn725n-tp-link-version-2-wifi-driver-install/
+
+aptitude update
+# do either:
+aptitude install linux-headers-$(uname -r)
+# or:
+aptitude install raspberrypi-kernel-headers
+#
+aptitude install build-essential git
+
+git clone https://github.com/lwfinger/rtl8188eu
+cd rtl8188eu
+make all
+make install
+insmod 8188eu.ko
+ 
+ifconfig #(check to see if your wireless wlan cards is now listed)
+ 
+#optional step ...reboot may be necessary
+#sometimes a reboot helps pickup newly installed devices
+reboot
+
+# ---
+

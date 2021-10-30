@@ -1,0 +1,16 @@
+# Defaults for dhcp3-relay initscript
+# sourced by /etc/init.d/dhcp3-relay
+# installed at /etc/default/dhcp3-relay by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# What servers should the DHCP relay forward requests to?
+SERVERS="10.10.100.2"
+
+# On what interfaces should the DHCP relay (dhrelay) serve DHCP requests?
+INTERFACES="eth1"
+
+# Additional options that are passed to the DHCP relay daemon?
+OPTIONS=""

@@ -1,0 +1,9 @@
+# dd.quicky
+# dd.quicky
+
+# clean disk
+dd if=/dev/zero of=/var/xenmachines/helmsdeep/disk1 oflag=direct bs=1M count=10200
+
+# write zeros (clear master boot record):
+dd if=/dev/zero of=/dev/sdb conv=notrunc bs=512 count=10000
+

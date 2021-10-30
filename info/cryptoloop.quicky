@@ -1,0 +1,28 @@
+# cryptoloop.quicky 
+
+See also: 
+encrypted-filesystem.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+USE cryptsetup !!!!!!
+see man
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+http://www.securityforest.com/wiki/index.php/Loopback_Encrypted_Filesystem
+
+test:
+modprobe cryptoloop && lsmod | grep cryptoloop
+modinfo /lib/modules/2.6.5-1.358/kernel/crypto/*
+
+make:
+dd if=/dev/zero bs=1M count=10 of=/root/.mycryptofs
+losetup -e serpent /dev/loop0 /root/.mycryptofs
+mkfs.ext3 /dev/loop0
+mkdir -p /mnt/crypto
+mount -t ext3 /dev/loop0 /mnt/crypto/
+
+unmount:
+umount /mnt/crypto
+losetup -d /dev/loop0
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

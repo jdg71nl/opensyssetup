@@ -1,0 +1,15 @@
+#!/bin/sh -e
+# also:
+# > chmod +x /etc/rc.local
+
+# jdg:
+# https://ritsch.io/2017/08/02/execute-script-at-linux-startup.html
+#
+# added by ADMIN to run fancy stuff at boot:
+# /root/run_this_at_startup.sh || exit 1
+
+# jdg: required for nfs: 
+/usr/sbin/rpc.statd
+
+exit 0
+#-EOF

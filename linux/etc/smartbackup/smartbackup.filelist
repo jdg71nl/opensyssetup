@@ -1,0 +1,5 @@
+# smartbackup.filelist
+/etc/passwd
+/var/log/
+/var/spool/cron/
+/usr/local/bin/arp-scan

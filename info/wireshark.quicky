@@ -1,0 +1,114 @@
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+# wireshark.quicky
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+
+# tethereal.quicky
+# nieuwe naam: tshark, wireshark 
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+
+# split an existing CAP file into multiple parts with each 1500000 packets:
+> editcap -c 1500000 VLB.Alcatel-VLA.Alcatel-LAN.cap VLB.Alcatel-VLA.Alcatel-LAN.cap.split
+creates: 
+VLB.Alcatel-VLA.Alcatel-LAN.cap.split.001
+VLB.Alcatel-VLA.Alcatel-LAN.cap.split.002
+VLB.Alcatel-VLA.Alcatel-LAN.cap.split.003
+etc
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+> tethereal -n -i eth1 -V -S -w dhcp-d050408.cap -R "udp.port eq 67 or udp.port eq 68"
+
+-V				decode packets
+-w file		write to file (instead of console)
+-S				do write to console if writting to file
+
+> tethereal -n -r dhcp-d050408.cap -t ad
+
+-t ad			display absolute time and date
+-r file		read from file
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+# filter ICMPv6
+
+type 128: Echo Request
+type 129: Echo Reply
+
+tshark -n -i eth1 -R "icmpv6.type eq 128 or icmpv6.type eq 129"
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+# tshark_tethereal.quicky
+# nieuwe naam: tshark, wireshark 
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+# rad filter = -f  (man tcpdump) -- do filtering BEFORE processing:
+
+tshark -n -i br30 -f "port 23"
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+
+# split an existing CAP file into multiple parts with each 1500000 packets:
+> editcap -c 1500000 VLB.Alcatel-VLA.Alcatel-LAN.cap VLB.Alcatel-VLA.Alcatel-LAN.cap.split
+creates: 
+VLB.Alcatel-VLA.Alcatel-LAN.cap.split.001
+VLB.Alcatel-VLA.Alcatel-LAN.cap.split.002
+VLB.Alcatel-VLA.Alcatel-LAN.cap.split.003
+etc
+
+# extract time-range
+editcap -A '2011-03-24 09:37:34' -B '2011-03-24 09:50:00' 24mrt2011-pantarijn-cap4.cap 24mrt2011-pantarijn-cap4-0937-0950.cap
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+> tethereal -n -i eth1 -V -S -w dhcp-d050408.cap -R "udp.port eq 67 or udp.port eq 68"
+
+-V				decode packets
+-w file		write to file (instead of console)
+-S				do write to console if writting to file
+
+> tethereal -n -r dhcp-d050408.cap -t ad
+
+-t ad			display absolute time and date
+-r file		read from file
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+# extract list of sessions from cap:
+
+tshark -n -r d110408-flexvpn.cap -q -z conv,tcp > d110408-flexvpn.cap.streams.txt
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+# decode/sniff passwords:
+
+# http://linux.die.net/man/8/dsniff
+
+> dsniff -n -p d110408-flexvpn.cap > d110408-flexvpn.cap.dsniff.txt
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+# display filter examples:
+
+ip.addr eq 172.20.150.1
+ip.addr eq 172.20.150.0/24
+#mac.addr eq 00:10:20:30:40:50
+eth.addr eq 3c:4a:92:d1:21:a2
+tcp.port eq 80
+not tcp.port eq 2221
+icmp
+http.request.method eq "POST"
+ip.addr eq 172.26.208.118 and smb.file matches "agree_login8"
+eth.addr eq 00:16:35:74:80:FA
+not eth.addr eq 00:16:35:74:80:FA and not arp and not hsrp and not ipx
+tcp.flags.syn==1 && tcp.flags.ack==0
+tcp.flags.syn==1
+http.request.method==CONNECT
+tcp.flags.syn==1 or tcp.flags.reset==1 or tcp.flags.fin==1
+
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+# re-sample with 60 bytes snaplen:
+
+mergecap -s60 -w d110714-snap.cap d110714.cap
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------
+# select cap on time basis:
+
+editcap -A '2011-03-24 09:37:34' -B '2011-03-24 09:50:00' infile outfile
+
+# ------+++------------+++------------+++------------+++------------+++------------+++------

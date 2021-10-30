@@ -1,0 +1,15 @@
+#
+
+# info: 
+http://blog.philippheckel.com/2008/05/16/unison-2-27-57-on-debian-etch-and-ubuntu-hardy/
+
+# binary: 
+wget -c http://blog.philippheckel.com/uploads/2008/05/unison-2.27.57-binary-for-debian-etch.gz
+
+# install
+>
+cp -a /usr/local/syssetup/debian/usr/bin/unison-2.27.57 /usr/bin/
+ln -sf /usr/bin/unison-2.27.57 /usr/bin/unison
+lt /usr/bin/unison
+lrwxrwxrwx 1 root root 23 2008-11-25 11:33 /usr/bin/unison -> /usr/bin/unison-2.27.57
+

@@ -1,0 +1,33 @@
+--
+Setup Virtual Hosts:
+
+# in /etc/httpd/conf/httpd.conf:
+NameVirtualHost *:80
+
+#in /etc/httpd/conf.d/:
+
+#file: aaa_default-virtualserver.conf (found first on alphabetical sort!)
+<VirtualHost _default_:80>
+	...
+	</VirtualHost>
+
+# check with:
+> httpd -S
+--
+
+voorbeeld hoe APACHE een redirect kan doen:
+
+webmail.asgaard.nl -> https://secure.smallbizconcepts.nl/webmail/
+
+<VirtualHost *:80>
+	ServerName asgaard.nl
+	ServerAlias *.asgaard.nl
+	DocumentRoot /www/asgaard.nl
+
+	RewriteEngine on
+	RewriteCond %{HTTP_HOST}   ^webmail.asgaard.nl
+	RewriteRule   ^/.* https://secure.smallbizconcepts.nl/webmail/
+</VirtualHost>
+
+--
+

@@ -1,0 +1,54 @@
+# Zabbix
+
+# ---
+# CentOS install
+
+# on monitor.ncbv: compile RPM from TGZ
+
+# but also:
+> yum list zabbix*
+Available Packages
+zabbix-agent.i386                                    1.4.6-1.el5                                     epel     
+zabbix-web.i386                                      1.4.6-1.el5                                     epel   
+
+# agent on centos:
+vi /etc/zabbix/zabbix_agentd.conf 
+chkconfig --list zabbix-agent
+chkconfig --level 345 zabbix-agent on
+/etc/init.d/zabbix-agent start
+
+# ---
+# Debian install
+
+# info: http://www.howtoforge.com/zabbix_network_monitoring_debian_etch
+apt-get install mysql-server mysql-client
+apt-get install zabbix-server-mysql zabbix-frontend-php zabbix-agent
+
+# info: http://www.linuxquestions.org/questions/linux-server-73/mysql-access-denied-for-user-test@localhost-659526/
+# if webUI login error, do:
+mysql -u root -p
+SET PASSWORD FOR 'zabbix'@'localhost' = PASSWORD('pwd');
+flush privileges;
+
+# if error in WebUI: 'Timezone for PHP is not set. Please set "date.timezone" option in php.ini.'
+# info: http://www.php.net/manual/en/timezones.europe.php
+# do:
+> cat /etc/php5/apache2/php.ini | egrep '\[Date|date.timezone'
+[Date]
+;date.timezone =
+date.timezone = Europe/Amsterdam
+
+# if error max_execution_time = 30
+# do:
+> cat /etc/php5/apache2/php.ini | egrep 'max_execution_time'
+#max_execution_time = 30     ; Maximum execution time of each script, in seconds
+max_execution_time = 300;
+
+# if error: cannot write config file
+# do:
+> chmod 660 /etc/zabbix/dbconfig.php 
+
+
+# WebUI default login: Admin / <blank>
+
+# ---

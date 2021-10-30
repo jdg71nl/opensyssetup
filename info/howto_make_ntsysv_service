@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+# adsl4linux     This shell script takes care of starting and stopping
+#                the PPTP connection to XS4ALL by running ADSL4Linux
+#
+# See manual of 'chkconf..' how the next lines work.
+#  Also note that high start priority starts the service relatively late.
+#  And that low stop priority stops the service relatively early.
+#
+# chkconfig: 35 96 02
+# description: adsl4linux is a script to automatically start and stop \
+#              a PPTP connection
+# processname: adsl4linux
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# See how we were called.
+case "$1" in
+  start)
+	echo -n "Turning on ADSL4Linux: "
+        /usr/sbin/adsl start
+        echo_success
+	echo
+	;;
+  stop)
+	echo -n "Turning off ADSL4Linux: "
+        /usr/sbin/adsl stop
+        echo_success
+	echo
+	;;
+  restart)
+	echo -n "Restarting ADSL4Linux: "
+        /usr/sbin/adsl restart
+        echo_success
+	echo
+	;;
+  status)
+	echo "Satus of ADSL4Linux: "
+        /usr/sbin/adsl status
+	echo
+	;;
+  *)
+	echo "Usage: adsl4linux {start|stop|restart|status}"
+	exit 1
+esac
+
+exit 0

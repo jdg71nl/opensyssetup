@@ -1,0 +1,17 @@
+# check-harddisk-linux.txt
+
+# ---
+# use SMART
+
+# info
+# http://www.howtoforge.com/checking-hard-disk-sanity-with-smartmontools-debian-ubuntu
+
+apt-get install smartmontools
+
+smartctl -a /dev/hda
+
+# ---
+# use e2fsck
+
+# ---
+

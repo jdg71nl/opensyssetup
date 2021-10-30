@@ -1,0 +1,143 @@
+# dhcp.quicky
+
+# on Redhat/Centos disable dhcp-behavior (169.254.0.0 in route-table):
+echo 'NOZEROCONF=1' >> /etc/sysconfig/network 
+
+> cat /etc/sysconfig/network
+NOZEROCONF=1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# example DHCP config for PXE (used in Jars: Appolos-builder):
+
+> cat /etc/dhcp3/dhcpd.conf
+ddns-update-style none;
+default-lease-time 600;
+max-lease-time 7200;
+authoritative;
+log-facility local7;
+subnet 172.16.2.0 netmask 255.255.255.0 {
+    range 172.16.2.100 172.16.2.199;
+    option subnet-mask 255.255.255.0;
+    option domain-name-servers 172.16.2.254;
+    option domain-name "appolos.net";
+    filename "pxelinux.0";
+    next-server 172.16.2.52;
+    option root-path "172.16.2.52:/pxeroot";
+    option broadcast-address 172.16.2.255;
+}
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# DHCP testing
+
+# debian:
+apt-get install dhcp3-client
+apt-get install dhcpdump
+apt-get install dhcping
+
+# dump contents of DHCP packets (sniffing):
+dhcpdump -i eth0
+
+# test DHCP server (basic):
+dhcping -v -c 172.24.2.174 -s 172.24.2.50 -h 01:02:03:04:05:06
+dhcping -v -i -c 172.24.2.174 -s 172.24.2.50 -h 01:02:03:04:05:06
+
+# use dhclient for testing:
+dhclient3 -d -n -w -pf /tmp/dhclient.test.pid -lf /tmp/dhclient.test.leases eth0
+
+# debian std use of dhclient, from ifup (/etc/network/interfaces)
+dhclient3 -pf /var/run/dhclient.eth0.pid -lf /var/lib/dhcp3/dhclient.eth0.leases eth0
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# howto prevent resolv.conf update from dhcl-client.
+# Ref: http://www.cyberciti.biz/faq/dhclient-etcresolvconf-hooks/
+
+# debian:
+cat <<HERE > /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate 
+#!/bin/sh
+make_resolv_conf(){
+	:
+}
+HERE
+chmod +x /etc/dhcp3/dhclient-enter-hooks.d/nodnsupdate 
+
+# Redhat/Centos:
+cat <<HERE >> /etc/dhclient-enter-hooks
+make_resolv_conf(){
+ 	:
+}
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+
+# ------+++------------+++------------+++------------+++------------+++------
+# dhcpstatus on debian
+
+http://dhcpstatus.sourceforge.net/install.html
+cd ~
+wget -c http://prdownloads.sourceforge.net/dhcpstatus/dhcpstatus_0.60.tar.gz
+tar xvfz dhcpstatus_0.60.tar.gz 
+mkdir /usr/local/dhcpstatus
+cd /usr/local/dhcpstatus
+tar -xvf /root/dhcpstatus_0.60/libraries.tar 
+cp -a /usr/local/dhcpstatus/dhcpstatus.ini /usr/local/dhcpstatus/dhcpstatus.ini.ori
+
+vi /usr/local/dhcpstatus/dhcpstatus.ini
+#debian
+conf_file=/etc/dhcp3/dhcpd.conf
+leases_file=/var/lib/dhcp3/dhcpd.leases
+#centos
+conf_file=/etc/dhcp/dhcpd.conf
+leases_file=/var/lib/dhcpd/dhcpd.leases
+
+# check if apache-user can read files:
+sudo -u apache -H ls /etc/dhcp/dhcpd.conf
+sudo -u apache -H ls /var/lib/dhcpd/dhcpd.leases
+
+mkdir -pv /var/www/dhcpstatus/cgi-bin/
+cp /root/dhcpstatus_0.60/scripts/dhcpstatus.cgi /var/www/dhcpstatus/cgi-bin/
+cp /root/dhcpstatus_0.60/scripts/dhcpstatus /usr/local/bin/
+# check bin and lib in .pl scripts:
+vi /var/www/dhcpstatus/cgi-bin/dhcpstatus.cgi 
+
+vi /usr/local/bin/dhcpstatus 
+#!/usr/bin/perl -w
+use lib "/usr/local/dhcpstatus";
+
+# debian
+cat > /etc/apache2/sites-available/dhcpstatus 
+ScriptAlias /dhcpstatus/cgi-bin/ /var/www/dhcpstatus/cgi-bin/
+<Directory "/var/www/dhcpstatus/cgi-bin/">
+	AllowOverride None
+	Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+	Order allow,deny
+	Allow from all
+	#Order deny,allow
+	#Deny from all
+	#Allow from 127.0.0.0/255.0.0.0 ::1/128
+</Directory>
+
+cd /etc/apache2/sites-enabled/
+ln -s ../sites-available/dhcpstatus 
+/etc/init.d/apache2 reload
+
+#centos
+cat > /etc/httpd/conf.d/dhcpstatus.conf
+ScriptAlias /dhcpstatus/cgi-bin/ /var/www/dhcpstatus/cgi-bin/
+<Directory "/var/www/dhcpstatus/cgi-bin/">
+	AllowOverride None
+	Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+	Order allow,deny
+	Allow from all
+	#Order deny,allow
+	#Deny from all
+	#Allow from 127.0.0.0/255.0.0.0 ::1/128
+</Directory>
+
+/etc/init.d/httpd reload
+
+# Web
+http://10.1.1.20/dhcpstatus/cgi-bin/dhcpstatus.cgi
+
+# ------+++------------+++------------+++------------+++------------+++------
+

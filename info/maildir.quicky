@@ -1,0 +1,20 @@
+# maildir.quicky
+#
+# howto make maildir (qmail style)
+
+--
+# make only FOLDER (not the base DIR):
+/usr/lib/courier-imap/bin/maildirmake -f <folder> <maildir>
+# -f		do not create a maildir, but create a folder in an existing maildir.
+# example: (dont use dot in front of new-mail-folder
+/usr/lib/courier-imap/bin/maildirmake -f zzz_Archive.Inbox-2006-Q3 /mail/mailbox/john_imap\@smallbizconcepts.nl/
+# then add to 
+vi courierimapsubscribed
+INBOX.folder
+# then:
+chown -R postfix.postfix .zzz_Archive.Inbox-2006-Q3/
+
+--
+# example
+see print-maildir-cmds.sh
+

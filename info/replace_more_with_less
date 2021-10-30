@@ -1,0 +1,3 @@
+#!/bin/sh
+mv /bin/more /bin/more_is_replaced_by_link_to_less
+ln -s /usr/bin/less /bin/more

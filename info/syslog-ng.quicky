@@ -1,0 +1,96 @@
+# syslog-ng.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# example config
+
+# syslog-collector:
+source s_udp {
+	udp( ip("0.0.0.0") port(514) );
+};
+destination d_file_rem {
+	file( "/var/log/HOSTS/$HOST.log.txt"
+		template("$YEAR-$MONTH-$DAY-$HOUR:$MIN:$SEC HOST:$FULLHOST FAC:$FACILITY PRIO:$PRIORITY MSG: $MESSAGE\n")
+		create_dirs(yes)
+	);
+};
+log {
+	source(s_udp);
+	destination(d_file_rem);
+};
+
+destination d_file_allremote {
+	   file( "/var/log/HOSTS/ALLHOSTS.log.txt"
+		      template("$YEAR-$MONTH-$DAY-$HOUR:$MIN:$SEC HOST:$FULLHOST FAC:$FACILITY PRIO:$PRIORITY MS
+				G: $MESSAGE\n")
+				      create_dirs(yes)
+						   );
+};
+log {
+	   source(s_udp);
+		   destination(d_file_allremote);
+};
+
+# --
+
+filter f_ciscochat {
+	not match("transmitting a proposal on")
+	and not match("SEC-6-IPACCESSLOG")
+	and not match("SNMP-3-AUTHFAIL")
+	;
+};
+
+log {
+	source(s_udp);
+	filter(f_ciscochat);
+	destination(d_file_rem);
+};
+
+filter f_notification {
+	match("SPANTREE.*?BLOCK.*?BPDUGUARD")
+	or match("ERR_RECOVER")
+	or match("SYS-5-CONFIG")
+	;
+};
+#	 or match("CONFIG")
+
+destination d_sms {
+	program("/etc/syslog-ng/sms.pl"
+	template("$YEAR-$MONTH-$DAY-$HOUR:$MIN:$SEC HOST:$FULLHOST FAC:$FACILITY PRIO:$PRIORITY MSG: $MESSAGE\n")
+	);
+};
+
+log {
+	source(s_udp);
+	filter(f_notification);
+	destination(d_sms);
+};
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# forward syslog
+
+# send copy to: 172.21.1.10
+source s_udp {
+	udp( ip("0.0.0.0") port(514) );
+};
+destination d_pcs { 
+        udp( "172.21.1.10", port(514) );
+};
+log {
+        source(s_udp);
+        destination(d_pcs);
+};
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# disable cron messages in /var/log
+
+# add filter f_no_cron:
+> cat /etc/syslog-ng/syslog-ng.conf | egrep -B3 -A2 f_no_cron
+filter f_no_cron { not facility(cron); };
+log {
+	source(s_all);
+	filter(f_syslog);
+	filter(f_no_cron);
+	destination(df_syslog);
+};
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

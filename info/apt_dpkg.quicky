@@ -1,0 +1,248 @@
+# apt_dpkg.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# see for release info
+http://www.debian.org/releases/
+
+unstable
+testing
+stable
+oldstable
+obsolete stable
+
+Debian GNU/Linux 5.0 ("lenny")  — current stable release
+Debian GNU/Linux 4.0 ("etch") — current oldstable release
+Debian GNU/Linux 3.1 ("sarge") — obsolete stable release
+Debian GNU/Linux 3.0 ("woody") — obsolete stable release
+Debian GNU/Linux 2.2 ("potato") — obsolete stable release
+Debian GNU/Linux 2.1 ("slink") — obsolete stable release
+Debian GNU/Linux 2.0 ("hamm") — obsolete stable release 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# debian repos are divided in:
+
+main
+contrib
+non-free
+
+deb http://http.us.debian.org/debian squeeze main 
+deb http://http.us.debian.org/debian squeeze main contrib 
+deb http://http.us.debian.org/debian squeeze main contrib non-free
+
+# see:
+http://www.debian.org/doc/manuals/repository-howto/repository-howto
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# check which package version in which release:
+
+http://packages.debian.org/search?keywords=openvpn
+
+# install specific package version
+# see: http://www.debian.org/doc/manuals/apt-howto/ch-apt-get.en.html
+
+> apt-get install -t etch openvpn=2.0.9-4etch1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# update
+
+apt-get update
+apt-get upgrade
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# show installed pacakges, without version and details etc (for export to other system):
+
+dpkg -l | egrep '^ii' | awk '{print $2};'
+
+# as one line:
+dpkg -l | egrep '^ii' | awk '{print $2};' | perl -pe 's/\n/ /'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# clean apt cache
+
+lt /var/lib/apt/lists
+
+apt-get clean
+echo > /etc/apt/sources.list
+apt-get update
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# get selections:
+
+dpkg --get-selections
+
+# set selections:
+echo "netatalk hold" | sudo dpkg --set-selections
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# include software from repositoies:
+
+> vi /etc/apt/sources.list
+
+note:
+universe = Community-maintained Open Source software
+multiverse = Software restricted by copyright or legal issues
+
+# this entry in sources.list:
+deb http://ftp.nl.debian.org/debian/ lenny main contrib
+# results in this URL (here for 'main'):
+http://ftp.nl.debian.org/debian/dists/lenny/main/
+# 'dists' is only package-lists, 'pool' is actual packages:
+http://ftp.nl.debian.org/debian/pool/main/q/qbittorrent/
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# package reconfigure:
+> dpkg-reconfigure php4-mysql
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# show what other packages this package depends upon:
+ apt-cache depends xsensors
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# setup local apt-cache
+
+apt-get install apt-cacher
+
+# enable
+vi /etc/default/apt-cacher 
+AUTOSTART=1
+
+# start
+/etc/init.d/apt-cacher start
+
+# URL is:
+# http://172.16.0.6:3142/
+
+# import local apt cache:
+/usr/share/apt-cacher/apt-cacher-import.pl /var/cache/apt/archives
+
+# on other machine, change sources.list to http://172.16.0.6:3142/.....
+
+> cat /etc/apt/sources.list
+#deb http://ftp.nl.debian.org/debian/ etch main
+deb http://172.16.0.6:3142/ftp.nl.debian.org/debian/ etch main
+#deb http://security.debian.org/ etch/updates main contrib
+deb http://172.16.0.6:3142/security.debian.org/ etch/updates main contrib
+#deb http://kernel-archive.buildserver.net/debian-kernel/ trunk main
+deb http://172.16.0.6:3142/kernel-archive.buildserver.net/debian-kernel/ trunk main
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# list contents (files) of a package:
+dpkg -L package.deb
+
+# Find package(s) owning file(s) (search binaries).
+> dpkg -S /etc/smokeping/config
+smokeping: /etc/smokeping/config
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# etch backports
+
+deb http://www.backports.org/debian etch-backports main
+
+# # ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+Upgrading from Etch to Lenny:
+
+vi sources.list
+change all words etch to lenny, or stable to testing
+apt-get update
+apt-get dist-upgrade
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# from wiki: Debian Distributions
+
+The Debian Project offers 3 distributions to choose from, each with different characteristics. 
+    * stable, presently aliased lenny, is the current release that has stable and well tested software.
+    * testing, presently aliased squeeze, is what the next major release will be and is currently being tested.
+    * unstable, permanently aliased sid, repository contains packages currently under development; it is updated continuously. 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# online search for a package in different debian distributions:
+
+iperf ==> http://packages.debian.org/search?keywords=iperf
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# force reinstall when package is damaged (or selected files from packages where deleted e.q. voyage linux):
+
+apt-get --reinstall install tzdata
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# show each package size:
+
+> dpkg-query -Wf '${Package}\t${Installed-Size}\n'
+
+> dpkg-query -Wf '${Package}\t${Installed-Size}\n' | awk '{print $2 "\t" $1}' | sort -n
+
+> dpkg-query -Wf '${Package}\t${Installed-Size}\n' | egrep '^.i' | awk '{print $2 "\t" $1}' | sort -n
+
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install ONE package from other dist
+
+# see: http://www.debian.org/doc/manuals/apt-howto/ch-apt-get.en.html
+
+# need correct sources.lst
+
+> vi /etc/apt/sources.list
+deb http://mirrors.nl.kernel.org/debian/ testing main
+apt-get update
+
+apt-get -t testing install unison
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# 
+
+> apt-show-versions |grep unison
+unison/lucid uptodate 2.27.57-2ubuntu2
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# update debian
+#
+# info from: http://www.go2linux.org/upgrading-debian
+
+# change all words etch to lenny, or stable to testing
+vi /etc/apt/sources.list
+
+# get repo info:
+aptitude update
+
+# renew pkg tools:
+aptitude install apt dpkg aptitude
+
+# do the update:
+aptitude full-upgrade
+
+# NOTE: 
+# aptitude can do on the cmdline what apt-get can do, but with beter 
+# dependency-checks and with a log of cmds in /var/log/aptitude
+# ref: http://www.linuxquestions.org/questions/debian-26/apt-get-vs-aptitude-363365/
+
+ 
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# example Lenny of /etc/apt/sources.list
+
+> cat /etc/apt/sources.list
+# 
+# deb cdrom:[Debian GNU/Linux 5.0.7 _Lenny_ - Official i386 NETINST Binary-1 20101128-01:05]/ lenny main
+
+#deb cdrom:[Debian GNU/Linux 5.0.7 _Lenny_ - Official i386 NETINST Binary-1 20101128-01:05]/ lenny main
+
+#deb http://mirrors.nl.kernel.org/debian/ lenny main
+#deb-src http://mirrors.nl.kernel.org/debian/ lenny main
+# or
+deb http://ftp.nl.debian.org/debian/ lenny main
+deb-src http://ftp.nl.debian.org/debian/ lenny main
+
+deb http://security.debian.org/ lenny/updates main
+deb-src http://security.debian.org/ lenny/updates main
+
+deb http://volatile.debian.org/debian-volatile lenny/volatile main
+deb-src http://volatile.debian.org/debian-volatile lenny/volatile main
+
+# testing
+#deb http://mirrors.nl.kernel.org/debian/ testing main
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

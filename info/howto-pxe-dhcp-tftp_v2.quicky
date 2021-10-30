@@ -1,0 +1,217 @@
+# howto-pxe-dhcp-tftp_v2.quicky 
+
+# NOTE: this is an update on d091123
+# old: howto-pxe-dhcp-tftp_with-vlans-vmware_v1.quicky
+# new: howto-pxe-dhcp-tftp_v2.quicky 
+
+# ---+------+------+------+++------------+++------------+++------------+++------------+++------
+# summary PXE-server (without virtual-machine, vlan setup):
+
+# ---+------+------+---
+> apt-get install debootstrap tftpd-hpa dhcp3-server nfs-kernel-server openssh-server
+
+# ---+------+------+---
+# The PXE-client will mount the /pxeboot directory as its root-filesystem:
+> mkdir /pxeroot
+> cd /pxeroot
+
+# ---+------+------+---
+# This will setup the pxeroot directory (debootstrap will fetch files directly from internet and takes some time!):
+> debootstrap lenny /pxeroot
+
+# ---+------+------+---
+> cat > /pxeroot/etc/network/interfaces
+# /etc/network/interfaces
+#
+auto lo
+iface lo inet loopback
+#
+# set eth0 to manual because it will do if-ip and trigger ntpdate
+# do not set dhcp, because that has been done at kernel-boot
+auto eth0
+iface eth0 inet manual
+#end
+
+# ---+------+------+---
+> echo "pxeboot" > /pxeroot/etc/hostname
+
+# ---+------+------+---
+> cat > /pxeroot/etc/hosts
+# /etc/hosts
+#
+127.0.0.1 localhost pxeboot
+# The following lines are desirable for IPv6 capable hosts
+::1 ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+#
+#end
+
+# ---+------+------+---
+> cat > /pxeroot/etc/fstab
+# /etc/fstab: static file system information.
+#
+# <file system>   <mount point>   <type>   <options>   <dump>    <pass>
+/dev/ram0  /       ext2   defaults    0   0
+proc       /proc      proc   defaults    0   1
+tmpfs      /tmp       tmpfs  defaults    0   1
+#
+#end
+
+# ---+------+------+---
+> cat > /pxeroot/etc/issue
+
+Debian GNU/Linux 5.0 \n \l
+
+You can login as 'root' with password 'root'.
+Note that the root-filesystem is a read/write-NFS mount and that all changes to it are persistent.
+Run 'date' to correct the time, format: date MMDDhhmm[[CC]YY], example: date 112311502009 is 'Mon Nov 23 11:50:00 CET 2009'
+
+# ---+------+------+---
+# Uncomment the serial-console line in the inittab (for console-less systems)
+vi /pxeroot/etc/inittab 
+T0:23:respawn:/sbin/getty -L ttyS0 9600 vt100
+#T1:23:respawn:/sbin/getty -L ttyS1 9600 vt100
+
+
+# ---+------+------+---
+# Prepare the pxe-runtime system (on top of what debootstrap did):
+
+> chroot /pxeroot
+
+# Set the root password to 'root':
+> passwd
+
+# need to get correct (486) kernel and generate boot info:
+#
+# Some warnings will appear because your system might not be bootable because there 
+# is no boot loader on the system (grub, lilo,…). Don't stop the script by answering 
+# “no” when it aks if you want to stop the installation.
+## jdg-not-sure> apt-get install linux-image-2.6.18-6-486
+#
+> apt-get install linux-image-2.6.26-2-486
+
+# These packages might be needed in pxeboot runtime (can be dynamically installed 
+# later, because NFS is read/write mount):
+> apt-get install partimage rsync ssh parted lsof arping
+
+# repair tzdata:
+> apt-get --reinstall install tzdata
+> dpkg-reconfigure tzdata
+> ls -altr /usr/share/zoneinfo/Europe/Amsterdam 
+
+> adduser jdg
+> apt-get install unison
+
+# install sysseup with colorprompt:
+> less /usr/local/syssetup/syssetup.txt 
+
+# (linux-image-2.6.26-2-486 does not support BOOT=nfs by default)
+# http://www.howtoforge.com/forums/archive/index.php/t-20887.html
+> vi /etc/initramfs-tools/initramfs.conf
+# change the line :
+BOOT=local
+# to:
+BOOT=nfs
+
+> update-initramfs -u
+
+# Exit the CHROOT:
+exit
+
+# ---+------+------+---
+# Setup DHCP on PXE-server:
+
+> cp -a /etc/dhcp3/dhcpd.conf /etc/dhcp3/dhcpd.conf.ori
+> cat > /etc/dhcp3/dhcpd.conf
+# /etc/dhcp3/dhcpd.conf
+#
+authoritative;
+ddns-update-style none;
+default-lease-time 6000;
+max-lease-time 72000;
+log-facility local7;
+subnet 172.16.2.0 netmask 255.255.255.0 {
+    range 172.16.2.100 172.16.2.199;
+    option subnet-mask 255.255.255.0;
+    option broadcast-address 172.16.2.255;
+    option routers 172.16.2.254;
+    option domain-name-servers 172.16.2.254;
+    option dhcp-server-identifier 172.16.2.52;
+    option domain-name "networkconcepts.nl";
+    filename "pxelinux.0";
+    next-server 172.16.2.52;
+    option root-path "172.16.2.52:/pxeroot";
+}
+#
+#end
+
+> cp -a /etc/default/dhcp3-server /etc/default/dhcp3-server.ori
+> cat > /etc/default/dhcp3-server
+# /etc/default/dhcp3-server
+#
+# only listen on this interface:
+INTERFACES="eth1"
+#
+#end
+
+/etc/init.d/dhcp3-server restart
+
+# ---+------+------+---
+# Setup TFTP on PXE-server:
+
+> cat > /etc/default/tftpd-hpa
+# /etc/default/tftpd-hpa
+#
+RUN_DAEMON="yes"
+OPTIONS="-l -s /var/lib/tftpboot"
+#
+#end
+
+/etc/init.d/tftpd-hpa restart
+
+# get latest boot-file:
+> cd /var/lib/tftpboot
+> wget http://ftp.debian.org/debian/dists/lenny/main/installer-i386/current/images/netboot/pxelinux.0
+> file /var/lib/tftpboot/pxelinux.0 
+/var/lib/tftpboot/pxelinux.0: pxelinux Loader, code offset 0x9c
+> cp -v /pxeroot/vmlinuz ./
+> cp -v /pxeroot/initrd.img ./
+> mkdir -v pxelinux.cfg
+
+> cat > /var/lib/tftpboot/pxelinux.cfg/default
+# /var/lib/tftpboot/pxelinux.cfg/default
+#
+DISPLAY boot.txt
+F1 f1.txt
+SAY Enter 'linux' or 'serial' or 'serial2' (after 5 seconds defaults to 'linux')
+DEFAULT linux
+LABEL linux
+    kernel vmlinuz
+    append vga=normal initrd=initrd.img ramdisk_size=14332 root=/dev/nfs nfsroot=172.16.2.52:/pxeroot rw --
+LABEL serial
+    kernel vmlinuz
+    append vga=normal initrd=initrd.img ramdisk_size=14332 root=/dev/nfs nfsroot=172.16.2.52:/pxeroot rw console=ttyS0,9600n8 quiet --
+LABEL serial2
+	kernel vmlinuz
+	append vga=normal initrd=initrd.img ramdisk_size=14332 root=/dev/nfs nfsroot=172.16.2.52:/pxeroot rw console=ttyS0,9600n8 noacpi acpi=off noapm apm=off --
+SERIAL 0 9600
+PROMPT 1
+TIMEOUT 50
+#
+#end
+
+# ---+------+------+---
+# Setup NFS on PXE-server:
+
+> cat >> /etc/exports
+/pxeroot    172.16.2.0/255.255.255.0(rw,sync,no_root_squash,no_subtree_check)
+
+/etc/init.d/nfs-kernel-server restart
+
+# ---+------+------+---
+
+# ---+------+------+------+++------------+++------------+++------------+++------------+++------

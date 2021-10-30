@@ -1,0 +1,9 @@
+# hp_laserjet_1505.quicky
+#
+
+info and dependnecies from:
+http://www.k12ltsp.org/mediawiki/index.php/HPLIP
+yum -y install gcc-c++ python-devel openssl-devel cups-devel libusb-devel libtool libjpeg\* libnet net-snmp net-snmp-devel python-ctypes libtiff-devel libpng-devel sane-devel dbus-devel 
+
+driver from sourceforge:
+hplip-2.8.9.tar.gz

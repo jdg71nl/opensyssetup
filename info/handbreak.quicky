@@ -1,0 +1,23 @@
+# handbrake.quicky
+
+# ------+++------
+# install on debian:
+
+# see: http://deb-multimedia.org/
+
+> cat /etc/apt/sources.list
+# install handbrake.fr via http://deb-multimedia.org/
+deb http://www.deb-multimedia.org stable main non-free
+
+apt-get update
+
+apt-get install deb-multimedia-keyring
+
+> aptitude search handbrake
+p   handbrake-cli                                                                             - versatile DVD ripper and video transcoder (command line)                                           
+p   handbrake-gtk                                                                             - versatile DVD ripper and video transcoder (GTK GUI)                                                
+
+> apt-get install handbrake-gtk
+
+# ------+++------
+

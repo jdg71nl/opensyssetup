@@ -1,0 +1,161 @@
+# apache-http.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# check apache with:
+> httpd -S
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# on debian/4/etch
+
+> cat /etc/apache2/apache2.conf  | grep Servername
+Servername "rmv-neo-01.networkconcepts.nl"
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# httpd-passwords
+
+# first time, create empty file:
+touch /etc/apache2/htpasswd.user.db
+touch /etc/httpd/conf/htpasswd.user.db
+
+# then add/change pwd (-m for MD5):
+htpasswd -m /etc/apache2/htpasswd.user.db name
+htpasswd -m /etc/httpd/conf/htpasswd.user.db name
+
+#in apache.conf use:
+<Directory /var/www/>
+ AuthType Basic
+ AuthName "Restricted Files"
+ AuthUserFile  /etc/httpd/conf/htpasswd.user.db
+ AuthGroupFile /etc/httpd/conf/htpasswd.groups.txt
+ Require user rmv-vhl
+</Directory>
+
+cat /etc/httpd/conf/htpasswd.groups.txt
+DG-download: jdgraaff vdentoom raugust willem berend download telengy lars
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Setup Virtual Hosts:
+
+# see: http://httpd.apache.org/docs/2.0/vhosts/
+
+# you can use IP-based virtual hosts (<virtualHost IP:80>)
+# you can use Name-based virtual hosts (ServerName name)
+# you can use a mix.
+
+# Syntax:	NameVirtualHost addr[:port]
+# NameVirtualHost 111.22.33.44 
+
+# example:
+Listen 80
+NameVirtualHost *:80
+<VirtualHost *:80>
+	ServerName www.domain.tld
+	ServerAlias domain.tld *.domain.tld
+	DocumentRoot /www/domain
+</VirtualHost>
+<VirtualHost *:80>
+	ServerName www.otherdomain.tld
+	DocumentRoot /www/otherdomain
+</VirtualHost>
+
+# NOTE: use can ommit the port if you are not also using a VirtualHost in HTTPS (using "Listen 443" and "<VirtualHost *:443>")
+NameVirtualHost *
+<VirtualHost *>
+
+
+# When using IP-based virtual hosting, the special name _default_ can be specified 
+# in which case this virtual host will match any IP address that is not explicitly 
+# listed in another virtual host.
+<VirtualHost _default_:80>
+
+# NOTE that the first file will be the default virtualhost (so use: 000-default.conf)
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# voorbeeld hoe APACHE een redirect kan doen:
+
+webmail.asgaard.nl -> https://secure.smallbizconcepts.nl/webmail/
+
+<VirtualHost *:80>
+	ServerName asgaard.nl
+	ServerAlias *.asgaard.nl
+	DocumentRoot /www/asgaard.nl
+
+	RewriteEngine on
+	RewriteCond %{HTTP_HOST}   ^webmail.asgaard.nl
+	RewriteRule   ^/.* https://secure.smallbizconcepts.nl/webmail/
+</VirtualHost>
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Enable mod_ssl (debian)
+
+a2enmod ssl
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+--
+Setup Virtual Hosts:
+
+# in /etc/httpd/conf/httpd.conf:
+NameVirtualHost *:80
+
+#in /etc/httpd/conf.d/:
+
+#file: aaa_default-virtualserver.conf (found first on alphabetical sort!)
+<VirtualHost _default_:80>
+	...
+	</VirtualHost>
+
+# check with:
+> httpd -S
+--
+
+voorbeeld hoe APACHE een redirect kan doen:
+
+webmail.asgaard.nl -> https://secure.smallbizconcepts.nl/webmail/
+
+<VirtualHost *:80>
+	ServerName asgaard.nl
+	ServerAlias *.asgaard.nl
+	DocumentRoot /www/asgaard.nl
+
+	RewriteEngine on
+	RewriteCond %{HTTP_HOST}   ^webmail.asgaard.nl
+	RewriteRule   ^/.* https://secure.smallbizconcepts.nl/webmail/
+</VirtualHost>
+
+--
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Rewrite engine (mod_rewrite)
+
+# info
+http://httpd.apache.org/docs/2.0/mod/mod_rewrite.html
+http://httpd.apache.org/docs/2.0/misc/rewriteguide.html
+
+# example how to rewrite secundairy domains to main domain:
+# also prepend www.
+
+<VirtualHost _default_:80>
+        ServerName twsnetworks.com
+
+        ServerAlias www.twsnetworks.com
+        ServerAlias twsnetworks.nl, www.twsnetworks.nl
+
+        RewriteEngine on
+        RewriteCond   %{HTTP_HOST}  !^www.twsnetworks.com$         [NC]
+        RewriteRule   ^(.*)         http://www.twsnetworks.com$1   [R,L]
+
+</VirtualHost>
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# rewrite HTTP to redirect ro HTTPS
+
+#jdg
+RewriteEngine On
+RewriteCond %{HTTPS} off
+#RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+RewriteRule (.*) https://portal.twsnetworks.com/
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

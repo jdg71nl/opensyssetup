@@ -1,0 +1,58 @@
+# mercurial.quicky
+
+# other SCM: subversion
+# advantage mercurial: lightweight and local, ideal for unix-config change-tracking
+
+# CentOS
+yum install mercurial
+# Debian
+apt-get install mercurial
+
+# init
+> cat ~/.hgrc 
+[ui]
+username = John de Graaff
+
+# use in dir-project:
+hg init
+hg add
+hg commit
+# commit without writing message in 'vi':
+hg commit -mx
+
+hg history
+hg history -r4:6
+
+# roll back a working dir to an earlier revision
+hg update 2
+
+ln -s /usr/local/syssetup/bin/hgcommitnow.sh .
+
+# ---
+# if error 'abort: requirement 'dotencode' not supported!' see:
+http://mercurial.selenic.com/wiki/RequiresFileDB 
+
+--> is version difference!
+
+--[CWD=/etc/httpd/conf.d]--[11:57:44 Thu 29-Nov-2012 CET]--[root@web1]--[CentOS-5.8]------
+> o /var/log/rpmpkgs | grep mercu
+mercurial-2.2-1.el5.rf.x86_64.rpm
+
+--[CWD=/etc/httpd/conf.d]--[11:59:02 Thu 29-Nov-2012 CET]--[root@web1]--[CentOS-6.3-x86_64]------
+> o /var/log/rpmpkgs | grep mercu
+mercurial-1.4-3.el6.x86_64.rpm
+
+http://pkgs.repoforge.org/mercurial/
+rpm -Uvh http://pkgs.repoforge.org/mercurial/mercurial-2.2.2-1.el6.rfx.x86_64.rpm
+
+# ---
+# ignore / exclude:
+
+# edit file in working dir:
+> cat .hgignore 
+^.*.sh
+^\.
+^archive$
+
+# ---
+

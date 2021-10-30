@@ -1,0 +1,62 @@
+# qemu.quicky
+
+# info: http://qemu-buch.de/cgi-bin/moin.cgi/QuickStartGuide
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# make disk (default format is 'raw', qcow2 is more versatile):
+
+qemu-img create -f qcow2 hda.img 512M
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# start with ISO: 
+
+qemu-system-i386 --hda ./hda.img --cdrom /root/voyage-linux/voyage-0.6.2/voyage-0.6.2.iso -m 256 -boot d -no-kqemu -k en-us
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# if problems with up-arrow (or enter key) in QEMU with X11, can use '-k en-us':
+
+qemu -k en-us file.iso
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# attach display to VNC (instead of X display):
+
+# display '1' (5901)
+qmeu -vnc :1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# attach virtual-nic to TAP (and then bridge to eth0):
+
+#
+qemu -net nic -net tap 
+# this will create tap0, then run script /etc/qemu-ifup
+ 
+# default: -net nic -net user
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# https://bugzilla.redhat.com/show_bug.cgi?id=471000
+#  Bug 471000 -  QEMU processes input from arrow keys incorrectly  
+
+# --
+Comment #18 From  Josh Cogliati  2009-01-21 23:34:14 EDT  -------
+
+For what it's worth, if you use qemu -vnc 0:0 ... the arrow keys will work, but
+not if you use the straight x version.  
+
+# --
+Comment #32 From  Ralph Siemsen  2009-05-18 17:13:57 EDT  -------
+
+(In reply to comment #25)
+> I don't think there are any plans to re-base qemu in F10, so people may well
+> have to wait until F11
+
+I ran into the same problem, using current F10 qemu-0.9.1-12.fc10.i386, and was
+able to work-around the cursor key issue by simply specifying a keymap when
+starting qemu, for example:
+
+    qemu -k en-us filename.iso
+
+YMMV.  
+# --
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

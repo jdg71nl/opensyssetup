@@ -1,0 +1,8 @@
+# owncloud
+
+cd /var/www/owncloud/
+sudo -u www-data php occ maintenance:mode --off
+
+# https://doc.owncloud.org/server/9.0/admin_manual/maintenance/package_upgrade.html#upgrade-quickstart
+
+

@@ -1,0 +1,75 @@
+# samba.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# testing samba config:
+
+testparm -s smb.conf.master > smb.conf
+testparm -sv smb.conf.master > smb.conf.with-defaults
+smbd -b | grep PRIVATE_DIR
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Anonymous Read-Write Document Server
+
+smbpasswd -a samba
+New SMB password: samba
+Retype new SMB password: samba
+Added user samba
+
+> cat /etc/samba/smbpasswd 
+samba:0:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:B3A3496D3F61D8CDA3B865A2B4B29A37:[U          ]:LCT-496B1417:
+
+[global]
+	security = SHARE
+[data]
+	force user = samba
+	force group = samba
+	guest ok = Yes
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# hints
+
+adduser samba
+passwd samba
+vi /etc/samba/smbpasswd
+samba:502:DF7D4C80BE72A070AAD3B435B51404EE:B3A3496D3F61D8CDA3B865A2B4B29A37:[U          ]:LCT-455F5EB6:
+smbpasswd samba
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# samba and symlinks
+
+info:
+http://lists.samba.org/archive/samba/2005-June/107587.html
+
+You're hitting the effects of the "unix extensions". Without
+unix extensions on, the client can't detect a file is a symlink,
+it just looks like a file and will be followed on the server.
+With unix extensions on, the client can detect a file is a symlink
+and (like with NFS) will follow it locally.
+
+# solution:
+
+> vi /etc/samba/smb.conf
+[global]
+	unix extensions = no
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Chapter 38. The Samba Checklist Part V. Troubleshooting
+http://us5.samba.org/samba/docs/man/Samba-HOWTO-Collection/diagnosis.html
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# error in syslog 'smbd  does not exist or permission denied when connecting to Error was Permission denied '
+
+check SElinux is disalbed:
+
+> cat /etc/selinux/config 
+SELINUX=disabled
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# samba / cifs:
+
+> cat /etc/fstab
+//172.24.2.50/samba     /mnt/samba/     cifs    username=samba,password=samba,file_mode=0744,dir_mode=0777,uid=samba,gid=samba        0 0
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+
+

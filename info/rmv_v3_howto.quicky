@@ -1,0 +1,177 @@
+# rmv_v3_howto.quicky
+-----------------------------------------------------------------------------
+
+# add RMV-unit in DB:
+INSERT INTO rmvunits (serial, customername, active) VALUES (32, 'Naaldwijk', 1);
+
+# Extract from: http://wiki.voyage.hk/dokuwiki/doku.php?id=getting_voyage
+
+#--- before CHROOT
+cd $IMAGEDIR/
+cp -r ro/* rw
+cp -a etc/apt/sources.list.voyage-nl etc/apt/sources.list
+cd ..
+chroot /usr/voyage/$IMAGEDIR/
+
+#--- DO directly in the CHROOT
+mount -t proc none /proc
+
+#--- things that can be done within the CHROOT
+apt-get update
+apt-get upgrade 
+apt-cache search dhcpd
+apt-cache show dhcp
+dpkg -l | grep vim
+apt-get install [package] 
+dpkg -s [package]
+cd /var/lib/dpkg/info ; cat [package].list
+apt-get install localepurge	; localepurge
+dpkg-query --showformat='${Status}\t${Installed-Size}\t${Package}\n' -W '*' | 
+           grep "^install ok" |
+           cut -f2,3 |
+           sort -n -k1
+
+#--- DO last BEFORE exit the CHROOT
+
+>> consider changing password for root, mysql-root
+
+exit ; cd $IMAGEDIR ; 
+mv rw/var/cache/apt/archives/*.deb /usr/sslimage/deb-added/ ; 
+cd .. ; chroot $IMAGEDIR
+
+apt-get clean
+echo > /etc/apt/sources.list
+apt-get update
+umount /proc
+rm -rf /rw/*
+exit
+
+rsync -n -vi -az --delete deb-added/ rsync://jdg@172.28.2.1/rmvuv3/deb_added/
+
+./prepare.sh $IMAGEDIR
+diff -r --brief sslimage-3.0.4 sslimage-3.0.5 2>&1 | \
+	egrep -v '/(dev|proc)' | \
+	egrep -v 'No such file or directory' | \
+	egrep -v '/usr/share/(man|doc)' | \
+	egrep -v '/var/(lib|cache)/(apt|dpkg)/'
+
+#--- [$IMAGEDIR] Package in TGZ
+./package.sh $IMAGEDIR
+or:
+	rm -rf rw/*
+	cd $IMAGEDIR/
+	tar cpzf "../$VERSION.tgz" --exclude='proc/*' *
+
+Cando:
+
+### on source:
+
+./prepare.sh $IMAGEDIR
+# NOTE: prepare.sh will also create CPIO file with all symlinks
+# NOTE: rsync will recreate and alter absolute symlink -> need to recreate locally with CPIO
+push:
+rsync -azv --delete --numeric-ids sslimage-3.0.3/ rsync://172.24.6.99/voyage/sslimage-3.0.3/
+retrieve:
+rsync -azv --delete --numeric-ids rsync://172.25.1.128/sslimage/sslimage-3.0.5/ sslimage-3.0.5/
+
+### on target:
+cd $IMAGEDIR
+find -type l -exec rm {} \;
+cat symlinks.cpio | cpio -ivm
+
+-----------------------------------------------------------------------------
+# duplicate entire CF-card using dd:
+
+dd if=/dev/sdb bs=512 | gzip > sslimage-3.0.15.rmv.dd.gz
+zcat sslimage-3.0.15.rmv.dd.gz | dd of=/dev/sdb bs=512
+
+-----------------------------------------------------------------------------
+# duplicate entire CF-card using partimage:
+
+dd if=/dev/sdb of=sdb.mbr count=1 bs=512
+sfdisk -d /dev/sdb > sdb.sf
+partimage -z1 -o -d save /dev/sdb1 sslimage-3.0.15.rmv.partimg.sdb1.gz
+partimage -z1 -o -d save /dev/sdb2 sslimage-3.0.15.rmv.partimg.sdb2.gz
+
+dd if=sdb.mbr of=/dev/sdb
+sfdisk /dev/sdb < sdb.sf
+(may need to extract/insert card to reread table)
+partimage restore /dev/sdb1 sslimage-3.0.15.rmv.partimg.sdb1.gz.000
+partimage restore /dev/sdb2 sslimage-3.0.15.rmv.partimg.sdb2.gz.000
+(no need to do 'lilo' as this is in the restored MBR already)
+
+-----------------------------------------------------------------------------
+# [$IMAGEDIR] install instructions
+# NOTE: can install 2nd Hardisk in MS-VPC Centos as /dev/hdb, 
+#       which image-file is actually primary HD (/dev/hda) from voyage-test
+#
+# fdisk /dev/hdb		hdb1: 300MB, hdb2: 212MB
+mkfs.ext2 /dev/hdb1
+mkfs.ext2 /dev/hdb2
+tune2fs -c 0 /dev/hdb1
+tune2fs -c 0 /dev/hdb2
+e2label /dev/hdb1 sslboot
+e2label /dev/hdb2 ssldata
+# mkdir -p /mnt/hdb1 ; mkdir -p /mnt/hdb2
+mount /dev/hdb1 /mnt/hdb1
+mkdir -p /mnt/hdb1/data
+mount /dev/hdb2 /mnt/hdb1/data
+cd /mnt/hdb1 ; tar --numeric-owner -zxf /usr/sslimage/sslimage-3.0.12.tgz
+cd voyage-0.2/ ; cp -a * /mnt/hdb1/
+# rsync -azv --delete --numeric-ids --exclude='lost+found/' sslimage-3.0.8/ /mnt/hdb1/
+vi /mnt/hdb1/etc/lilo.conf
+vi /mnt/hdb1/etc/fstab
+chroot /mnt/hdb1 lilo -C /etc/lilo.conf -v -v -v
+chroot /mnt/hdb1 /data/rmv/mod/set_rmv.sh
+sync
+cd /mnt ; umount /dev/hdb2; umount /dev/hdb1
+-----------------------------------------------------------------------------
+diff -r --brief sslimage-3.0.7 sslimage-3.0.8 2>&1 | \
+	egrep -v '/(dev|proc)' | egrep -v 'No such file or directory' | \
+	egrep -v '/usr/share/(man|doc)' | egrep -v '/var/(lib|cache)/(apt|dpkg)/'
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+# DO NOT USE THIS HERE !!!
+# summary taken from: /voyage.update
+fdisk /dev/sdc
+mkfs.ext2 /dev/sdc1
+tune2fs -c 0 /dev/sdc1
+mkdir -p /mnt/sdc1
+mount /dev/sdc1 /mnt/sdc1
+cd ~
+tar --numeric-owner -zxvf /path/voyage-0.2.tar.gz
+cd voyage-0.2/
+cp -a * /mnt/sdc1
+cp /mnt/sdc1/etc/lilo.conf.voyage /mnt/sdc1/etc/lilo.install.conf
+vi /mnt/sdc1/etc/lilo.install.conf
+chroot /mnt/sdc1 lilo -C /etc/lilo.install.conf -v -v -v
+sync
+umount /mnt/sdc1
+
+-----------------------------------------------------------------------------
+# note: 1st time boot
+# cat /etc/init.d/voyage-util
+...
+if [ -f /voyage.1st ] ; then
+ echo "First-time installation "
+ echo -n "Re-generating host ssh keys ... "
+ rm -f /etc/ssh/ssh_host_rsa_key
+ ssh-keygen -q -t rsa -f /etc/ssh/ssh_host_rsa_key -N '' || { echo "Fatal Error: Failed to generate RSA keypair"
+ rm -f /etc/ssh/ssh_host_dsa_key
+ ssh-keygen -q -t dsa -f /etc/ssh/ssh_host_dsa_key -N '' || { echo "Fatal Error: Failed to generate DSA keypair"
+
+ depmod -ae
+
+ rm -f /voyage.1st
+ echo "Done."
+fi
+...
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------

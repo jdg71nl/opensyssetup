@@ -1,0 +1,27 @@
+# The settings in this file are used by the program ntpdate-debian, but not
+# by the upstream program ntpdate.
+
+# Set to "yes" to take the server list from /etc/ntp.conf, from package ntp,
+# so you only have to keep it in one place.
+NTPDATE_USE_NTP_CONF=yes
+
+# List of NTP servers to use  (Separate multiple servers with spaces.)
+# Not used if NTPDATE_USE_NTP_CONF is yes.
+#NTPSERVERS="0.debian.pool.ntp.org 1.debian.pool.ntp.org 2.debian.pool.ntp.org 3.debian.pool.ntp.org"
+
+# Additional options to pass to ntpdate
+#NTPOPTIONS=""
+
+#jdg
+NTPSERVERS="89.106.162.2 89.106.163.2 80.69.65.224 84.244.144.194"
+#
+# ntp-pool.networkconcepts.nl = load-balanced:
+# ntp1.networkconcepts.nl 89.106.162.2
+# ntp2.networkconcepts.nl 89.106.163.2
+# ntp3.networkconcepts.nl 80.69.65.224
+# ntp4.networkconcepts.nl 84.244.144.194
+#
+#jdg
+# -u     Direct  ntpdate  to  use an unprivileged port for outgoing packets.
+NTPOPTIONS="-u"
+#

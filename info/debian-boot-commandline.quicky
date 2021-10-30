@@ -1,0 +1,14 @@
+# debian-boot-commandline.quicky
+
+# info: http://ask.xmodulo.com/boot-into-command-line-ubuntu-debian.html
+
+# jdg: not in this grub version?? :
+# vi /etc/default/grub
+# #GRUB_CMDLINE_LINUX=""
+# GRUB_CMDLINE_LINUX="text"
+
+update-grub
+
+systemctl set-default multi-user.target
+systemctl set-default graphical.target
+

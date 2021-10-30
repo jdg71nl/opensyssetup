@@ -1,0 +1,5 @@
+# ext4.quicky
+
+# https://ext4.wiki.kernel.org/index.php/Ext4_Howto#Creating_ext4_filesystems
+mkfs.ext4 /dev/sdb1
+

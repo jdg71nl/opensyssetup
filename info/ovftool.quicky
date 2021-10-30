@@ -1,0 +1,29 @@
+# ovftool.quicky
+
+# ---
+# import / export VMware VMs (vmx) to OVF
+
+# get ovftool for MAC:
+VMware OVF Tool.pkg
+VMware-ovftool-2.1.0-467744-mac.i386.tar.gz
+ovftool-210-userguide.pdf
+
+# NOTE:
+- make sure the VM-version (virtual hardware) is compatible with target host.
+- info: http://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=1003746
+  hw version 7 = fusion 2/3, esx 4
+  hw version 8 = fusion 4, esx 5
+
+# ---
+# http://communities.vmware.com/thread/267531
+
+You will have to select to install ovftool (select customize) when installing Fusion 3.1 and ovftool will be installed in
+/Library/Application Support/VMware Fusion/ovftool
+to import an OVF to fusion you can do
+./ovftool http://www.mydomain.com/myVM.ovf ~/vmware/myVM.vmwarevm/myVm.vmx 
+or export a fusion vm to OVF
+./ovftool  ~/vmware/myVM.vmwarevm/myVm.vmx /tmp/myVM.ovf
+./ovftool --help will tell out about the different options and the ovftool user guide can also provide information.
+
+# ---
+

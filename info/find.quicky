@@ -1,0 +1,152 @@
+# find.quicky
+
+find path [...] expression [...]
+
+Recommended default: 
+find . -xdev -xtype f -iname '*string*'
+
+Examples:
+find . -path '/string/' -prune -o -print		(print all files expect with string in path)
+find . -name foo -print				(print all files with 'foo' as name)
+find . -name "foo*" -print 			(print all files with 'foo*' in name)
+find . -xtype f -exec grep foo /dev/null {} \;	(print filenames that contain 'foo' inside)
+find . -xtype f -mmin -30 -print		(print filenames that were modified within the last 30 minutes)
+find . -xtype f -mtime -2 -print		(print filenames that were modified within the last 2 days (2x24hr))
+find /home -xdev -size +500k -ls > piggies	(print all files larger than 500k to file)
+find . \( -fstype nfs -prune \) -o \			(print omit NFS subdirs)
+       \( -type d -a -exec chmod 771 {} \; \) -o \	(if dir then chmod and visit next file)
+       \( -name "*.BAK" -a -exec /bin/rm {} \; \) -o \	(if .BAK then rm and visit next file)
+       \( -name "*.sh" -a -exec chmod 755 {} \; \)	(if .sh then chmod)
+NOTE: this way multiple actions can be combined in one search! 
+NOTE: Use '\' and "" to escape shell characters, so \/file to find "/file"
+
+How 'find' works:
+- finds visits all files and subdirectories, starting from a path.
+- for each file: run the expression from left to right
+- if the expression is 'true' then search is stopped (-prune is 'true')
+- expressions are combinations of options, tests, actions, operators.
+
+Operators
+ expr1      expr2
+ expr1 -a   expr2
+ expr1 -and expr2	if expr1 is fales, then expr2 is not evaluated
+ expr1 -o   expr2
+ expr1 -or  expr2	if expr1 is true, then expr2 is not evaluated
+ !expr
+ -not expr		Negate
+ ( expr )		Force precedence
+ expr1, expr2		List; both are always evaluated
+			Value of the list is the value of expr2
+
+Options		[affect overall operation of find]
+ -xdev		Don't descend directories on other filesystems (dont 'cross-device')
+
+Tests		[perform test on each file that is visited]
+ -name pattern	True if pattern matches file (without leading directories)
+ -iname pattern	Ignore case
+ -empty		True if file is empty
+ -path pattern	True if pattern matches in te complete 'path/file' string
+ -type c 	True if file is of type c, (d=directory, f=file, l=link)
+ -xtype c	Symbolic link: true if link to file of type c
+
+Actions		[action on the visited file]
+-exec cmd ; 	Execute shell command on file {} (do not forget the ';')
+-ok cmd ; 	Same as 'execute', but ask user first
+-print		Print filename
+-prune		Stop searching subtree from here
+-ls		Print filename in 'ls -dils' format
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+remove empty dirs:
+> find -type d -empty -exec rmdir {} \;
+note: may need to repeat if subsequent parent-dirs have become empty
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+#printf output formats
+
+# normal print
+find
+#is same as:
+find -print
+#is same as:
+find -printf "%p\n" 
+
+# find symlinks and print with target (like "ls -l" but without perm/date/size)
+find -type l -printf "%p -> %l\n"
+
+# printf largely like 'ls -altr'
+find -printf "%4m %3n %8u %8g %5s %t %f\n"
+
+# print date-epoch, full date, name:
+find -printf "%010T@ [%Tc] %p\n"
+#example: 1178650257 [Tue 08 May 2007 08:50:57 PM CEST] ./fstab
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# can use PERL to do search-replace of all occurances in file
+# will save backup with file~
+
+perl -pi~ -e 's/foo/bar/' file
+
+# recursively
+find -type f -print0 | xargs -0 perl -pi~ -e 's/foo/bar/'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+make 'snapshot of all files in subtree:
+
+# will print (tab-delimite):
+# size	perms	user	group	modtime	filename
+
+find /var/sbc/databases/ -printf "%s\t%m\t%u(%U)\t%g(%G)\t%a\t%p\n" > file
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# find and move 'old' files
+touch -d '2006-08-15 11:48:05' /tmp/start
+touch -d '2007-08-15 11:48:05' /tmp/stop
+touch -d '2006-01-01' /tmp/start
+touch -d '2006-06-01' /tmp/stop
+
+#test
+find -maxdepth 1 -type f -name "[0-9][0-9]*" \( ! -newer /tmp/stop -prune \) -newer /tmp/start -printf "%010T@ [%Tc] %p\n" | sort
+#move
+find -maxdepth 1 -type f -name "[0-9][0-9]*" \( ! -newer /tmp/stop -prune \) -newer /tmp/start -printf "%010T@ [%Tc] %p\n" -exec mv {} ../.2006-q1q2/cur/ \;
+find -maxdepth 1 -type f -name "[0-9][0-9]*" \( ! -newer /tmp/stop -prune \) -newer /tmp/start -printf "." -exec mv "{}" ../.zzz_Archive.Inbox/cur/ \;
+
+# find files older than 1 day and more than 500kB size and print also size:
+find $DIR -type f -mtime +1 -size +500k -printf "%010T@ [%Tc] (%10s Bytes) %p\n"
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# clean email big files only
+touch -d '2004-10-01' /tmp/start
+touch -d '2006-09-30' /tmp/stop
+find -type f -name "[0-9][0-9]*" \( ! -newer /tmp/stop -prune \) -newer /tmp/start -size +2048k -exec ls -altrhp {} \; -exec rm -rf {} \;
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# find large files:
+find -maxdepth 2 -type f -size +2048k -printf "%s\t%p\n" | convertsize.pl | sort
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# examples for deleting filenames with illegal characters
+
+find -type f | perl -ne "print if /[^a-z0-9\.\s\/\_\-\!\,\@\(\)\[\]\'\&\+\~\=\#]/i" > file-wrong.txt
+cat file-wrong.txt | perl -ne 'chomp;$f=$_;print "mv \"$f\"";$f=~s/[^a-z0-9\.\s\/\_\-\!\,\@\(\)\[\]\&\+\~\=\#]/_/gi ;print " \"$f\" \n\n";' > rename.sh
+find -type f | perl -ne "print if /__/" | perl -ne 'chomp;$f=$_;print "mv \"$f\"";$f=~s/_{2,}/_/gi ;print " \"$f\" \n\n";'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# reformat files:
+
+> head -n 3 /data/y
+/mnt/sda2/usr/share/doc/autotools-dev/upstream.mail.template
+/mnt/sda5/data/helmsdeep-d090119/data/backup/d050716_jdg_d-drive_backup-folder/backuped/NetworkConcepts/Mail/Outlook/Security Info - Outlook2k.pst
+/mnt/sda5/data/helmsdeep-d090119/data/backup/sbc/d050209/sbc/encrypted/Projects/Bredero College/Mailserver/d050114 cert - mail_brederocollege_nl.zip
+
+cat /data/y | xargs -i find "{}" -printf "%010T@ [%Tc] (%10s Bytes) %p\n" > /data/y.exp
+
+> head -n 3 /data/y.exp 
+1091993785.0000000000 [Sun Aug  8 21:36:25 2004] (       927 Bytes) /mnt/sda2/usr/share/doc/autotools-dev/upstream.mail.template
+1089552877.0000000000 [Sun Jul 11 15:34:37 2004] ( 108265472 Bytes) /mnt/sda5/data/helmsdeep-d090119/data/backup/d050716_jdg_d-drive_backup-folder/backuped/NetworkConcepts/Mail/Outlook/Security Info - Outlook2k.pst
+1105783860.0000000000 [Sat Jan 15 11:11:00 2005] (      4800 Bytes) /mnt/sda5/data/helmsdeep-d090119/data/backup/sbc/d050209/sbc/encrypted/Projects/Bredero College/Mailserver/d050114 cert - mail_brederocollege_nl.zip
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# rename files with a pattern
+
+find . -type f -iname '*d11*' -exec rename_file_pattern.sh "{}" 's/d11/d12/' \; > rename.sh
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+

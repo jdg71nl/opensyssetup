@@ -1,0 +1,63 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          iptables
+# Required-Start:    $local_fs $remote_fs $network $syslog $named
+# Required-Stop:     $local_fs $remote_fs $network $syslog $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# X-Interactive:     true
+# Short-Description: Start/stop iptables
+### END INIT INFO
+
+# debian: enable routing:
+# echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf 
+# echo 1 > /proc/sys/net/ipv4/ip_forward
+
+CMD="/sbin/iptables"
+if [ ! -x $CMD ]; then
+        echo "error: $CMD not found."
+        exit 0
+fi
+
+REST="/sbin/iptables-restore"
+if [ ! -x $REST ]; then
+        echo "error: $REST not found."
+        exit 0
+fi
+
+CONF="/etc/iptables.conf"
+if [ ! -f $CONF ]; then
+        echo "error: $CONF not found."
+        exit 0
+fi
+
+start()
+{
+        clearall
+        cat $CONF | sed 's/#.*$//' | $REST
+}
+
+clearall()
+{
+        $CMD -F
+        $CMD -X
+$CMD --policy INPUT ACCEPT
+$CMD --policy OUTPUT ACCEPT
+$CMD --policy FORWARD ACCEPT
+}
+
+
+case "$1" in
+restart|start)
+        start
+        ;;
+stop)
+        clearall
+        ;;
+*)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit 0

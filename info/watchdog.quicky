@@ -1,0 +1,8 @@
+# watchdog.quicky
+
+http://oss.digirati.com.br/watchcatd/watchdog.html
+
+RPM:    http://dag.wieers.com/packages/watchdog/
+wget -c http://dag.wieers.com/packages/watchdog/watchdog-5.2-7.2.el4.rf.i386.rpm
+
+

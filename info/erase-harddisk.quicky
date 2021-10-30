@@ -1,0 +1,23 @@
+# erase-harddisk.quicky
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# http://linuxhelp.blogspot.com/2006/06/how-to-securely-erase-hard-disk-before.html
+# http://www.fsckin.com/2008/01/09/using-shred-to-wipe-hard-drives-dod-uses-it-you-should-too/
+
+shred - delete a file securely, first overwriting it to hide its contents  
+Overwrite the specified FILE(s) repeatedly, in order to make it harder for even very expensive hardware probing to recover the data. 
+
+-f	change permissions to allow writing if necessary 
+-n	overwrite N times instead of the default (25) 
+-v	show progress 
+-z	add a final overwrite with zeros to hide shredding 
+
+> shred -vfz -n6 /dev/sdc5
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# http://www.dban.org/
+
+Darik's Boot and Nuke ("DBAN") is a self-contained boot disk that securely wipes the hard disks of most computers. DBAN will automatically and completely delete the contents of any hard disk that it can detect, which makes it an appropriate utility for bulk or emergency data destruction.
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

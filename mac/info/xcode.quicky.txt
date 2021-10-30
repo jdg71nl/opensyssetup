@@ -1,0 +1,5 @@
+# xcode.quicky.txt
+
+# install Xcode commandline tools:
+xcode-select --install
+

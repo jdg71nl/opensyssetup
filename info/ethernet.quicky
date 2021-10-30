@@ -1,0 +1,18 @@
+# ethernet.quicky
+--
+show speed/duplex of Ethernet:
+> mii-tool -v
+> ethtool eth0
+--
+set (force) speed:
+> mii-tool -F 100baseTx-FD eth0
+
+--
+In /etc/modules.conf there is the binding 
+alias eth0 e100
+In /etc/sysconfig/network-scripts/ifcfg-eth0 there is MACADDRESS
+--
+# set new MAC address:
+ifconfig eth0 hw ether 00:17:A4:D3:3F:67
+--
+

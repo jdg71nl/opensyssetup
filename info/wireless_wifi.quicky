@@ -1,0 +1,187 @@
+# wireless_wifi.quicky
+#
+--
+# manual connect to SSID with no-encryption:
+iwlist scan
+iwconfig eth1 essid JDGINET mode managed
+iwconfig eth1 key off
+iwconfig
+ifdown eth1
+ifup eth1
+--
+# manual connect to SSID with WEP
+iwlist scan
+iwconfig eth1 essid AP5JDG mode managed
+iwconfig eth1 key s:2nc89
+iwconfig eth1 key 326E-6338-39
+iwconfig eth1 key open
+iwconfig
+ifdown eth1
+ifup eth1
+--
+# manual connect WIFI with WPA:
+
+iwconfig eth1 essid famdegraaff enc 000000000 mode managed
+ifconfig eth1 allmulti up
+# check
+iwconfig
+# make sure other wpa_supplicant is stopped:
+/etc/init.d/wpa_supplicant stop
+# do the WPA key thing:
+# EDIT /etc/wpa_supplicant/wpa_supplicant.conf FIRST !!!
+wpa_supplicant -c /etc/wpa_supplicant/wpa_supplicant.conf -i eth1 -D wext -B
+# check
+iwconfig
+iwlist key
+# give static address:
+ifconfig eth1 172.27.1.12 netmask 255.255.255.0 up
+# set default gw:
+route add default gw 172.27.1.254
+# set DNS
+vi /etc/resolv.conf
+
+--
+> cat /etc/wpa_supplicant/wpa_supplicant.conf
+
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=wheel
+
+network={
+	ssid="any"
+	key_mgmt=NONE
+}
+
+network={
+	ssid="famdegraaff"
+	key_mgmt=WPA-PSK
+	psk="wpa kay pama toverdoos hopiedoei"
+}
+
+--
+
+
+# ------+++------
+# Debian wlan / wifi config
+# ------+++------
+
+https://wiki.debian.org/WiFi
+https://wiki.debian.org/WiFi/HowToUse
+
+> wpa_passphrase NEUF_C5D4 cogitteckrignakduic3
+network={
+        ssid="NEUF_C5D4"
+        #psk="cogitteckrignakduic3"
+        psk=3cd03116e6286752fe79112cf15ac41c5f521d6c5bf209f2f98dc8cbd1e04ebf
+}
+
+auto wlan1
+iface wlan1 inet dhcp
+        wpa-ssid "NEUF_C5D4"
+        wpa-psk 3cd03116e6286752fe79112cf15ac41c5f521d6c5bf209f2f98dc8cbd1e04ebf
+
+# see:
+> man 5 wpa_supplicant.conf
+
+> cat /etc/wpa_supplicant/wlan1.conf
+country=NL
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+# > wpa_passphrase NEUF_C5D4 cogitteckrignakduic3
+network={
+        ssid="NEUF_C5D4"
+        #psk="cogitteckrignakduic3"
+        psk=3cd03116e6286752fe79112cf15ac41c5f521d6c5bf209f2f98dc8cbd1e04ebf
+        #
+        scan_ssid=1
+        key_mgmt=WPA-PSK
+}
+
+> ifup wlan1
+ioctl[SIOCSIWAP]: Operation not permitted
+ioctl[SIOCSIWENCODEEXT]: Invalid argument
+ioctl[SIOCSIWENCODEEXT]: Invalid argument
+
+# https://www.raspberrypi.org/forums/viewtopic.php?t=28878&p=254735
+# getting WiFi working
+ctrl_interface=DIR=/var/run/wpa_supplicant
+ctrl_interface_group=0
+
+# http://omarriott.com/aux/raspberry-pi-wifi/
+# SETTING UP WIFI ON A RASPBERRY PI
+network={
+    ssid="<your ssid>"
+    proto=RSN
+    key_mgmt=WPA-PSK
+    pairwise=CCMP TKIP
+    group=CCMP TKIP
+    psk="<your wpa key>"
+}
+
+# https://gist.github.com/eduardschaeli/4734786
+# Raspberry Pi, WiFi and motion sensors
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+network={
+  ssid="Your SSID Here"
+  proto=RSN
+  key_mgmt=WPA-PSK
+  pairwise=CCMP TKIP
+  group=CCMP TKIP
+  psk="YourPresharedKeyHere"
+}
+If you get errors like this, you can apparently ignore them (2):
+ioctl[SIOCSIWAP]: Operation not permitted
+ioctl[SIOCSIWENCODEEXT]: Invalid argument
+ioctl[SIOCSIWENCODEEXT]: Invalid argument
+# I was still having a few power issues, and disabling powermanagement helped (1):
+options 8192cu rtw_power_mgnt=0 rtw_enusbss=0
+
+# http://svay.com/blog/setting-up-a-wifi-connection-on-the-raspberrypi/
+# Setting up a WiFi connection on the RaspberryPi
+> vi /etc/modprobe.d/8192cu.conf
+options 8192cu rtw_power_mgnt=0 rtw_enusbss=0
+> crontab -e
+*/1 * * * * ping -c 1 192.168.0.254 # ping the router every minute to make sure that the connection stays up
+
+> dmesg
+[ 2038.288146] RTL871X: nolinked power save enter
+[ 2041.862149] RTL871X: nolinked power save leave
+
+# https://www.raspberrypi.org/forums/viewtopic.php?f=36&t=151360
+# Comfast CF912AC RTL8812au works but disconnects after awhile
+> vi /etc/modprobe.d/8812au.conf
+options 8812au rtw_power_mgnt=0 rtw_enusbss=0
+# blacklist brcmfmac   # -- to disable built-in broadcom wifi in RIP3
+
+# https://www.raspberrypi.org/forums/viewtopic.php?f=36&t=134207
+# Edimax EW7811UAC (RTL8812) - 802.11ac AP mode
+
+# https://bbs.archlinux.org/viewtopic.php?id=187398
+# Solved: HostAPD + EW-7822UAC? -- Network Disappears
+
+> sudo iwlist wlan0 scan | grep ESSID
+                    ESSID:"Bbox-90789A"
+                    ESSID:"REMOTE78ttcv"
+                    ESSID:"SFR WiFi Mobile"
+                    ESSID:"NEUF_C5D4"
+                    ESSID:"SFR WiFi FON"
+
+> sudo iwlist wlan1 scan | grep ESSID 
+                    ESSID:"Bbox-90789A"
+                    ESSID:"REMOTE78ttcv"
+                    ESSID:"FairFlowLabs.com-ffss1"
+                    ESSID:"NEUF_C5D4"
+                    ESSID:"SFR WiFi Mobile"
+                    ESSID:"SFR WiFi FON"
+                    ESSID:"FreeWifi"
+                    ESSID:"FreeWifi_secure"
+                    ESSID:"orange"
+                    ESSID:"NEUF_220C"
+                    ESSID:"SFR WiFi FON"
+                    ESSID:"Livebox-80CB"
+                    ESSID:"IMMOTECH"
+                    ESSID:"SFR WiFi Mobile"
+                    
+# ------+++------
+
+

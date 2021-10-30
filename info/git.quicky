@@ -1,0 +1,786 @@
+# copy from Evernote
+#
+#
+#
+
+
+
+# Git quicky 
+ 
+# from: /usr/local/syssetup/syssetup.txt
+#
+aptitude install git curl htop lsof
+#
+git clone --origin vps3 ssh://git@vps3.dgt-bv.com:2221/opt/git/syssetup.git /usr/local/syssetup
+#
+git config --global user.name "John de Graaff"
+git config --global user.email john@de-graaff.net
+git config --global alias.ss "status -s"        # short status
+git config --global alias.logg "log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'"
+git config --global alias.logn "log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat"
+#
+
+# JDG setup Git:  
+git config --global user.name "John de Graaff"
+git config --global user.email john@de-graaff.net
+git config --global alias.ss "status -s"        # short status
+# https://git-scm.com/docs/git-log#_pretty_formats
+git config --global alias.logg "log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'"
+git config --global alias.logn "log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat"
+git config --global alias.ssb "status -s -b"    # short status with branch
+git config --global core.pager cat
+#git config --global --replace-all core.pager "less -F -X"
+git config --global alias.logg2 "log --oneline --decorate --graph --all"
+git config --global alias.logp1 "log --oneline --graph --all --pretty=format:'%h %s’"
+git config --global alias.logp "log --oneline --all --no-decorate --pretty=format:'%h %aD %s'"
+git config --global alias.logt "log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s'"
+git config --global alias.logs "log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --stat"
+# 
+# setup git completion and prompt: 
+aptitude install curl
+cd ~
+curl -OL https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+curl -OL https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+cp git-completion.bash ~/.git-completion.bash
+cp git-prompt.sh ~/.git-prompt.sh
+# add these lines:
+vi ~/.bashrc
+# git completion and prompt:
+[ -r ~/.git-completion.bash ] && source ~/.git-completion.bash
+[ -f ~/.git-prompt.sh ] && source ~/.git-prompt.sh
+RED='\e[1;31m' ; GREEN='\e[1;32m' ; YELLOW='\e[1;33m' ; BLUE='\e[1;34m' ; CYAN='\e[1;36m' ; NOCOLOR='\e[0m'
+#[ -f ~/.git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+[ -f ~/.git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+#
+# on Mac OSX also add:
+vi ~/.bash_profile
+[ -r ~/.bashrc ] && source ~/.bashrc
+
+
+
+# Git User's Manual
+https://git-scm.com/docs/user-manual.html
+https://git-scm.com/docs/git-log/2.1.4
+https://git-scm.com/doc
+
+# Git book (also free to download)
+https://git-scm.com/book/en/v2
+
+# setup local Git repo:
+git init 
+
+# tracking a new file (staging a file):
+git add *.c
+
+# remove file
+git rm PROJECTS.md           # deleted at next commit
+git rm --cached README     # keep the file on your hard drive but not have Git track it anymore
+git rm log/\*.log                    # backslash is necessary because Git does its own filename expansion
+git rm \*~
+
+# rollback - undo changes - copy file from repo back to working dir:
+git checkout — <file>
+
+# moving/renaming files:
+git mv file_from file_to
+
+# ignoring files
+cat .gitignore
+*.[oa]
+*~
+# another example:
+cat .gitignore
+*.a                    # no .a files
+!lib.a                 # but do track lib.a, even though you're ignoring .a files above
+/TODO             # only ignore the TODO file in the current directory, not subdir/TODO
+build/               # ignore all files in the build/ directory
+doc/*.txt          # ignore doc/notes.txt, but not doc/server/arch.txt
+doc/**/*.pdf     # ignore all .pdf files in the doc/ directory
+
+# show status
+git status
+git status -s     # show one-line status
+
+# show diff
+git diff                    # To see what you’ve changed but not yet staged, type
+git diff --staged     # This command compares your staged changes to your last commit
+git diff --cached    # to see what you’ve staged so far (--staged and --cached are synonyms)
+
+# 
+git commit -m 'initial project version'
+git commit -a -m 'added new benchmarks’     # skip staging: automatically stage every file that is already tracked
+
+# show log
+git log
+git log --oneline --decorate --graph --all
+git log -p -2            # limit to last 2 commits
+git log --stat          # show file changes stats
+git log --pretty=oneline
+git log --pretty=format:"%h - %an, %ar : %s"
+
+Option     Description of Output
+%H          Commit hash
+%h          Abbreviated commit hash
+%T          Tree hash
+%t           Abbreviated tree hash
+%P          Parent hashes
+%p          Abbreviated parent hashes
+%an         Author name
+%ae        Author email
+%ad        Author date (format respects the --date=option)
+%ar         Author date, relative
+%cn        Committer name
+%ce        Committer email
+%cd        Committer date
+%cr         Committer date, relative
+%s          Subject
+
+git log --pretty=format:"%h %s" --graph
+
+Option                     Description
+-p                             Show the patch introduced with each commit.
+--stat                       Show statistics for files modified in each commit.
+--shortstat               Display only the changed/insertions/deletions line from the --stat command.
+--name-only            Show the list of files modified after the commit information.
+--name-status          Show the list of files affected with added/modified/deleted information as well.
+--abbrev-commit     Show only the first few characters of the SHA-1 checksum instead of all 40.
+--relative-date          Display the date in a relative format (for example, “2 weeks ago”) instead of using the full date format.
+--graph                    Display an ASCII graph of the branch and merge history beside the log output.
+--pretty                    Show commits in an alternate format. Options include oneline, short, full, fuller, and format
+
+git log --since=2.weeks
+git log --pretty="%h - %s" --author=gitster --since="2008-10-01" --before="2008-11-01" --no-merges -- t/
+
+# undoing things
+git commit -m 'initial commit'
+git add forgotten_file
+git commit --amend          # add file to commit (it will update/remove old commit)
+
+# unstagging
+git reset HEAD CONTRIBUTING.md
+
+# revert a file:
+git checkout -- CONTRIBUTING.md
+
+# add branch
+git branch testing
+git checkout testing      # switching to a branch
+git commit -a -m 'made a change’      # commit in the current branch (last checkout)
+git checkout master      # switch back to master branch, will also reset HEAD to master
+
+# setup local Git repo by cloning:
+git clone https://github.com/libgit2/libgit2                    # will create dir ‘libgit2'
+git clone https://github.com/libgit2/libgit2 mylibgit      # will create dir ‘mylibgit'
+
+# use shallow clone to limit data transfer : https://git-scm.com/docs/git-clone
+git clone —depth=1
+
+# note that ‘clone’ automatically setup branch tracking.
+# check:
+git remote show origin
+git remote show ffdev1
+# can also add this later:
+git branch -u ffdev1/master 
+git push --set-upstream ffdev1 master
+# now can do
+git pull
+
+# show remote repos:
+git remote 
+git remote -v
+git remote -vv
+
+# add remote
+git remote add pb https://github.com/paulboone/ticgit          # pb = local_name_of_remote
+
+# get changes/updates from remote and copy local (but don’t merge)
+git fetch pb
+git pull            # automatically fetch and then merge that remote branch into your current branch
+
+# pushing local changes to remote:
+git push origin master
+# note: if remote is updated by some other, need fetch first and merge local then push
+
+# inspecting a remote:
+git remote show origin
+
+> git remote show ffdev1
+* remote ffdev1
+  Fetch URL: ssh://git@ffdev1.fairflowlabs.com:24010/opt/git/ffgen.git
+  Push  URL: ssh://git@ffdev1.fairflowlabs.com:24010/opt/git/ffgen.git
+  HEAD branch: master
+  Remote branch:
+    master tracked
+  Local branch configured for 'git pull':
+    master merges with remote master
+  Local ref configured for 'git push':
+    master pushes to master (up to date)
+
+# rename a remote
+git remote rename pb paul
+
+# Remote Branches = Remote references are references (pointers) in your remote repositories
+# show remote branches
+git ls-remote [remote]          
+git remote show [remote] 
+# push to remote branch (not master):
+git push origin serverfix
+
+git config --global credential.helper cache     # don’t type your password every time
+
+# Tracking Branches
+# Checking out a local branch from a remote-tracking branch automatically creates what is called a “tracking branch” (and the branch it tracks is called an “upstream branch”). Tracking branches are local branches that have a direct relationship to a remote branch. If you’re on a tracking branch and type git pull, Git automatically knows which server to fetch from and branch to merge into.
+
+# Branch serverfix set up to track remote branch serverfix from origin. Switched to a new branch 'serverfix'
+git checkout --track origin/serverfix     
+
+# set up a local branch with a different name than the remote branch
+git checkout -b sf origin/serverfix    
+
+# If you already have a local branch and want to set it to a remote branch you just pulled down, or want to change the upstream branch you’re tracking, you can use the -u or --set-upstream-to option to git branch to explicitly set it at any time.
+git branch -u origin/serverfix 
+
+# show branches and tracking:
+git branch -vv
+
+# delete branch
+git branch -d hotfix # delete branch hotfix (unless uncommit changes)
+git branch -D hotfix # force delete branch hotfix, even if uncommited changes
+
+# Pulling:
+git pull           # is 'git fetch' immediately followed by a 'git merge'
+
+# deleting remote branches:
+git push origin --delete serverfix
+
+# reverting to some historical commit:
+# man git-checkout       # Switch branches or restore working tree files 
+https://git-scm.com/docs/git-checkout
+# NOTE: Updates files in the working tree to match the version in the index or the specified tree. If no paths are given, git checkout will also update HEAD to set the specified branch as the current branch.
+git checkout [-p|--patch] [<tree-ish>] [--] <pathspec>  # NEED paths!
+git log      # look-up commit hash
+git checkout --patch <tree-ish> — filename       # NEED paths!
+
+# alias
+git config --global alias.ss "status -s"          # short status
+git config --global alias.rs "remote show"
+git config --global alias.rsf "remote show ffdev1"
+git config --global alias.buf "branch -u ffdev1/master"
+git config --global alias.logg "log --oneline --decorate --graph --all"
+
+# git config:
+git config --system        # system-wide $(prefix)/etc/gitconfig
+git config --global        #  "global for current user", file: ~/.gitconfig
+git config --local        # <git-home-dir>/.git/config (default behavior)
+git config --file <filename>
+
+cat ~/.gitconfig
+[user]
+        name = John de Graaff
+        email = john@fairflow.eu
+[alias]
+        ss = status -s
+        logg = log --oneline --decorate --graph --all
+
+# or show this way:
+> git config --global -l    
+user.name=John de Graaff
+user.email=john@fairflow.eu
+alias.st=status
+alias.dfs=diff staged
+alias.logg=log --oneline --decorate --graph --all
+alias.ss=status -s
+alias.rs=remote show
+alias.rsf=remote show ffdev1
+alias.buf=branch -u ffdev1/master
+
+# detailed merge and resolve conflicts:
+
+# https://git-scm.com/book/en/v2/Git-Tools-Advanced-Merging 
+# https://git-scm.com/docs/git-merge 
+# https://git-scm.com/docs/git-status 
+# show update/merge status:
+git status -sb        # -s =short, -b =branch
+#
+# abort merge (if initiated after git merge or pull):
+git merge --abort
+#
+git merge -Xignore-space-change file
+#
+# Manual File Re-merging
+# we get into the merge conflict state:
+# - my version of the file,
+# - their version (from the branch we’re merging in) and
+# - the common version (from where both sides branched off)
+# Git stores all of these versions in the index under “stages” which each have numbers associated with them.
+# - stage 1 is the common ancestor
+# - stage 2 is your version
+# - stage 3 is from the MERGE_HEAD, the version you’re merging in (“theirs”).
+#
+# extract a copy of each of these versions of the conflicted file:
+git show :1:hello.rb > hello.common.rb
+git show :2:hello.rb > hello.ours.rb
+git show :3:hello.rb > hello.theirs.rb
+#
+git ls-files -u
+100755 ac51efdc3df4f4fd328d1a02ad05331d8e2c9111 1    hello.rb
+100755 36c06c8752c78d2aff89571132f3bf7841a7b5c3 2    hello.rb
+100755 e85207e04dfdd5eb0a1e9febbc67fd837c44a1cd 3    hello.rb
+#
+git diff --ours
+git diff --theirs -b
+git diff --base -b
+#
+# ??
+git checkout --conflict=diff3 hello.rb
+#
+git log --oneline --left-right HEAD...MERGE_HEAD
+#
+# ??
+git log --oneline --left-right --merge
+git log --cc -p -1
+#
+git mergetool
+git mergetool --tool-help
+#
+git merge -s recursive      # 'recursive' is the default merge strategy (can use -X for options)
+git merge -X ours            # NOTE: this is '-s recursive' options, not the same as '-s ours' !!!!
+git merge -X theirs
+
+git merge -Xtheirs vps3/master     # manually (auto) merge remote branch (when ‘git pull’ fails)
+
+
+
+https://training.github.com/kit/downloads/github-git-cheat-sheet.pdf
+
+
+
+
+
+
+
+# checkout (revert file):
+http://gitready.com/intermediate/2009/03/18/restoring-a-directory-from-history.html
+
+# ---
+# GIT concept:
+- a version = snapshot of all files and its contents (GIT keeps no 'per-file' changes)
+- a ‘version’ is a ‘commit'
+- GIT uses 3 file states: 1:committed, 2:modified, 3:staged
+- GIT uses 3 main sections: 1:.git repository, 2: working directory, 3: staging area
+- always work on local repo
+- commit is on local repo
+- clone: create copy from remote into local repo
+- fetch: copy commits from remote to local (pull=fetch+merge)
+- push: copy commits from local to remote (push=upload+merge)
+- pull-request (on Github): ask editor to merge, or discuss/comments
+- merge: integrate remote commits into local repo
+
+
+# ---
+# info: <Pro Git - Everything you need to know about Git - progit-en.457.pdf>
+
+# your identity:
+> git config --global user.name "John de Graaff"
+> git config --global user.email john@fairflow.eu
+> git config --list
+> git config user.name
+ 
+
+ 
+# get help
+> git help <verb>
+> git <verb> --help
+> man git-<verb>
+ 
+
+# setup new local repo (creates .git directory here):
+> git init
+> git --bare init # see below what ‘bare’ really means !
+
+# add files and commit:
+ 
+> git add *.c
+> git add LICENSE
+> git commit -m 'initial project version'
+
+# clone repo from remote:
+> git clone https://github.com/libgit2/libgit2
+> git clone https://github.com/libgit2/libgit2 mylibgit
+
+# life cycle of files:
+ 
+#
+
+
+# 
+> git status
+> git status -s
+
+#
+> cat .gitignore
+ 
+*.[oa]
+*~
+
+# 
+> git diff
+> git diff --staged
+
+#
+> git commit
+> git commit -m "Story 182: Fix benchmarks for speed"
+
+#
+> git rm PROJECTS.md
+# keep the file on your hard drive but not have Git track it anymore:
+> git rm --cached README
+#
+> git mv file_from file_to
+ 
+
+ 
+# commit history:
+> git log
+ 
+> git log -p -2
+> git log --stat
+> git log --pretty=oneline
+> git log --pretty=format:"%h - %an, %ar : %s"
+> git log --pretty=format:"%h %s" --graph
+> git log --oneline --decorate --graph --all 
+> git commit -m 'initial commit'
+> git add forgotten_file
+> git commit --amend
+
+ 
+# Unmodifying a Modified File: 
+> git checkout -- CONTRIBUTING.md
+
+# remotes:
+> git clone https://github.com/schacon/ticgit
+Cloning into 'ticgit'...
+remote: Reusing existing pack: 1857, done.
+remote: Total 1857 (delta 0), reused 0 (delta 0)
+“Receiving objects: 100% (1857/1857), 374.35 KiB | 268.00 KiB/s, done.
+Resolving deltas: 100% (772/772), done.
+Checking connectivity... done.
+ 
+> cd ticgit
+> git remote
+origin
+> git remote -v
+origin    https://github.com/schacon/ticgit (fetch)
+origin    https://github.com/schacon/ticgit (push)
+> git remote add pb https://github.com/paulboone/ticgit
+> git remote show origin 
+> git remote rename pb paul 
+> git remote rm paul
+
+# fetch = download all changes (but no merge!)
+> git fetch [remote-name]
+
+# pull = fetch + (auto-) merge
+
+# tags: lightweight or annotated
+# Git uses two main types of tags: lightweight and annotated.
+# - A lightweight tag is very much like a branch that doesn’t change – it’s just a pointer to a specific commit.
+# - Annotated tags, however, are stored as full objects in the Git database. They’re checksummed; contain the tagger name, e-mail, and date; have a tagging message;
+> git tag
+
+--[CWD=~/Documents/Xcode/FairFlow Simulator]--[16:46:15 Mon 21-Mar-2016 CET]--[jdg@Flaptop-jdg71nl]--[MacOS-10.10.5]------
+> git remote -v
+secure.dgt-bv.com-fairflow-simulator.git        ssh://git@secure.dgt-bv.com:2221/opt/git/fairflow-simulator.git (fetch)
+secure.dgt-bv.com-fairflow-simulator.git        ssh://git@secure.dgt-bv.com:2221/opt/git/fairflow-simulator.git (push)
+>
+> git remote show secure.dgt-bv.com-fairflow-simulator.git
+Warning: the ECDSA host key for '[secure.dgt-bv.com]:2221' differs from the key for the IP address '[141.138.205.158]:2221'
+Offending key for IP in /Users/jdg/.ssh/known_hosts:28
+Matching host key in /Users/jdg/.ssh/known_hosts:33
+Are you sure you want to continue connecting (yes/no)? yes
+* remote secure.dgt-bv.com-fairflow-simulator.git
+  Fetch URL: ssh://git@secure.dgt-bv.com:2221/opt/git/fairflow-simulator.git
+  Push  URL: ssh://git@secure.dgt-bv.com:2221/opt/git/fairflow-simulator.git
+  HEAD branch: master
+  Remote branch:
+    master tracked
+  Local branch configured for 'git pull':
+    master merges with remote master
+  Local ref configured for 'git push':
+    master pushes to master (up to date)
+
+ 
+# example on branching and merging:
+> git checkout -b iss53
+Switched to a new branch "iss53"
+# This is shorthand for:
+> git branch iss53
+> git checkout iss53 
+> vim index.html
+> git commit -a -m 'added a new footer [issue 53] 
+
+# branch
+git branch testing # add new brach
+git checkout testing # switch (working dir) to branch
+git commit -a -m 'made a change' # commit changes to current branch
+git checkout master # switch back to master branch
+git checkout -b iss53 # is short for:
+  git branch iss53
+  git checkout iss53
+git branch -d hotfix # delete branch hotfix (unless uncommit changes)
+git branch -D hotfix # force delete branch hotfix, even if uncommited changes
+git checkout master # switched to branch 'master' before merge
+git merge iss53 # now merge 'iss53' branch into master (if success create new commit)
+git branch # view all branches available in this repo
+git branch -v # view verbose
+git branch -vv # show branches including the tracking remote branches and status (ahead/behind)
+git branch --merged # only show branches that are merged into the current (checked out) branch
+git branch --no-merged # only show branches that are NOT merged into the current (checked out) branch
+# remote branch is local copy of a branch from a remote server that you cannot locally move (it moves when you push to remote)
+git checkout -b serverfix origin/serverfix # clone a remote branch AND create local branch copy which you can work on AND setup tracking branch
+# Tracking branches (automatically setup by checkout remote branch): If you're on a tracking branch and type git pull, Git automatically knows which server to fetch from and branch to merge into.
+git push origin serverfix # push all changes of serverfix branch to remote server 'origin' (and merge??)
+git merge origin/serverfix # merge remote branch 'origin/serverfix' (which is already copied local using git fetch) into current working dir
+git branch -u origin/serverfix # -u = --set-upstream-to , explicitly set tracking branch
+git push origin --delete serverfix # delete remote branch
+
+ 
+
+ 
+# ---
+# Git home
+
+https://git-scm.com
+
+# Git source on Github:
+https://github.com/git/git
+
+# ---
+# get Git bash auto-completion
+
+ 
+# idea from:
+# http://www.lynda.com/Git-tutorials/Exploring-Git-auto-completion/100222/111257-4.html
+
+ 
+# Git source:
+# https://github.com/git/git/tree/master/contrib/completion
+ 
+
+ 
+cd ~
+curl -OL https://github.com/git/git/raw/master/contrib/completion/git-completion.bash
+
+# or
+> curl -OL https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+> curl -OL https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+
+> cp git-completion.bash ~/.git-completion.bash
+> cp git-prompt.sh ~/.git-prompt.sh
+
+curl -OL https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+curl -OL https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+cp git-completion.bash ~/.git-completion.bash
+cp git-prompt.sh ~/.git-prompt.sh
+vi ~/.bashrc
+
+ 
+# add to bashrc:
+ 
+> vi ~/.bashrc
+# git tools:
+[ -r ~/.git-completion.bash ] && source ~/.git-completion.bash
+[ -f ~/.git-prompt.sh ] && source ~/.git-prompt.sh
+RED='\e[1;31m'
+GREEN='\e[1;32m'
+YELLOW='\e[1;33m'
+BLUE='\e[1;34m'
+CYAN='\e[1;36m'
+NOCOLOR='\e[0m'
+[ -f ~/.git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+#
+
+# on Mac OS X add:
+> vi ~/.bash_profile
+[ -r ~/.bashrc ] && source ~/.bashrc
+
+# ---
+# https://guides.github.com/introduction/flow/
+
+# ---
+# from: <Github tutorial - slides-94-edu-wglunch-6.pdf>
+
+# Pull from main repo, push to your private fork:
+> git clone https://github.com/main/repo
+> cd repo
+> git remote set-url --push origin https://github.com/personal/fork
+
+# Windows users, don’t mark everything as executable by accident:
+> git config --global core.fileMode false
+
+# ---
+# Git tutorial on Youtube from Lynda.com
+- difference Git vs SVN,CVS,etc.: Git tracks ‘changes’ not ‘versions'
+
+Git and Github Tutorial for Beginners
+https://www.youtube.com/watch?v=BKcEkXdNjRs&index=3&list=PLb5HO8RZjX-kZnThtY4f4yKgb2CQWwh8c
+
+# also on Lynda.com (free?)
+https://www.lynda.com/Git-tutorials/Git-Essential-Training/100222-2.html?autocompleteMovieId=111256
+
+
+
+
+
+# better video:
+https://www.youtube.com/watch?v=_vEPmy31XDE&list=PLEIPSRdn5KEoLbRZJuS4bLlldQ4wiA5Nf 
+https://youtu.be/_vEPmy31XDE
+Git Tutorial for Beginners
+
+---- 
+
+ 
+# ---
+# Bare repo
+
+> git —bare init # create repo files in the current dir (don’t create '.git' dir)
+
+# see: http://stackoverflow.com/questions/7861184/what-is-the-difference-between-git-init-and-git-init-bare
+What is the difference between “git init” and “git init --bare”?
+
+One creates a repository with a working directory so you can actually work (git clone). After creating it you will see that the directory contains a .git folder where the history and all the git plumbing goes. You work at the level where the .git folder is.
+
+The other creates a repository without a working directory (git clone --bare). You don't get a directory where you can work. Everything in the directory is now what was contained in the above case.
+
+The need for git repos without a working directory is the fact that you can push branches to it and it doesn't manage what someone is working on. You still can push to a repository that's not bare, but you will get rejected as you can potentially move a branch that someone is working on in that working directory.
+
+So in a project with no working folder, you can only see the objects as git stores them. They are compressed and serialized and stored under the SHA1 (a hash) of their contents. In order to get an object in a bare repository, you need to git show and then specify the sha1 of the object you want to see. You won't see a structure like what your project looks like.
+
+Bare repositories are usually central repositories where everyone moves their work to. There is no need to manipulate the actual work. It's a way to synchronize efforts between multiple people. You will not be able to directly see your project files.
+
+You may not have the need for any bare repositories if you are the only one working on the project or you don't want/need a "logically central" repository. One would prefer git pull from a the other repositories in that case. This avoids the objections that git has when pushing to non-bare repositories.
+
+ 14
+down vote
+When I read this question some time ago, everything was confusing to me. I just started to use git and there are these working copies (which meant nothing at that time). I will try to explain this from perspective of the guy, who just started git with no idea about terminology.
+
+A nice example of the differences can be described in the following way:
+
+--bare gives you just a storage place (you can not develop there). Without --bare it gives you ability to develop there (and have a storage place).
+
+git init creates a git repository from your current directory. It adds .git folder inside of it and makes it possible to start your revision history.
+
+git init --bare also creates a repository, but it does not have the working directory. This means that you can not edit files, commit your changes, add new files in that repository. 
+
+When --bare can be helpful? You and few other guys are working on the project and use git . You hosted the project on some server (amazon ec2). Each of you have your own machine and you push your code on ec2. None of you actually develop anything on ec2 (you use your machines) - you just push your code. So your ec2 is just a storage for all your code and should be created as --bare and all your machines without --bare (most probably just one, and other will just clone everything). The workflow looks like this:
+
+
+shareimprove this answer
+answered Mar 27 '14 at 21:37
+
+Salvador Dali
+39.5k29185254
+
+
+
+
+ 
+
+ 
+
+# - - - +++ - - - 
+# Git using http_pxoy
+
+> export HTTP_PROXY=http://[fe80::ae87:a3ff:fe13:dd6a%eth0]:3128/
+
+> git config --global http.proxy $HTTP_PROXY
+
+# but that only works when using HTTP … not SSH
+
+# for SSH:
+
+# https://help.github.com/articles/using-ssh-over-the-https-port/
+# Using SSH over the HTTPS port
+
+# http://stackoverflow.com/questions/1728934/accessing-a-git-repository-via-ssh-behind-a-firewall
+> aptitude search socat
+p   socat          - multipurpose relay for bidirectional data transfer
+ 
+
+ 
+ 
+# > cat /usr/local/syssetup/bin/git-create-repo-user-git.sh
+
+#!/bin/bash
+#= git-create-repo-user-git.sh 
+# (c)2016 John de Graaff @ FairFlowTech
+
+# usage from 'git client':
+# ssh -t -p2221 jdg@vps3.fairflowlabs.com '/usr/local/syssetup/bin/git-create-repo-user-git.sh rtpc.git'
+
+BASENAME=`basename $0`
+usage() {
+        echo
+        echo "Usage: $BASENAME <repo-name.git>":
+        echo "  will create dir '/opt/git/repo-name.git/' and in it do 'git init --bare'"
+        echo
+        exit 1
+}
+error_usage()  { echo "$BASENAME: Error - $1"; usage       ; }
+error()        { echo "$BASENAME: Error - $1"; exit 1      ; }
+echo_msg_log() { echo "$BASENAME: Error - $1"; logger "$1" ; }
+
+REPO="$1"
+USER="git"
+DIR="/opt/git/$REPO"
+
+#if [ "$REPO" == "" ]; then
+[ "$REPO" == "" ] && error_usage "provide new repo name (ending with .git)"
+
+[ -d "$DIR" ] && error "directory '$DIR' already exists!"
+
+# > visudo
+# #jdg
+# %sudo ALL=NOPASSWD:/bin/mkdir
+# %sudo ALL=NOPASSWD:/usr/bin/git
+
+sudo -u $USER /bin/mkdir -pv "$DIR"
+[ ! -d "$DIR" ] && error "could not create directory '$DIR' !"
+
+cd "$DIR"
+sudo -u $USER /usr/bin/git init --bare
+
+
+# - - - +++ - - - 
+# Changing a commit message
+
+https://help.github.com/articles/changing-a-commit-message/
+
+If a commit message contains unclear, incorrect, or sensitive information, you can amend it locally and push a new commit with a new message to GitHub.
+
+Rewriting the most recent commit message
+
+# jdg
+git commit —amend
+
+hmmm… did not change it — see webpage for more options
+
+
+SAVE FRAGMENTS
+
+Shelve and restore incomplete changes
+
+# Temporarily stores all modified tracked files
+git stash
+
+#  Lists all stashed changesets
+git stash list
+
+#  Restores the most recently stashed files
+git stash pop
+
+# Discards the most recently stashed changeset
+git stash drop
+
+
+

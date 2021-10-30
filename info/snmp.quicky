@@ -1,0 +1,168 @@
+# snmp.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+> snmptranslate -O f 1.3.6.1.2.1.1.1
+.iso.org.dod.internet.mgmt.mib-2.system.sysDescr
+
+# .iso.org.dod.internet.mgmt.mib-2.system
+system           .1.3.6.1.2.1.1
+sysDescr         .1.3.6.1.2.1.1.1
+sysObjectID      .1.3.6.1.2.1.1.2
+sysUpTime        .1.3.6.1.2.1.1.3
+sysContact       .1.3.6.1.2.1.1.4
+sysName          .1.3.6.1.2.1.1.5
+sysLocation      .1.3.6.1.2.1.1.6
+sysServices      .1.3.6.1.2.1.1.7
+
+# .iso.org.dod.internet.mgmt.mib-2.interfaces.ifTable
+ifTable         .1.3.6.1.2.1.2.2
+ifEntry         .1.3.6.1.2.1.2.2.1
+ifIndex         .1.3.6.1.2.1.2.2.1.1
+ifInOctets      .1.3.6.1.2.1.2.2.1.10
+ifOutOctets     .1.3.6.1.2.1.2.2.1.16
+
+
+#.iso.org.dod.internet.mgmt.mib-2.interfaces.ifTable
+ifTable         .1.3.6.1.2.1.2.2
+
+#.iso.org.dod.internet.mgmt.mib-2.ip.ipForward.ipForwardTable
+ipForwardTable  .1.3.6.1.2.1.4.24.2
+
+#.iso.org.dod.internet.mgmt.mib-2.ifMIB.ifMIBObjects.ifXTable
+ifXTable        .1.3.6.1.2.1.31.1.1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+> snmptranslate -Of 1.3.6.1.2.1.1.1
+.iso.org.dod.internet.mgmt.mib-2.system.sysDescr
+
+> snmptranslate -On IP-MIB::ipAdEntAddr
+.1.3.6.1.2.1.4.20.1.1
+
+> snmptranslate -Td IP-MIB::ipAdEntAddr
+IP-MIB::ipAdEntAddr
+ipAdEntAddr OBJECT-TYPE
+  -- FROM      IP-MIB
+  SYNTAX       IpAddress
+  MAX-ACCESS   read-only
+  STATUS       deprecated
+  DESCRIPTION  "The IPv4 address to which this entry's addressing
+            information pertains."
+::= { iso(1) org(3) dod(6) internet(1) mgmt(2) mib-2(1) ip(4) ipAddrTable(20) ipAddrEntry(1) 1 }
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+snmpget -v 1 -Cf -c public 172.24.1.8 system.sysDescr.0
+snmpwalk  -v 1 -c public 172.24.1.8 system
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install SNMP::Info
+
+# CPAN failed, did it directly
+wget -c http://surfnet.dl.sourceforge.net/sourceforge/snmp-info/SNMP-Info-2.00.tar.gz
+tar x ...
+perl Makefile.PL
+make
+make install
+
+# package SNMP::Info looks in /etc/snmp.conf for reference to MIBs
+
+# get MIBs:
+mkdir -pv /usr/local/netdisco/
+cd /usr/local/netdisco/
+wget -c http://surfnet.dl.sourceforge.net/sourceforge/netdisco/netdisco-mibs-0.6.tar.gz
+tar xvfz netdisco-mibs-0.6.tar.gz
+ln -s netdisco-mibs-0.6 mibs
+# snmp.conf should link to here:
+cp -a /usr/local/netdisco/mibs/snmp.conf /etc/snmp/
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install net-snmp for zenoss:
+
+# CentOS
+> yum install net-snmp-utils
+# dependencies:
+net-snmp-utils
+lm_sensors
+net-snmp
+net-snmp-libs
+
+cd /etc/snmp
+cp -a snmpd.conf snmdp.conf.ori
+echo "rocommunity public" > snmpd.conf
+chkconfig --level 345 snmpd on
+/etc/init.d/snmpd restart
+
+# add access in iptables:
+# snmp from monitor:
+-A INPUT -s 89.106.162.13 -p udp -m udp --dport 161 -j ACCEPT
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# set server s SNMP-client (agent)
+
+# centos
+yum install net-snmp net-snmp-utils
+
+# debian:
+
+apt-get install snmpd
+
+cp -a /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.ori
+echo "rocommunity public" > /etc/snmp/snmpd.conf 
+
+> cat /etc/snmp/snmpd.conf 
+rocommunity public
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# copy 3rd-party MIBs to NET-SNMP
+
+# http://www.cuddletech.com/articles/snmp/node11.html
+
+for f in COLUBRIS-*.my; do n=$(echo $f|sed 's/\.my/\.txt/'); cp -v $f $n; done
+mv COLUBRIS-*.txt /usr/share/snmp/mibs/
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# translote OID
+
+snmptranslate 1.3.6.1.2.1.17
+snmptranslate -O f 1.3.6.1.2.1.17
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# get MIBs
+
+http://wiki.debian.org/SNMP
+
+# works on Debian6 mrt-2012:
+apt-get install snmp-mibs-downloader
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# get MIBs using netdisco:
+
+# install netdisco-mibs-installer
+# add contrib:
+> cat /etc/apt/sources.list
+deb http://ftp.nl.debian.org/debian/ squeeze main contrib non-free
+# do install
+apt-get install netdisco-mibs-installer
+
+# get MIBs:
+netdisco-mibs-download
+# creates:
+# /tmp/netdisco-mibs/netdisco-mibs-0.7.tar.gz
+
+# or get the tarball from syssetup:
+mkdir -pv /tmp/netdisco-mibs/
+cp -av /usr/local/syssetup/info/netdisco/tmp/netdisco-mibs/netdisco-mibs-0.7.tar.gz /tmp/netdisco-mibs/
+
+# install
+netdisco-mibs-install
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# enable SNMP for IPv6 on CentOS
+
+> cat /etc/sysconfig/snmpd.options | grep ^OPTIONS
+OPTIONS="-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a udp:161 udp6:161"
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

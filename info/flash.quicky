@@ -1,0 +1,18 @@
+# 
+
+# ---
+# debian adobe flash
+
+#d1203017
+http://wiki.debian.org/FlashPlayer
+
+> cat /etc/apt/sources.list | grep contrib
+deb http://ftp.nl.debian.org/debian/ squeeze main contrib
+
+apt-get update
+apt-get install flashplugin-nonfree
+update-flashplugin-nonfree --install
+
+
+# ---
+

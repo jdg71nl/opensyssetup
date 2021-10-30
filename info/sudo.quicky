@@ -1,0 +1,86 @@
+# sudo.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# on Fedora (centos, redhat?) add user jdg to group wheel:
+
+gpasswd wheel -a jdg
+
+# alternative:
+usermod jdg -a -G wheel
+
+# all user in group wheel can do anything:
+> cat /etc/sudoers | egrep '^%wheel'
+%wheel	ALL=(ALL)	ALL
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+use "visudo" to edit /etc/sudoers
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# set default editor ti vim instead of nano:
+
+# add in /etc/sudoers file:
+> visudo
+Defaults editor=/usr/bin/vim
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# to give normal user admin-privs (sudo -i) :
+
+# User privilege specification
+root  ALL=(ALL) ALL
+
+# ubuntu:
+# Members of the admin group may gain root privileges
+%admin ALL=(ALL) ALL
+
+# debian:
+# Uncomment to allow members of group sudo to not need a password
+# (Note that later entries override this, so you might need to move
+# it further down)
+%sudo ALL=NOPASSWD: ALL
+
+# add existing user to an existing group:
+adduser jdg sudo
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# examples:
+
+> visudo
+
+
+#jdg
+# Format:
+#user   host_allowed = (run_as_user) cmd
+# Example:
+#jdg    ALL = /bin/sh
+#jdg    ALL = (ALL) /usr/bin/perl
+#jdg    ALL = (ALL) NOPASSWD: /usr/bin/perl
+# used on RMV:
+#networktest     ALL = /usr/local/bin/rmvshutdown, /usr/local/bin/rmvreboot
+
+vdentoom ALL = (ALL) NOPASSWD: /etc/postfix-asgaardnl/rc-postfix-asgaardnl, /etc/init.d/named-reload.sh, /etc/init.d/copy-asgaard.nl.zone.sh
+
+# create folder from postfixadmin
+pureftp  ALL = NOPASSWD: /www/secure.networkconcepts.nl/postfixadmin/makeftpdir.pl
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+if error:
+	sudo: sorry, you must have a tty to run sudo
+disable "requiretty" to run sudo from php:
+
+#jdg
+#Defaults    requiretty
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# allow a specific user (or root) to run a command as a specific user:
+
+> visudo
+samba ALL = (samba) /home/samba/sudowrap-unison-ncbv.sh
+
+> sudo -u samba /home/samba/sudowrap-unison-ncbv.sh
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

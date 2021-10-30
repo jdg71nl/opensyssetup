@@ -1,0 +1,7 @@
+# rpmbuild.quicky
+#
+
+rpmbuild --rebuild file.srpm
+
+will create /usr/src/redhat/SRPMS/file.rpm
+

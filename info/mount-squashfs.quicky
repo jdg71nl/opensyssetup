@@ -1,0 +1,24 @@
+# mount-squashfs.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install squashfs on debian
+# see: http://tldp.org/HOWTO/html_single/SquashFS-HOWTO/#debian
+
+apt-get install squashfs-modules-2.6-486 squashfs-modules-2.6.26-2-686 squashfs-tools
+modprobe squashfs
+
+# check
+lsmod | grep squash
+
+# newxt boot:
+echo squashfs >> /etc/modules
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# mount squasfh via loop:
+
+mkdir /tmp/root
+mount -o loop /live/image/live/filesystem.squashfs  /tmp/root
+cd /tmp/root
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

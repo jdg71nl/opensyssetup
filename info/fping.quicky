@@ -1,0 +1,7 @@
+# fping.quicky
+
+watch --interval=1 'cat /root/xp-migratie-targets.txt  | fping -t100 -e'
+
+# fast ping (50ms):
+> fping -e -i50 -l 172.20.150.100
+

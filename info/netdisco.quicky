@@ -1,0 +1,101 @@
+# netdisco.quicky
+
+# ------+++------
+# back-end
+
+# install
+apt-get install netdisco-frontend netdisco-backend postgresql
+
+# also get MIBs
+# see: http://sites.google.com/site/gorwits/home/netdisco-debian-packages
+wget -c http://users.ox.ac.uk/%7Eoliver/data/files/netdisco-mibs-installer_1.2_all.deb
+dpkg -i netdisco-mibs-installer_1.2_all.deb 
+
+> cd /tmp/
+> wget -c http://downloads.sourceforge.net/project/netdisco/netdisco-mibs/0.7/netdisco-mibs-0.7.tar.gz
+> touch netdisco-mibs-0.7.tar.gz 
+> netdisco-mibs-install 
+
+# create psql user/db:
+> sudo -u postgres sh
+postgres> createuser -S -D -R -P netdisco
+Enter password for new role: 
+Enter it again: 
+
+postgres> psql template1
+template1=# CREATE DATABASE netdisco WITH OWNER netdisco;
+CREATE DATABASE
+template1=# \q
+
+# import schema:
+postgres> psql -h 127.0.0.1 -U netdisco -W netdisco < /usr/share/doc/netdisco-backend/sql/complete_bootstrap.sql
+
+postgres> exit
+>
+
+# test:
+> psql -h 127.0.0.1 -U netdisco -W netdisco
+netdisco=> \q
+
+# get OUI
+> wget http://standards.ieee.org/regauth/oui/oui.txt
+> netdisco -O
+....
+Can't connect to DB. FATAL:  Ident authentication failed for user "netdisco"
+==> Debian PSQL uses IDENT, login as user 'postgres'
+
+# curcumvent, see http://semweb.weblog.ub.rug.nl/node/61
+> cd /etc/postgresql/8.3/main/
+> cp - pg_hba.conf pg_hba.conf.ori
+> cat > pg_hba.conf
+local all all trust
+host  all all 127.0.0.1/32 trust
+> /etc/init.d/postgresql-8.3 restart
+
+# setup:
+> cd /etc/netdisco/
+> zcat /usr/share/doc/netdisco-common/contrib/netdisco.conf.example.gz > netdisco.conf
+
+> cat /etc/netdisco/netdisco.conf | grep -A1 jdg
+#jdg
+domain          = .onc.nl
+#jdg
+db_Pg_pw        = dbpwd
+#jdg
+community       = public,oncswmgtRO
+
+> touch /etc/netdisco/netdisco-topology.txt
+
+# do first import (should give nice output):
+> netdisco -D -d 172.16.14.251
+
+# discover network using seed and CDP/LLDP:
+> netdisco -r 172.16.14.251
+
+# ------+++------
+# front-end
+
+> cd /etc/apache2/sites-available/
+> cat /etc/apache2/sites-available/netdisco 
+Include /etc/netdisco/netdisco_apache2_dir.conf
+> cd ../sites-enabled/
+> ln -s ../sites-available/netdisco .
+> a2enmod apreq
+> ln -s /etc/netdisco/netdisco_apache2.conf /etc/apache2/conf.d/netdisco
+> cd /etc/netdisco/
+> cp -a netdisco_apache2.conf netdisco_apache2.conf.ori
+> cat netdisco_apache2.conf | grep session_password
+        session_password       => 'nd4560',
+> /etc/init.d/apache2 restart
+
+create web-user (admin):
+
+> netdisco -u ndadmin
+n e t  d i s c o
+--------------------------------------------------
+Enter new password for ndadmin [no change]: 
+Give ndadmin Port Control [no change]? 
+Give ndadmin Admin Rights [no change]? 
+Added user ndadmin. (1)
+
+# ------+++------

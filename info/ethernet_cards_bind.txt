@@ -1,0 +1,7 @@
+I guess:
+
+In /etc/modules.conf there is the binding 
+alias eth0 module
+
+In /etc/sysconfig/network-scripts/ifcfg-eth0 there is MACADDRESS
+

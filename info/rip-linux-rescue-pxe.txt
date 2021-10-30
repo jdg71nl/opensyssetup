@@ -1,0 +1,14 @@
+
+(R)ecovery (I)s (P)ossible Linux rescue system here!
+
+http://www.tux.org/pub/people/kent-robotti/looplinux/rip/
+
+* Alternate RIP Site! (fast download. May not be ready!) 
+  http://www.oss.cc.gatech.edu/pub/linux/system/recovery
+
+Notes jdg:
+d050406 successfully installed RIP-PXE
+rmv-units, boot PXE
+bone server: dhcps, tftp (centos4)
+-> needed for rescue and install RMV-image
+

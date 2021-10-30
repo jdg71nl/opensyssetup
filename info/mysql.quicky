@@ -1,0 +1,264 @@
+# mysql.quicky
+# mysql.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Manual:
+http://dev.mysql.com/doc/mysql/en/
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# 1st setup:
+mysql -u root
+UPDATE mysql.user SET Password=PASSWORD('newpwd') WHERE User='root';
+FLUSH PRIVILEGES;
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+new user allowed on ALL databases: 
+(NOTE: '%' does not match 'localhost', need to make extra account)
+
+GRANT ALL PRIVILEGES ON *.* TO 'jdg'@'%' IDENTIFIED BY 'jdgpasswd' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'jdg'@'localhost' IDENTIFIED BY 'jdgpasswd' WITH GRANT OPTION;
+UPDATE mysql.user SET Password=PASSWORD('newpwd') WHERE User='jdg';
+FLUSH PRIVILEGES;
+
+# or run this cmd:
+/usr/local/syssetup/bin/set_mysql_user_jdg.pl 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# bash scripted:
+#
+ROOTPWD="x1"
+JDGPWD="x2"
+mysql -u root <<HERE
+UPDATE mysql.user SET Password=PASSWORD('$ROOTPWD') WHERE User='root';
+GRANT ALL PRIVILEGES ON *.* TO 'jdg'@'%' IDENTIFIED BY '$JDGPWD' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'jdg'@'localhost' IDENTIFIED BY '$JDGPWD' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+HERE
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+login:
+> mysql -u root -p
+Enter password:
+
+mysqldump --all-databases
+
+mysql> SHOW DATABASES;
+mysql> SHOW DATABASES FROM books;
+mysql> USE MYSQL;
+mysql> SHOW TABLES;
+mysql> SHOW COLUMNS FROM books.orders;
+mysql> DESCRIBE tables_priv	;
+mysql> SHOW GRANTS FOR bookorama;
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+new user allowed on SPECIFIC database:
+
+CREATE DATABASE ingosur;
+GRANT USAGE                            ON ingosur.* TO ingosurwebuser@localhost IDENTIFIED BY 'asdassd';
+GRANT SELECT, INSERT, DELETE, UPDATE   ON ingosur.* TO ingosurwebuser@localhost IDENTIFIED BY 'asdassd';
+USE ingosur;
+
+can do
+# mysql -u root [-p] < DATABASE.TXT
+
+USE mysql;
+INSERT INTO user (Host, User, Password) VALUES ('localhost','postfix',password('pf1212'));
+INSERT INTO db (Host, Db, User, Select_priv) VALUES ('localhost','postfix','postfix','Y');
+FLUSH PRIVILEGES;
+GRANT USAGE ON postfix.* TO postfix@localhost;
+GRANT SELECT, INSERT, DELETE, UPDATE ON postfix.* TO postfix@localhost;
+GRANT USAGE ON postfix.* TO postfix@127.0.0.1;
+GRANT SELECT, INSERT, DELETE, UPDATE ON postfix.* TO postfix@127.0.0.1;
+FLUSH PRIVILEGES;
+
+NOTE:
+MySQL Manual (http://dev.mysql.com/doc/mysql/en/adding-users.html) explains we only need GRANT; INSERT is alternative way.
+TODO:
+Do I need both USAGE and SELECT,...?
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+CREATE DATABASE postfix;
+USE postfix;
+CREATE TABLE admin (
+  username varchar(255) NOT NULL default '',
+  password varchar(255) NOT NULL default '',
+  created datetime NOT NULL default '0000-00-00 00:00:00',
+  modified datetime NOT NULL default '0000-00-00 00:00:00',
+  active tinyint(1) NOT NULL default '1',
+  PRIMARY KEY  (username),
+  KEY username (username)
+) TYPE=MyISAM COMMENT='Postfix Admin - Virtual Admins';
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+command-line mode:
+echo "use postfix; select address, goto from alias order by address asc;" | mysql -u jdg -p
+echo "use postfix; select login, password, username from mailbox order by login asc;" | mysql -u jdg -p
+echo "use postfix; select username, password from admin order by username asc;" | mysql -u jdg -p
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# import from EXCEL into MySQL:
+# on MySQL prompt, use <db>, then:
+LOAD DATA LOCAL INFILE '/tmp/x'
+INTO TABLE customers
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+(id,name,vlan,switchport,patch,domainname,winsserver,dhcp,gateway,enable,room);
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# save table to file:
+SELECT * INTO OUTFILE 'data.txt'
+FIELDS TERMINATED BY ','
+FROM table2;
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# mysqldump
+
+# -t, --no-create-info
+# -d, --no-data
+# -c, --complete-insert
+# -p, --password[=name]
+
+# create seperate inster statemens:
+# -t --skip-extended-insert
+
+mysqldump ingosur -u jdg -p -c -t >> $FILE
+mysqldump ingosur -u jdg -p -c -t --skip-extended-insert >> $FILE
+mysqldump ingosur -u jdg -p -d >> $FILE
+
+# mysqlcc
+# -t, --no-create-info
+# -d, --no-data
+# -c, --complete-insert
+# -p, --password[=name]
+# -e, --extended-insert
+# --opt
+# --skip-opt
+mysqldump $DB -u $USER --password=$PASS -c --skip-opt >> $FILE
+
+# dump table create structure:
+mysqldump netadmin tbl_vlan -u root -p -d --compact 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+SELECT klant_wachtwoord_s FROM tbl_klanten WHERE klant_login_s='$SESSID_USERNAME' AND klant_actief_n=1
+UPDATE tbl_klanten SET klant_wachtwoord_s='$fNieuwwachtwoord' WHERE klant_login_s='$SESSID_USERNAME'
+INSERT INTO tbl_klanten (klant_id_n, klant_debnummer_n) VALUES ('$newid', $fDebnr_new);
+DELETE FROM Professor WHERE ProfessorID > 2;
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+note:
+storage types:
+MyISAM = default for MySQL
+InnoDB = Transaction-save
+ISAM   = old type
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# reset root password:
+/etc/init.d/mysqld stop
+echo "SET PASSWORD FOR 'root'@'localhost' = \"\" ;" > ~/mysql-init
+mysqld_safe --init-file=~/mysql-init &
+/etc/init.d/mysqld start
+mysql -u root  #(no pwd required)
+UPDATE mysql.user SET Password=PASSWORD('newpwd') WHERE User='root';
+FLUSH PRIVILEGES;
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# query and editing tools under Debian4:
+
+# edit DB (for queries and inline-edit, "mysql-query-browser" is called):
+apt-get install mysql-admin
+mysql-admin &
+
+# queries and inline-edit:
+apt-get install mysql-query-browser
+mysql-query-browser &
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# example of mysql-script:
+
+# --++--
+	#!/bin/bash
+	mysql -u dbuser --password=pwd postfix -t <<HERE
+	SELECT address, goto
+	FROM alias
+	ORDER BY address ASC
+	HERE
+# --++--
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# MySQL query logging:
+
+touch /var/log/mysqld.query.log
+chown mysql.mysql /var/log/mysqld.query.log
+
+> cat /etc/my.cnf 
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+user=mysql
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+#jdg
+port=3306
+bind-address=127.0.0.1
+log=/var/log/mysqld.query.log
+#
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# mysqldump:
+
+STAMP=$(date +d%y%m%d-%H%M); mysqldump -u jdg -p SaltwaterWebDB | gzip -c > $STAMP.SaltwaterWebDB.mysqldump.sql.gz
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# show size of databases:
+
+http://rudygems.com/post/206608569/mysql-db-size
+
+SELECT table_schema,
+  sum(data_length) / 1024 / 1024 "data",
+  sum(index_length) / 1024 / 1024 "index",
+  sum( data_length + index_length ) / 1024 / 1024 "total"
+FROM information_schema.TABLES
+GROUP BY table_schema \G;
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+echo "SHOW TABLES;" | mysql -t -u twsnet_ingouser --password=pwd twsnet_ingosurNL
++----------------------------+
+| Tables_in_twsnet_ingosurNL |
++----------------------------+
+| tbl_beheerders             |
+| tbl_config                 |
+| tbl_klanten                |
+| tbl_landen                 |
+| tbl_log                    |
+| tbl_meldingen              |
+| tbl_merken                 |
+| tbl_naw                    |
+| tbl_pdf                    |
+| tbl_verzekeringen          |
++----------------------------+
+
+echo "describe tbl_landen;" | mysql -t -u twsnet_ingouser --password=pwd twsnet_ingosurNL
++-----------------+----------------------+------+-----+---------+-------+
+| Field           | Type                 | Null | Key | Default | Extra |
++-----------------+----------------------+------+-----+---------+-------+
+| land_naam_s     | varchar(36)          | NO   | PRI |         |       |
+| land_landid_n   | smallint(5) unsigned | NO   |     | 0       |       |
+| land_landcode_n | smallint(5) unsigned | NO   |     | 0       |       |
+| land_actief_n   | tinyint(1)           | NO   |     | 1       |       |
++-----------------+----------------------+------+-----+---------+-------+
+
+echo "show create table tbl_landen;" | mysql -u twsnet_ingouser --password=pwd twsnet_ingosurNL  
+Table   Create Table
+tbl_landen      CREATE TABLE `tbl_landen` (\n  `land_naam_s` varchar(36) NOT NULL DEFAULT '',\n  `land_landid_n` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'VWE landid',\n  `land_landcode
+_n` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'VWE landcode',\n  `land_actief_n` tinyint(1) NOT NULL DEFAULT '1',\n  PRIMARY KEY (`land_naam_s`),\n  KEY `verz_polisnr_n` (`land_naam_s`)\
+n) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Ingosur lijst van landen'
+
+echo "select * from tbl_landen;" | mysql -t -u twsnet_ingouser --password=pwd twsnet_ingosurNL
++----------------------------------+---------------+-----------------+---------------+
+| land_naam_s                      | land_landid_n | land_landcode_n | land_actief_n |
++----------------------------------+---------------+-----------------+---------------+
+| AFGHANISTAN                      |           178 |             660 |             1 |
+| ALBANIE                          |            39 |              70 |             1 |
+| ALDERNEY                         |           259 |               6 |             1 |
++----------------------------------+---------------+-----------------+---------------+
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

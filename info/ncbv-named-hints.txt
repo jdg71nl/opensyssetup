@@ -1,0 +1,6 @@
+
+cd /var/named/chroot/var/named/zones; for x in *tws* *networkco*; do grep -sinH ^www $x; done | grep "IN A "
+
+cd /var/named/chroot/var/named/zones; for x in *tws* *networkco*; do grep -l ^www $x; done | perl -pe 's/(.*).zone$/www.$1/'
+
+

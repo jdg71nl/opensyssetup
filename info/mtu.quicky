@@ -1,0 +1,19 @@
+# mtu.quicky
+
+# ---
+# test MTU on Ethernet:
+
+# Linux:
+ping -M do 172.24.2.60 -c 3 -s 1472
+# -M do -- is dont fragment
+
+# Windows:
+ping -f www.xs4all.nl -l 1472
+# -f -- is dont fragment
+
+The data size specified by the -l switch is 1,472 rather than the Ethernet IP MTU of 1,500 
+because 20 bytes are reserved to make room for the IP header and 8 bytes must be allocated 
+for the ICMP Echo Request header.
+
+--
+

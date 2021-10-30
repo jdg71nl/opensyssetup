@@ -1,0 +1,113 @@
+# iptables.quicky
+
+# NOTE !!!!!!!
+better use: ufw
+
+
+
+
+
+
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+Overview from man:
+
+Table	Chain
+------	-----------
+filter	INPUT
+filter	FORWARD
+filter	OUTPUT
+nat		PREROUTING
+nat		OUTPUT
+nat		POSTROUTING
+mangle	PREROUTING
+mangle	INPUT
+mangle	FORWARD
+mangle	OUTPUT
+mangle	POSTROUTING
+raw		PREROUTING
+raw		OUTPUT
+
+Typical commands:
+-A, --append chain rule-specification
+-L, --list [chain]
+-F, --flush [chain]
+-P, --policy chain target
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# example of manual setup:
+
+# --++----++----++----++----++----++----++--
+> cat /etc/iptables.sh
+#!/bin/bash
+#
+#Tables: filter, nat, mangle, raw
+##Chains: INPUT, FORWARD, OUTPUT, PREROUTING, POSTROUTING, 
+
+# Configure default policies (-P)
+iptables -P INPUT   ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT  ACCEPT
+
+# Flush (-F) all specific rules
+iptables -F INPUT 
+iptables -F FORWARD 
+iptables -F OUTPUT 
+iptables -F -t nat
+
+# Table: filter
+# stateful
+iptables -t filter -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+# allow localhost
+iptables -t filter -A INPUT -i lo -j ACCEPT
+# allow mgt via SSH
+iptables -t filter -A INPUT -p tcp -m tcp --dport 2221 -m state --state NEW -j ACCEPT
+# allow replies
+iptables -t filter -A INPUT -p udp -m udp --dport 1024:65535 --sport 53 -j ACCEPT
+iptables -t filter -A INPUT -p icmp -m icmp --icmp-type 0 -j ACCEPT
+iptables -t filter -A INPUT -p icmp -m icmp --icmp-type 3 -j ACCEPT
+iptables -t filter -A INPUT -p icmp -m icmp --icmp-type 4 -j ACCEPT
+iptables -t filter -A INPUT -p icmp -m icmp --icmp-type 11 -j ACCEPT
+iptables -t filter -A INPUT -p icmp -m icmp --icmp-type 12 -j ACCEPT
+#
+iptables -t filter -A INPUT -s 172.17.40.0/21 -j DROP
+iptables -t filter -A INPUT -j ACCEPT
+
+# Table: nat
+iptables -t nat -A POSTROUTING -s 2.1.1.0/24 -o eth0 -j SNAT --to-source 172.20.150.1
+#-A PREROUTING -p tcp -d 80.69.65.224 --dport 1:1024 -j DNAT --to-destination 80.69.65.224:49382
+#-A POSTROUTING -s 5.29.4.1             -j SNAT --to-source 2.10.40.17
+# --++----++----++----++----++----++----++--
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+See syssetup:/etc/sysconfig/iptables-config
+
+#jdg: module "ip_conntrack_ftp: needed in "/etc/sysconfig/iptables-config" for FTP Server accepting PASSIVE connections 
+#     (tested on BTC Internetserver)
+#jdg: not sure about also need of "ip_nat_ftp"
+IPTABLES_MODULES="ip_conntrack_ftp ip_nat_ftp"
+
+#jdg: in some cases kernel will hang if unload=YES
+IPTABLES_MODULES_UNLOAD="no"
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# create new chain: 
+
+> cat /etc/sysconfig/iptables | grep -A1 KNOWNHOSTS
+:KNOWNHOSTS - [0:0]
+# NCBV-ISP
+-A KNOWNHOSTS -s 89.106.160/21 -j ACCEPT
+-A KNOWNHOSTS -s 80.69.65.224 -j ACCEPT
+# multi-adam-01
+-A KNOWNHOSTS -s 84.244.144.192/29 -j ACCEPT
+# multi-rdam-01
+-A KNOWNHOSTS -s 84.244.144.192/29 -j ACCEPT
+# deventer
+--
+-A KNOWNHOSTS -s 83.163.42.145 -j ACCEPT
+-A KNOWNHOSTS -j DROP
+
+-A INPUT -p tcp -m tcp --dport 22 -j KNOWNHOSTS
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

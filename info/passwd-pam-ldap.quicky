@@ -1,0 +1,33 @@
+# passwd-pam-ldap.quicky
+
+# info from sambaldap.twswireless.loc (Coen Hamers)
+
+# ---
+# LDAP settings for PAM, see:
+/etc/nsswitch.conf
+/etc/pam.d/system-auth
+
+# ---
+# better than viewing files (onlt local accounts):
+cat /etc/passwd
+cat /etc/group
+
+# do these commands to also view LDAP accounts:
+getent passwd
+getent group
+
+# or sorted:
+getent passwd | sort --field-separator=':' --key=3 --numeric-sort
+getent group  | sort --field-separator=':' --key=3 --numeric-sort
+
+# ---
+# add user for SSH which is not in LDAP (make sure has unique UID):
+
+# make sure that GID already exists:
+> getent group | grep 513
+Domain Users:*:513:mfranssen,mdejong,rzinger,dmonne,ipbackup,bdusee,jdgraaff,jviester,cnijkamp,skuipers,pschutte,rtraag,nsteenhuis,bgerards,osedney,halbers,swiggers,jvrooij,bstanneveld,hvdpaard,kkippers,delreps,rverlinden,wperdok,mtelussa,rdwinter,digiworks,emolenaar,mbiemans,rhinrich,mallebe,mvandoorn,jleedeman,mdijkers,mvanbree,twienema,jmoorer,cvandoornen,coen,jzebregs,nvankooten,sduncan
+
+useradd --uid 401 --gid 513 jdg-ssh
+
+# ---
+

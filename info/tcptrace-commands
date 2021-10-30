@@ -1,0 +1,10 @@
+
+# show only lines with my address:
+ tcptrace -n ../snort.log.1045331399 | grep 212.238 \
+# remove my address:port up to ' - '
+  | sed 's/^.*- //' \
+# remove trailing info after other address and ':'
+  | sed 's/:.*$//' \
+# then sort and uniq
+  | sort | uniq
+

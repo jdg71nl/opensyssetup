@@ -1,0 +1,19 @@
+# convert.quicky
+#
+--
+# image convert
+
+# rotate movie: first extract JPG from AVI
+# then rotate 640x480 -> 480x640, resize 640x480:result=360x480, add border 140x0: result=640x480
+# then compose video again
+for f in *.jpg; do 
+	echo $f; 
+	convert -rotate 270 -resize 640x480 -frame 140x0 $f ../z/$f ; 
+done
+--
+# convert PDF to PNG:
+
+# will give PNG with 1200 pixels width:
+convert -density 300x300 x.pdf -resize 1200 x.png
+--
+

@@ -1,0 +1,42 @@
+# firefox.quicky
+
+# ---
+# add REAL firefox to Debian:
+
+# see http://linuxtrends.com/adding-real-firefox-to-debian-lenny/
+
+# download firefox-3.0.5.tar.bz2 from http://www.mozilla.com/firefox/
+# mind the quotes:
+wget -c 'http://download.mozilla.org/?product=firefox-3.6.10&os=linux&lang=en-US'
+
+apt-get remove iceweasel
+mv firefox-3.0.5.tar.bz2 /usr/lib/
+cd /usr/lib/
+tar -jxvf firefox-3.0.5.tar.bz2
+ln -s /usr/lib/firefox/firefox /usr/bin/firefox 
+
+# get this file (is shortcut on desktop): 
+wget -c http://linuxtrends.com/files/Firefox.desktop
+# this is:
+cat home/user/Desktop/Firefox.desktop 
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Firefox
+Type=Application
+Terminal=false
+Name[en_US]=Firefox
+Exec=/usr/bin/firefox
+no-Icon=/usr/lib/firefox/icons/mozicon50.xpm
+Icon=/usr/lib/firefox/icons/mozicon128.png
+StartupNotify=true
+
+rm -rf /usr/lib/firefox/plugins; 
+ln -s /usr/lib/mozilla/plugins /usr/lib/firefox/plugins
+
+# get flash: http://get.adobe.com/flashplayer/
+dpkg -i install_flash_player_10_linux.deb
+
+# ---
+
+

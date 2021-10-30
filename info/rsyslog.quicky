@@ -1,0 +1,41 @@
+# rsyslog.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# debian: disable dns-resolve for remote msgs:
+
+> cat /etc/sysconfig/rsyslog
+# if you want to use them, switch to compatibility mode 2 by "-c 2"
+#SYSLOGD_OPTIONS="-c 4"
+# -x no dns resolve
+SYSLOGD_OPTIONS="-r514 -m 0 -x"
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+#*.*     @172.19.2.16;RFC3164fmt
+# jdg - forward syslog on 514 to 10514 (zenoss):
+# OR BETTER: duplicate UDP on IPTABLES
+*.*      @127.0.0.1:10514
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# example from: http://wiki.rsyslog.com/index.php/Log_Router_syslog_with_Dynamic_File_Names
+# ALL ROUTER LOGS
+$template DynFile,"/var/log/router-log/%HOSTNAME%/%timegenerated:1:10:date-rfc3339%"
+:source , !isequal , "localhost" ?DynFile
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+http://kb.monitorware.com/viewtopic.php?f=36&t=10051&sid=017a154242b355b61d2d93e150d8ba58
+http://www.rsyslog.com/doc-omudpspoof.html
+$ModLoad omudpspoof
+$ActionUDPSpoofTargetHost 192.168.2.1
+$ActionUDPSpoofTargetPort 1514
+
+$ModLoad omudpspoof
+$template spoofaddr,"192.0.2.1"
+$template spooftemplate,"%rawmsg%"
+$ActionUDPSpoofSourceNameTemplate spoofaddr
+$ActionUDPSpoofTargetHost server.example.com
+$ActionUDPSpoofSourcePortStart 514
+$ActionUDPSpoofSourcePortEnd 514
+*.*      :omudpspoof:;spooftemplate
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

@@ -1,0 +1,116 @@
+# kvm-virtualization.quicky
+
+# d210331 start CentOS.qcow2 image with Nokia-vSR-Lab on Debian-10/buster on Rock10T
+# need 'nested kvm', do on host (rock10t):
+#
+> cat /etc/modprobe.d/kvm.conf 
+options kvm_intel nested=1
+#
+# while kvm vm's stopped, do:
+modprobe -r kvm_intel
+modprobe kvm_intel nested=1
+#
+# now start VM and inside the client we see:
+> egrep -c '(vmx|svm)' /proc/cpuinfo
+4
+#
+
+# d200509
+# https://wiki.debian.org/KVM
+apt install qemu-kvm libvirt-clients libvirt-daemon-system
+adduser jdg libvirt
+adduser jdg libvirt-qemu
+virt-manager (over X11) => create/open VM
+
+# https://www.linuxtechi.com/install-configure-kvm-debian-10-buster/
+apt install qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager -y
+
+# launch graphical (need X, see x11.quicky):
+virt-manager
+
+--[CWD=/usr/local/syssetup/info(git:master)]--[1589044149 19:09:09 Sat 09-May-2020 CEST]--[root@dev-apu2]--[Debian-10(buster)-linux-4.19.0-8-amd64]------
+> egrep -c '(vmx|svm)' /proc/cpuinfo
+4
+#
+
+--[CWD=/usr/local/syssetup/info(git:master)]--[1589044113 19:08:33 Sat 09-May-2020 CEST]--[root@dev-apu2]--[Debian-10(buster)-linux-4.19.0-8-amd64]------
+> systemctl status libvirtd.service
+● libvirtd.service - Virtualization daemon
+   Loaded: loaded (/lib/systemd/system/libvirtd.service; enabled; vendor preset: enabled)
+   Active: active (running) since Sat 2020-05-09 19:04:01 CEST; 4min 32s ago
+     Docs: man:libvirtd(8)
+           https://libvirt.org
+ Main PID: 5968 (libvirtd)
+    Tasks: 17 (limit: 32768)
+   Memory: 17.8M
+   CGroup: /system.slice/libvirtd.service
+           └─5968 /usr/sbin/libvirtd
+
+May 09 19:04:00 dev-apu2.dgt-bv.com systemd[1]: Starting Virtualization daemon...
+May 09 19:04:01 dev-apu2.dgt-bv.com systemd[1]: Started Virtualization daemon.
+#
+
+# ------+++------
+# edit vm
+
+virsh destroy ns1
+virsh list --all
+virsh list
+virsh edit ns1
+virsh create ns1.xml
+
+# ------+++------
+# use this to copy/clone a LVM-partition with virtual-machine using libvirt:
+
+> virt-clone --original ns1 --name ns2 --file /dev/mapper/VolGroup00-LV_NS2 
+Cloning /dev/mapper/VolGroup00-LV_NS1                                                  | 4.0 GB     00:32     
+Clone 'ns2' created successfully.
+
+# ------+++------
+# set VM to boot from CDROM instead of HARDDISK
+
+> diff -bur monitor2.xml monitor2.xml.boot-cdrom 
+--- monitor2.xml		2011-03-08 21:05:08.000000000 +0100
++++ monitor2.xml.boot-cdrom	2011-03-08 20:51:14.000000000 +0100
+-    <boot dev='hd'/>
++    <boot dev='cdrom'/>
+
+# ------+++------
+# overview add new KVM machine
+
+* store boot ISO in /root/ISOS/
+* add LVM partition: lvcreate -L30G -nLV_MON2 VolGroup00
+* run: virt-manager
+* run add-new-VM wizard
+* manually edit XML file:
+* cd /etc/libvirt/qemu
+* virsh edit monitor2
+* set 'virtio' and boot=cdrom:
+
+<os>
+ <type arch='x86_64' machine='rhel5.4.0'>hvm</type>
+ <loader>/usr/lib/xen/boot/hvmloader</loader>
+ <boot dev='hd'/>
+</os>
+<devices>
+ <disk type='block' device='disk'>
+  <driver name='qemu' cache='none'/>
+  <source dev='/dev/mapper/VolGroup00-LV_MON2'/>
+  <target dev='vda' bus='virtio'/>
+ </disk>
+ <disk type='file' device='cdrom'>
+  <target dev='hdc' bus='ide'/>
+  <source file='/root/ISO/CentOS-5.5-x86_64-netinstall.iso'/>
+  <readonly/>
+ </disk>
+ <interface type='bridge'>
+  <mac address='54:52:00:74:87:be'/>
+  <source bridge='br163'/>
+  <model type='virtio'/>
+ </interface>
+</devices>
+
+* if installing centos-5.5-x86_64.netinst.iso -- do simple install (no repos, no desktop)
+
+# ------+++------
+

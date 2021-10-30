@@ -1,0 +1,7 @@
+# htmldoc.quicky
+
+# htmldoc -> to generate PDF from an webpage/URL
+# http://www.htmldoc.org/
+
+htmldoc --webpage -f t.pdf http://10.122.13.8/cacti-view/
+

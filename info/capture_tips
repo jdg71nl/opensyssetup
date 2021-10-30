@@ -1,0 +1,15 @@
+
+[tethereal]
+Capture with -R read filter
+Use -n for no-translation
+
+tethereal -n -i eth0 -R "not tcp.port eq 22 and not tcp.port eq 9000"
+tethereal -n -i eth1 -R "tcp.port eq 80" -w teth_p80_cap6.cap
+tethereal -n -r file | less
+
+remark: tethereal dies when running a long time - better use snort
+
+[snort]
+snort-plain -b -i eth1 -l /samba/cap/snort/ -h 212.238.194.206/23 'port http'
+snort-plain -d -i eth1 -l /samba/cap/snort/ -h 212.238.194.206/23 -c /etc/snort/snort.conf-reassemble 'port http'
+/usr/sbin/snort-plain -b -i eth1 -l /samba/cap/snort/ -h 212.238.194.206/23 'port http and net 205.158.0.0/16'

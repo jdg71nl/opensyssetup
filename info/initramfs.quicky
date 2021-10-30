@@ -1,0 +1,33 @@
+# initramfs.quicky
+
+# info from: http://www.mjmwired.net/kernel/Documentation/filesystems/ramfs-rootfs-initramfs.txt
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# The following command line can extract a cpio image back into its component files:
+
+> cpio -i -d -H newc -F initramfs_data.cpio --no-absolute-filenames
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# The following shell script can create a prebuilt cpio archive you can use in place of the above config file:
+
+#!/bin/sh
+# Copyright 2006 Rob Landley <rob[AT]landley.net> and TimeSys Corporation[DOT]
+# Licensed under GPL version 2
+if [ $# -ne 2 ]
+then
+	echo "usage: mkinitramfs directory imagename.cpio.gz"
+	exit 1
+fi
+if [ -d "$1" ]
+then
+	echo "creating $2 from $1"
+	(cd "$1"; find . | cpio -o -H newc | gzip) > "$2"
+else
+	echo "First argument must be a directory"
+	exit 1
+fi
+#end
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+

@@ -1,0 +1,27 @@
+# debian-network-interface.quicky
+
+# - - -
+# https://linuxconfig.org/how-to-setup-a-static-ip-address-on-debian-linux
+# config static IP with manual config (need to disable NetworkManager, but not uninstall)
+
+sudo -i
+systemctl stop NetworkManager.service
+systemctl disable NetworkManager.service
+
+> cat /etc/network/interfaces
+#
+source /etc/network/interfaces.d/*
+#
+auto lo
+iface lo inet loopback
+#
+auto enp4s0
+iface enp4s0 inet static
+  address 10.21.10.58
+  netmask 255.255.255.0
+  gateway 10.21.10.254
+  dns-nameservers 194.109.6.66 104.109.9.99
+#
+
+# - - -
+

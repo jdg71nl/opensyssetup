@@ -1,0 +1,415 @@
+# voyage.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Voyage Linux, based on Debian
+
+# d0912
+# stable: 0.5.2 
+# development: 0.6.2 (has debian-5 and ramdisk-via-mount-bind-tmpfs)
+
+http://linux.voyage.hk/
+http://www.voyage.hk/download/voyage/voyage-0.6.2.tar.bz2
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# summary of Voyage Linux filesystem handling (v0.6.2):
+
+* the system mounts a 'global' tmpfs on /lib/init/rw/ (no voyage specific ?)
+
+* /etc/init.d/voyage-sync 
+- start: copy real-dir to ram-dir, mount-bind (overlay) ram-dir to runtime-dir
+- stop: do sync, then unmount (no overlay anymore, no ram-dirs), then copy sync-dir to real-dir
+- sync: copy runtime-dir to sync-dir (sync-dir is on flash, not ram)
+
+description:
+	real-dir:    dir on flash
+	ram-dir:     dir on ramdisk (tmpfs)
+	runtime-dir: dir on rootfs (overlay above dirs on flash)
+	sync-dir:    dir on flash with copy of real-dir
+
+example:
+	real-dir:    /var/log
+	ram-dir:     /lib/init/rw/var/log/
+	runtime-dir: /var/log
+	sync-dir:    /.sync/var/log
+example: start
+	mkdir -p /lib/init/rw/var/log/
+	cp -rp /var/log/* /lib/init/rw/var/log/
+	mount --bind /lib/init/rw/var/log /var/log
+example: sync
+	if [ ! -d /.sync/var/log ] ; then
+		mkdir -p /.sync/var/log
+		PERM=$(stat --format=%U:%G /var/log)
+		chown $PERM /.sync/var/log
+	fi
+	rsync -a -q --delete-after /var/log/* /.sync/var/log
+example: stop
+	sync
+	for P in `lsof -F p /var/log/*` kill ${P:1}; done
+	umount /var/log
+	rsync -a -q --delete-after /.sync/var/log /var
+(end of example)
+
+# settings
+> cat /etc/init.d/voyage-sync 
+SYNC_DIRS="var/log var/tmp"
+if [ -f /etc/default/voyage-util ] ; then
+	. /etc/default/voyage-util;
+fi
+SYNC_DIRS="$SYNC_DIRS $VOYAGE_SYNC_DIRS"
+UNIONFS=${VOYAGE_UNIONFS:=tmpfs}
+
+# settings:
+
+> cat /etc/default/voyage-util
+# apart from /var/tmp and /var/log, add extra directories to sync from tmpfs
+VOYAGE_SYNC_DIRS=""
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# It is save to add DIRS to VOYAGE_SYNC_DIRS (without leading slash!) at runtime
+Because sync will create /.sync/dir at next call from real-dir, and voyage-sync will overwrite real-dir again with sync-dir at stop-time
+
+> cat /etc/default/voyage-util
+# jdg: already mounted to tmpfs (from what script?): /var/run /var/lock
+# jdg: already mounted to tmpfs from /etc/fstab: /tmp
+# jdg: for unison updates etc, add: 'root' (NOTE: does not sync /root/.dir)
+# jdg: home directories 'home'
+# jdg: for package samba, add: 'etc/samba var/lib/samba'
+# jdg: for package mysql-server, add: 'var/lib/mysql'
+# jdg: for package dhcp3-server, add: 'var/lib/dhcp3'
+# jdg: for package rmvuv35, add: 'opt/rmvuv35/rmv'
+# jdg: for package postfix, add: 'var/spool var/lib/postfix'
+# jdg: for package cacti, add: 'var/lib/cacti/rra' (also afterwards: chown root.www-data /var/lib/cacti/rra/; chmod 770 /var/lib/cacti/rra/ !)
+# jdg: for package php, add: 'var/lib/php5' (also afterwards: chmod 1733 /var/lib/php5 /.sync/var/lib/php5/ /lib/init/rw/var/lib/php5/ !)
+# jdg: for package wvdial, add: 'etc/ppp'
+VOYAGE_SYNC_DIRS=""
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# http://www.google.com/notebook/public/09540430698362695916/BDQzTSwoQz8-R28Ui
+# this says:
+
+Added line to stop Samba in "/usr/sbin/remountro"  to avoid "mount: / is busy" error when Samba is running and "remountrw" was executed
+
+Samba does not work in RO filesystem; need to fix this using /rw structure (/etc/samba /var/lib/samba and maybe others)
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# how to repair tzdata
+
+# this command breaks locales and tzdata:
+/usr/local/sbin/remove.docs
+
+# php error: Fatal error: date(): Timezone database is corrupt - this should *never* happen! in Command line code on line 1
+
+# info: http://wiki.debian.org/TimeZoneChanges
+# repair:
+> apt-get --reinstall install tzdata
+
+# show zoneinfo file is part of tzdata:
+> dpkg -S /usr/share/zoneinfo/Europe/Amsterdam
+tzdata: /usr/share/zoneinfo/Europe/Amsterdam
+
+> dpkg-reconfigure tzdata
+
+Current default timezone: 'Europe/Amsterdam'
+Local time is now:      Thu Oct  1 20:16:12 CEST 2009.
+Universal Time is now:  Thu Oct  1 18:16:12 UTC 2009.
+
+> ls /usr/share/zoneinfo/Europe/Amsterdam 
+
+# check current setting:
+> cat /etc/timezone 
+Europe/Amsterdam
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# how to repair locales
+
+# check:
+> locale -a
+C
+POSIX
+
+> apt-get install locales
+
+# uncomment wanted locales:
+# check:
+> egrep -v "^(#|$)" /etc/locale.gen
+# append:
+> cat >> /etc/locale.gen 
+en_US ISO-8859-1
+en_US.ISO-8859-15 ISO-8859-15
+en_US.UTF-8 UTF-8
+
+# generate:
+> locale-gen
+
+# check:
+> locale -a
+C
+POSIX
+en_US
+en_US.iso88591
+en_US.iso885915
+en_US.utf8
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+ssh syssetup@helmsdeep.networkconcepts.nl "rm -v .unison/ar24fad115861c4ecaae487e69a608f176"
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# prepare voyage (copy):
+
+# prep hda1 (whole disk single partition)
+fdisk /dev/hda
+mkfs.ext2 /dev/hda1
+tune2fs -c 0 /dev/hda1
+
+# make mountpoint:
+mkdir /mnt/cf
+
+# copy and prepare voyage:
+cd /usr/sslimage/voyage-0.6.2/voyage-0.6.2/
+./usr/local/sbin/voyage.update 
+
+# --
+What would you like to do?
+  1 - Specify Distribution Directory
+  2 - Select Target Profile
+  3 - Select Target Disk
+  4 - Select Target Bootstrap Loader
+  5 - Configure Target Console
+  6 - Copy Distribution to Target
+  7 - Exit
+       (default=6 [Copy Distribution to Target]): 6
+
+
+Configuration details:
+----------------------
+
+Distribution directory:   /usr/sslimage/voyage-0.6.2/voyage-0.6.2
+
+Disk/Flash Device:        /dev/hda
+Installation Partition:   /dev/hda1
+Bootstrap Partition:      /dev/hda1
+
+Will be mounted on:       /mnt/cf
+
+Target system profile:    ALIX
+Target console:           serial
+Target baud rate:         9600
+
+Bootstrap installer:      grub
+Bootstrap partition:      /dev/hda1
+
+OK to continue (y/n)? y
+# --
+
+runtime:
+remountrw
+adduser jdg
+adduser networktest
+cp -a /etc/apt/sources.list /etc/apt/sources.list.ori.voyage062
+cat /usr/local/syssetup/voyage062/etc/apt/sources.list.voyage.jdg > /etc/apt/sources.list
+apt-get update
+apt-get install unison vim-tiny man dialog libterm-readline-perl-perl apt-utils htop 
+
+--> fix tzdata (see elsewhere in this doc)
+--> fix locales (see elsewhere in this doc)
+
+cat > /etc/hostname
+rmv034-lunet.networkconcepts.nl
+
+cat > /etc/hosts 
+127.0.0.1	localhost.localdomain	localhost
+172.24.2.210	rmvu034-lunet.networkconcepts.nl	rmvu034-lunet
+
+cp -a /etc/network/interfaces /etc/network/interfaces.voyage062
+cat /usr/local/syssetup/debian/etc/network/interfaces.syssetup > /etc/network/interfaces
+vi /etc/network/interfaces
+
+vi /etc/resolv.conf
+
+syssetup-sync.sh
+apt-get upgrade
+
+
+ln -s /etc/init.d/voyage-sync /
+ln -s /usr/local/syssetup/bin/voyage-sync-dir /
+touch /var/tmp/empty.tmp
+/voyage-sync sync
+
+# add to crontab: remountro
+# add: crontab: update_issue_sysinfo.sh
+
+vi /etc/dnsmasq.more.conf 
+/etc/init.d/dnsmasq restart
+/etc/init.d/pptpd stop
+update-rc.d -f pptpd remove
+/etc/init.d/atftpd stop
+update-rc.d -f atftpd remove
+apt-get remove pptpd atftpd
+
+cp -a /usr/local/syssetup/debian/etc/init.d/iptables /etc/init.d/
+update-rc.d iptables defaults
+cp /usr/local/syssetup/debian/etc/iptables.conf_minimal /etc
+cp -a /usr/local/syssetup/debian/etc/iptables.conf_minimal /etc/iptables.conf
+vi /etc/iptables.conf
+/etc/init.d/iptables restart
+
+# add in crontab:
+cat /etc/crontab
+*/5 * * * * root /usr/local/syssetup/bin/check_restart_ntp.sh
+
+# UMTS
+apt-get install usbutils minicom wvdial rrdtool host mtr
+
+RMV v3.5
+apt-get install unison rsync vim-tiny openvpn redir iperf nmap tshark subversion arping arp-scan telnet sudo
+apt-get install libgd-gd2-perl ntp librrds-perl mysql-server syslog-ng
+apt-get install apache2 snmpd snmp php5-snmp libnet-snmp-perl libnet-telnet-cisco-perl atftpd telnetd 
+
+> cat vi /etc/syslog-ng/syslog-ng.conf 
+~> *.* /dev/tty12
+
+# check 
+chown -Rv mysql.mysql /var/lib/mysql
+chown -Rv www-data.www-data /var/lib/php5 
+chown -Rv www-data.www-data /var/lib/cacti/rra         
+
+*) svn checkout svn+ssh://svn@subversion.networkconcepts.nl/var/svn_repos/rmvuv35/ /opt/rmvuv35/
+*) mv /etc/init.d/openvpn /etc/init.d/openvpn.voyage062
+*) cd /opt/rmvuv35/mod/root/etc/init.d/; cp -a openvpn openvpn.rmv4 openvpn-rmv_hub* start_and_restart.sh /etc/init.d/; cd -
+*) update-rc.d openvpn-rmv_hub1 defaults
+*) update-rc.d openvpn-rmv_hub2 defaults
+*) update-rc.d -f openvpn remove
+*) cd /etc/openvpn
+*) scp -P2221 root@80.69.65.224:~/openvpn-template* .
+*) tar xvfz openvpn-template-rmv_gw-rmv_hub12.tgz 
+*) ssh -p2221 root@80.69.65.224 'cd /var/rmv/certs/keys/ ; tarbase64.sh rmvu043.vpncert.rmv2.[ck][re][ty]'
+*) cat | untarbase64.sh 
+*) ssh -p2221 root@80.69.65.224 'cd /var/rmv/certs/keys/ ; tarbase64.sh rmvu028.vpncert.rmv2.[ck][re][ty]' | untarbase64.sh 
+*) cd rmv_hub1/ ; ln -s ../rmvu043.vpncert.rmv2.* . ; cd -
+*) cd rmv_hub2/ ; ln -s ../rmvu043.vpncert.rmv2.* . ; cd -
+
+*) apt-get install cacti
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# problems with 'dma timeout' when using flash as IDE drive (kernel boottime)
+
+# add 'ide=nodma' in kernel boot line:
+> vi /boot/grub/menu.lst 
+kernel /vmlinuz root=LABEL=ROOT_FS ide=nodma
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# check voyage version:
+
+> cat /etc/motd
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# add in case alix, see ntp.quicky:
+
+> cat /boot/grub/menu.lst
+
+title voyage-linux-08Oct09-nomfgpt
+	root (hd0,0)
+	kernel /vmlinuz root=LABEL=ROOT_FS  console=ttyS0,9600n8 nomfgpt
+	initrd /initrd.img
+
+title voyage-linux-23Nov09 quiet
+        root (hd0,0)
+        kernel /vmlinuz root=LABEL=ROOT_FS  console=ttyS0,9600n8 quiet noacpi acpi=off noapm apm=off nomfgpt
+        initrd /initrd.img
+
+# also noacpi etc
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# PHP cannot write session-Id:
+
+> lt /var/lib/php5
+drwxr-xr-x  2 root root   40 Jan  1  2000 ./
+
+> chmod 1733 /var/lib/php5
+> chmod 1733 /.sync/var/lib/php5/
+> chmod 1733 /lib/init/rw/var/lib/php5/
+
+> lt /var/lib/php5
+drwx-wx-wt  2 root root   40 Jan  1  2000 ./
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install voyage from livecd
+
+# start voyage-0.6.5.iso in VMware machine (NIC = bridged to physical eth0)
+# bug in 0.6.5: do these commands before starting pxe:
+> remountrw
+> cd / ; ln -s /live/image/live/filesystem.squasfs .
+# star pxe on livecd:
+> /etc/init.dvoyage-pxe start
+
+# follow manual: voyage-0.6.5.iso README.pxe.txt
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# !!! on ALIX force time after boot: 
+#
+cp /usr/local/syssetup/debian/etc/init.d/date-set-1jan2011 /etc/init.d/
+chmod +x /etc/init.d/date-set-1jan2011
+update-rc.d date-set-1jan2011 defaults
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# d1012 HOWTO install voyage on Alix with LiveCD and PXE
+# d1108 tested with v.075
+
+# NOTE !!! - Voyage LiveCD PXE is TROUBLE, Alix hangs after kernel-boot, seems not to mount NFS
+# install via CF in USB on VM-LiveCD.....
+
+# Download voyage Live ISO
+# v0.70 livecd will not start atftd ... using 0.62
+
+# Run in VMware with eth0 = bridged to fysical Ethernet PC.
+# Make sure this VM is the only one bridging to this NIC (shutdown other VMs)
+
+# boot livecd, login: root / voyage
+
+# set alix to boot pxe: <s> during boot, E to enable PXE
+
+# start PXE on LiveCD: will set static IP on livecd-machine (192.168.1.200/24):
+remountrw
+# first make sure the NIC is link-up (connect to Alix eth0/right-most with power-on)
+# replace /live/image/ with /live/image/live/:
+perl -pi -e 's/\/live\/image/\/live\/image\/live/' /tftpboot/pxelinux.cfg/default
+# then start services (will also provision eth0):
+/etc/init.d/voyage-pxe start
+
+/etc/init.d/nfs-common restart
+/etc/init.d/nfs-kernel-server restart
+
+# Connect Alix with eth0 on PC. Boot PXE, default menu 1
+
+# Follow: README.PXE
+# http://linux.voyage.hk/content/getting-started-pxe-boot-v06x
+# http://linux.voyage.hk/content/getting-started-pxe-boot-v07x
+#
+mkdir /tmp/root
+mount -o loop /live/image/live/filesystem.squashfs  /tmp/root
+cd /tmp/root
+mkdir /tmp/cf
+/usr/local/sbin/format-cf.sh /dev/hda
+/usr/local/sbin/voyage.update
+# use settings:
+Distribution directory:   /tmp/root
+Disk/Flash Device:        /dev/hda
+Installation Partition:   /dev/hda1
+Create Partition and FS:  yes
+Bootstrap Partition:      /dev/hda1
+Will be mounted on:       /tmp/cf
+Target system profile:    ALIX
+Target console:           serial
+Target baud rate:         9600
+Bootstrap installer:      grub
+Bootstrap partition:      /dev/hda1
+
+#apt-get remove syslinux atftpd nfs-kernel-server bzip2 sg3-utils minicom
+apt-get remove syslinux atftpd nfs-kernel-server sg3-utils resolvconf
+apt-get autoremove
+
+# ---
+

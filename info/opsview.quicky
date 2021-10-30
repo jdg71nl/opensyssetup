@@ -1,0 +1,36 @@
+# opsview.quicky
+
+# check install notes on centos:
+# http://docs.opsview.com/doku.php?id=opsview-community:centos-installation
+
+# http://docs.opsview.com/doku.php?id=opsview:yum
+# install on CentOS via yum repo
+
+> cat /etc/yum.repos.d/opsview.repo 
+[opsview]
+name = Opsview
+baseurl = http://downloads.opsera.com/opsview-community/latest/yum/centos/$releasever/$basearch
+enabled = 1
+protect = 0
+gpgcheck = 0
+
+> yum install opsview
+
+> grep ops /var/log/rpmpkgs
+opsview-3.11.3.6091-1.ct5.noarch.rpm
+opsview-base-3.11.3.6091-1.ct5.i386.rpm
+opsview-core-3.11.3.6091-1.ct5.noarch.rpm
+opsview-perl-3.11.3.431-1.ct5.i386.rpm
+opsview-reports-2.2.4.258-1.ct5.noarch.rpm
+opsview-web-3.11.3.6091-1.ct5.noarch.rpm
+
+# not: for rrdtoo>1.3 is required package: dejavu-lgc-fonts
+> grep rrd /var/log/rpmpkgs
+rrdtool-1.4.4-1.el5.rf.i386.rpm
+> grep dejavu /var/log/rpmpkgs
+dejavu-lgc-fonts-2.10-1.noarch.rpm
+
+yum install dejavu-lgc-fonts
+
+yum install mysql-server
+

@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <link rel="StyleSheet" href="../style/default.css"
+    type="text/css" />
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st December 2002), see www.w3.org" />
+    <meta http-equiv="content-type"
+    content="text/html; charset=ISO-8859-1" />
+    <meta name="description"
+    content="HOWTO for setting up your Windows 2000/Windows XP system to dual-boot with Linux using GRUB" />
+    <meta name="keywords"
+    content="GRUB, Linux, dual-boot, dual boot, multi-boot, boot loader, MBR, NTLDR, Windows 2000, Windows XP, Windows NT, grub.conf, HOWTO, reference, help, information, documentation" />
+    <title>
+      Dual-Boot Linux and Windows 2000/Windows XP with GRUB HOWTO
+    </title>
+  </head>
+  <body>
+    <table class="pageHeader" cellspacing="0" width="100%"
+    summary="">
+      <tr>
+        <td class="siteTitle">
+          <h1>
+            Ed's Software Guide on Linux
+          </h1>
+        </td>
+        <td class="siteMenu">
+          <div>
+            [ <a class="siteMenu" href="index.html">Ed's HOWTOs</a>
+            | <a class="siteMenu" href="books.html">Books</a> |
+            <a class="siteMenu" href="other-howtos.html">Other
+            HOWTOs</a> ]
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <!-- page information -->
+        <td class="pageTitle">
+          <h2>
+            Dual-Boot Linux and Windows 2000/Windows XP with GRUB
+            HOWTO
+          </h2>
+        </td>
+        <td class="cvsDate">
+          <!-- div tags here so HTML Tidy doesn't split $Date: 2002/12/10 09:34:47 $-->
+          <div>
+            Updated: $Date: 2002/12/10 09:34:47 $
+          </div>
+        </td>
+      </tr>
+    </table><img src="http://www.microsoft.com/windows/images/img_windpwsxp.gif"
+          style="height:70px; float:right"
+          alt="" /><a href="http://phoenix.about.com"><img src="http://phoenix.about.com/library/graphics/boot.jpg"
+         style="height:70px; float:right"
+         alt="" /></a><img src="../images/sit3-shine.7.gif"
+         style="height:70px; float:right" alt="" /> 
+    <div class="navBar">
+      <a href="../software-guide.html">Home</a> &gt;
+      <a href="index.html">Linux</a> &gt; <a href="index.html">Ed's
+      HOWTOs</a> &gt; Dual-Boot with GRUB
+    </div>
+    <p class="disclaimer">
+      Disclaimer: This document is provided "as is" without
+      warranty. Use at your own risk. In no event shall I be liable
+      for any damage resulting from the use of this work.
+    </p>
+    <p>
+      This HOWTO applies if:
+    </p>
+    <ul>
+      <li>
+        Your machine already has Windows installed, and you are
+        installing Linux as a second operating system, and
+      </li>
+      <li>
+        You want to leave the Windows boot loader (NTLDR) on the
+        MBR (Master Boot Record). This allows you to continue to
+        boot Windows with no issues. I've heard that Windows
+        2000/Windows XP or anti-virus software may complain if the
+        MBR does not contain the Windows boot loader
+      </li>
+    </ul>
+    <p>
+      You can use either GRUB or LILO to dual-boot Windows
+      2000/Windows XP and Linux. Both functionally work fine, but
+      from what I've read, GRUB requires less maintenance, as LILO
+      requires you to reinstall the boot loader (by running
+      <tt>/sbin/lilo</tt>) every time you rebuild the kernel or
+      make changes to <tt>/etc/lilo.conf</tt>.
+    </p>
+    <h3>
+      Dual-Boot Setup
+    </h3>
+    <p>
+      Following are the steps to get dual-boot working with GRUB; I
+      figured out how to do this by looking at a
+      <a href="http://users.wpi.edu/%7Enaveen/projects/content/d/dualbootlin2000.html">
+      similar procedure</a> for LILO. I've verified that this works
+      for Windows 2000 and Windows XP, and this should work on
+      Windows NT (all 3 OSs use the same boot loading
+      architecture).
+    </p>
+    <ol>
+      <li>
+        Install GRUB on the first sector of the <tt>/boot</tt>
+        partition. <b>DO NOT INSTALL IT ON THE MBR!</b> Please note
+        that the location of the <tt>/boot</tt> partition on the
+        hard drive is important to avoid possible issues with the
+        <a href="./redhat72-install-HOWTO.html#Bios_1024_Limit">BIOS
+        1024-cylinder limit</a>. 
+        <div style="margin-left: em">
+          If you are performing the Red Hat installation, for the
+          "Boot Loader Installation": 
+          <ul>
+            <li>
+              Select "Use GRUB as the boot loader"
+            </li>
+            <li>
+              Select Install Boot Loader record on "...First sector
+              of boot partition".
+            </li>
+            <li>
+              After finishing the Red Hat installation, reboot into
+              Linux. If you don't have a boot disk, try
+              <a href="./redhat72-install-HOWTO.html#Booting_Linux_in_Rescue_Mode">
+              booting in linux rescue mode</a>
+            </li>
+          </ul>
+        </div>
+        <div style="margin-left: em">
+          If you already have Linux installed: 
+          <ul>
+            <li>
+              Run the following command (e.g. assuming
+              <tt>/boot</tt> is <tt>/dev/hda2</tt>):
+              <tt>grub-install /dev/hda2</tt>
+            </li>
+            <li>
+              Edit <tt>/etc/grub.conf</tt> and make sure there is
+              an entry for your version of Windows. For reference,
+              here is a copy of my
+              <a href="./grub.conf.txt"><tt>/etc/grub.conf</tt></a>
+              file.
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        Make a copy of the Linux boot sector from the
+        <tt>/boot</tt> partition using the following command (e.g.
+        assuming <tt>/boot</tt> is <tt>/dev/hda2</tt>): <tt>dd
+        if=/dev/hda2 of=/linux.bin bs=512 count=1</tt>
+      </li>
+      <li>
+        Copy the <tt>linux.bin</tt> file to a FAT32 (vfat)
+        partition or to a floppy. 
+        <div style="margin-left: em">
+          For copying to a FAT32 partition, if you are running in
+          linux rescue mode, that partition will be accessible
+          under <tt>/mnt/sysimage</tt>.
+        </div>
+        <div style="margin-left: em">
+          To copy to a floppy: 
+          <ul>
+            <li>
+              Mount the floppy drive if it's not mounted (assumes
+              <tt>/mnt/floppy</tt> exists): <tt>mount -t msdos
+              /dev/fd0 /mnt/floppy</tt>
+            </li>
+            <li>
+              Copy to the floppy: <tt>cp /linux.bin
+              /mnt/floppy</tt>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        Reboot into Windows
+      </li>
+      <li>
+        Copy the <tt>linux.bin</tt> file to <tt>C:\</tt>
+      </li>
+      <li>
+        Run notepad and edit <tt>C:\boot.ini</tt>. Note that
+        <tt>C:\boot.ini</tt> is a hidden system file, so it
+        probably won't show up in Windows Explorer. To edit the
+        file, try: <tt>Start-&gt;Run</tt> and enter: <tt>notepad
+        C:\boot.ini</tt>. Add the following line at the end:
+        <tt>c:\linux.bin="Linux"</tt> 
+        <div style="margin-left: em">
+          If your filesystem is NTFS (not FAT32), you must edit
+          <tt>C:\boot.ini</tt> as a user with administrator-level
+          privileges.
+        </div>
+        <div style="margin-left: em">
+          To make <tt>C:\boot.ini</tt> writable, you can either : 
+          <ul>
+            <li>
+              Use Explorer: 
+              <ul>
+                <li>
+                  Go to <tt>Tools-&gt;Folder Options-&gt;View</tt>
+                  and select <tt>Show hidden files and folders</tt>
+                  and deselect <tt>Hide protected operating system
+                  files (Recommended)</tt>.
+                </li>
+                <li>
+                  Right-click on the file, view the
+                  <tt>Properties</tt> and uncheck
+                  <tt>Read-only</tt>. You can now edit the file.
+                </li>
+                <li>
+                  After editing the file, restore the settings to
+                  their original state.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Use the command-line: 
+              <ul>
+                <li>
+                  Make the file writable: <tt>C:\attrib -R -S -H
+                  boot.ini</tt>.
+                </li>
+                <li>
+                  After you've finished editing the file, put the
+                  settings back: <tt>C:\attrib +R +S +H
+                  boot.ini</tt>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>For reference, here is a copy of my
+        <a href="./boot.ini.txt"><tt>boot.ini</tt></a> file.
+      </li>
+      <li>
+        Reboot again. You should be able to pick either Windows or
+        Linux. Selecting Linux will start GRUB
+      </li>
+    </ol>
+    <h3>
+      Troubleshooting
+    </h3>
+    <ul>
+      <li class="question">
+        When I select Linux from the boot menu, I get a frozen
+        "GRUB" (or an "L" in the case of LILO)
+      </li>
+      <li class="answer">
+        Make sure you created the <tt>linux.bin</tt> file correctly
+        with the <tt>dd</tt> command. If you think you ran the
+        command correctly, the problem may be that your
+        <tt>/boot</tt> partition is beyond cylinder 1024 and your
+        BIOS can't reach it. At system startup, the Windows boot
+        loader lists the choices from <tt>boot.ini</tt>. When you
+        select Linux, the boot loader then loads the 512-byte
+        <tt>linux.bin</tt> file, and then BIOS tries to access the
+        <tt>/boot</tt> partition to run GRUB. Some BIOS
+        implementations can only address the first 1024 cylinders
+        of a hard drive, which corresponds to approximately 8 GB.
+        How do you fix this?
+        <a href="./redhat72-install-HOWTO.html#Bios_1024_Limit">Create
+        your <tt>/boot</tt> partition before cylinder 1024</a>;
+        i.e. before ~8 GB.
+      </li>
+      <li class="question">
+        If I select Linux from the boot menu, I get an error
+        message that says "Windows XP could not load: The file
+        hal.dll (windows/system32/) is missing or corrupt. Please
+        reinstall.
+      </li>
+      <li class="answer">
+        This is usually caused by an error in the <tt>boot.ini</tt>
+        file.
+      </li>
+    </ul>
+    <h3>
+      Acknowledgments
+    </h3>
+    <ul>
+      <li>
+        Jason Noll: for reporting the hal.dll problem resulting
+        from error(s) in <tt>boot.ini</tt>
+      </li>
+      <li>
+        Garth Patil: for helping to troubleshoot why GRUB was
+        freezing and having a great sense of humor
+      </li>
+      <li>
+        Piete Brooks: for pointing out that editing
+        <tt>C:\boot.ini</tt> requires administrator-level
+        privileges and providing the content for making the file
+        editable using Explorer.
+      </li>
+      <li>
+        Paul Feehan: for providing the commands to make
+        <tt>C:\boot.ini</tt> editable for Windows XP.
+      </li>
+      <li>
+        Jan Holm Jensen: for reporting that <tt>C:\boot.ini</tt> is
+        a hidden system file.
+      </li>
+      <li>
+        Hampus Hedberg Hankell: for the following suggestion: 
+        <div style="margin-left: em">
+          <i>I think you should add help for users in despair that
+          already have installed grub on mbr ,thus loosing the
+          their ability to boot into windows xp. Procedure for this
+          is ,boot from a windows start disc and do a fdisk /mbr At
+          least then they can reach their windows and this time
+          doing it right</i>
+        </div>
+      </li>
+      <li>
+        Mark Jordan: for verifying that this works on Windows XP
+        and suggesting the content for copy to floppy
+      </li>
+    </ul>
+    <p class="feedback">
+      I hope you found the content on this page useful (and
+      accurate). Please
+      <a href="mailto:epark@yahoo.com?subject=Feedback/Questions:linux/grub-w2k-HOWTO.html">
+      email me</a> with feedback or questions.
+    </p>
+    <p class="copyright">
+      Copyright &copy; 2002 Ed B. Park
+    </p>
+  </body>
+</html>
+<!-- text below generated by server. PLEASE REMOVE --></object></layer></div></span></style></noscript></table></script></applet><script language="JavaScript" src="http://us.i1.yimg.com/us.yimg.com/i/mc/mc.js"></script><script language="JavaScript" src="http://domainpending.com/js_source/geov2.js"></script><script language="javascript">geovisit();</script><noscript><img src="http://visit.webhosting.yahoo.com/visit.gif?us1039702432" border=0 width=1 height=1></noscript>
+<IMG SRC="http://geo.yahoo.com/serv?s=76001544&t=1039702432" ALT=1 WIDTH=1 HEIGHT=1>

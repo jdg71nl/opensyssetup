@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# iperf-server   runs iperf in server mode
+#
+# chkconfig: 345 99 01
+# description: run iperf in server mode
+# processname: iperf
+
+# Redhat:
+# Source function library.
+#. /etc/rc.d/init.d/functions
+
+NAME="iperf-server"
+BIN="iperf"
+PROG="/usr/bin/iperf"
+CMD="$PROG -s -p5002"
+if ! [ -f  $PROG ]; then
+  echo "binary '$PROG' not found"
+  exit 0
+fi
+
+# pidfile
+mkdir -pv /var/run/
+PIDF="/var/run/start_and_restart.$NAME.pid"
+
+case_status() {
+	if [ -s $PIDF ]; then
+		echo "'start_and_restart.sh iperf' running as PID "`cat $PIDF`
+	else
+		echo "'start_and_restart.sh iperf' is NOT running"
+	fi
+}
+
+case_start() {
+	/etc/init.d/start_and_restart.sh $PIDF $CMD &
+}
+
+case_stop() {
+	if [ -s $PIDF ]; then
+		kill `cat $PIDF` >/dev/null 2>&1
+	fi 
+	rm -f $PIDF
+	killall -9 iperf
+}
+
+# See how we were called.
+case "$1" in
+	start)
+		echo "Starting $NAME: "
+		case_start
+	;;
+  stop)
+		echo -n "Stopping $NAME: "
+		case_stop
+	;;
+  restart)
+		echo -n "Restarting $NAME: "
+		case_stop
+		sleep 3
+		case_start
+	;;
+  status)
+	  case_status
+	;;
+  *)
+	echo "Usage: $NAME {start|stop|restart|status}"
+	exit 1
+esac
+
+exit 0
+

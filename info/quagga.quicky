@@ -1,0 +1,176 @@
+# quagga.quicky
+
+# ------+++------
+# install centos:
+yum install quagga
+
+# ------+++------
+# Centos (5.5) setup
+
+# zebra will auto generate conf with system-interfaces
+# # need to supply base conf:
+cp -a ospfd.conf.sample ospfd.conf
+
+# vtysh.conf does not (yet) have a hostname (the system hostname is called)
+# make hostname uniform in all daemons, enable logging:
+> cat /etc/quagga/zebra.conf | egrep '(hostname|log file)'
+hostname flexvpn2.networkconcepts.nl
+log file /var/log/quagga/zerba.log informational
+> cat /etc/quagga/ospfd.conf | egrep '(hostname|log file)'
+hostname flexvpn2.networkconcepts.nl
+log file /var/log/quagga/ospfd.log informational
+> cat /etc/quagga/vtysh.conf | egrep '(hostname|log file)'
+hostname flexvpn2.networkconcepts.nl
+
+# enable and start daemons:
+chkconfig zebra on
+/etc/init.d/zebra start
+chkconfig ospfd on
+/etc/init.d/ospfd start
+
+
+# ------+++------
+# quagga has a general daemon 'zebra' and routing-protocols daemons e.g. 'ospfd'
+# each daemon has its own config file, and its own telnet login interface
+# zebra: telnet localhost 2601
+# ospfd: telnet localhost 2604
+# bgpd:	 telnet localhost 2605
+# save in telnet results in save in file (# wr mem, config saved to /etc/quagga/ospfd.conf)
+# 
+# use 'vtysh' to do all CLI (will write config in appropriate daemon config file):
+vtysh
+
+# ------+++------
+# first set loginpwd and enablepwd:
+
+> vi /etc/quagga/zebra.conf
+hostname hostname
+password loginpwd
+enable password enablepwd
+log stdout
+
+> vi /etc/quagga/ospfd.conf
+hostname hostname
+password loginpwd
+enable password enablepwd
+log stdout
+
+> vi /etc/sysconfig/quagga 
+
+# ---
+# login to zebra:
+telnet localhost 2601
+
+# login to ospfd:
+telnet localhost 2604
+
+# BETTER !!! (write in different configs):
+vtysh
+
+# ---
+
+
+
+# ------+++------
+# example config:
+
+> cd /etc/quagga/ ; for f in zebra.conf ospfd.conf bgpd.conf; do echo -e "\n---file: $f\n"; cat $f; done
+
+---file: zebra.conf
+
+!
+! Zebra configuration saved from vty
+!   2010/03/06 13:42:52
+!
+hostname hostname
+password loginpwd
+enable password enablepwd
+log stdout
+!
+interface eth0
+ ip address 89.106.160.75/29
+ ipv6 nd suppress-ra
+!
+interface lo
+!
+interface sit0
+ ipv6 nd suppress-ra
+!
+ip route 89.106.167.0/24 89.106.160.77
+!
+!
+!
+line vty
+!
+
+---file: ospfd.conf
+
+!
+! Zebra configuration saved from vty
+!   2010/03/06 13:44:33
+!
+hostname hostname
+password loginpwd
+enable password enablepwd
+log stdout
+!
+!
+!
+interface eth0
+!
+interface lo
+!
+interface sit0
+!
+router ospf
+ ospf router-id 10.0.0.75
+ redistribute static
+ network 89.106.160.72/29 area 0.0.0.0
+ network 89.106.167.0/24 area 0.0.0.0
+!
+line vty
+!
+
+---file: bgpd.conf
+
+!
+! Zebra configuration saved from vty
+!   2010/02/17 00:37:01
+!
+hostname hostname
+password loginpwd
+enable password enablepwd
+log stdout
+!
+router bgp 48812
+ bgp router-id 89.106.160.10
+ bgp log-neighbor-changes
+ network 95.129.28.0/22
+ neighbor 89.106.160.9 remote-as 50554
+!
+line vty
+!
+
+# ------+++------
+# experience with quagga and openvpn
+
+# d110423 quagga ospf on flexpvnp1/2 with openvpn-2.1.4
+# seems that one side requires /32 in zebra.conf and the other /30
+# even while both are ptp in linux.
+# seems that flexvpn1 has initiated (server) and needs /32 and flexvpn2 is client and needs /30 ??
+
+> cat /etc/openvpn/vpninternoc/vpninternoc.conf | grep ifconfig
+ifconfig 10.222.100.1 10.222.100.2 
+> cat /etc/quagga/zebra.conf | grep -A3 tun100
+interface tun100
+ ip address 10.222.100.1/32
+
+> cat /etc/openvpn/vpninternoc/vpninternoc.conf | grep ifconfig
+ifconfig 10.222.100.2 10.222.100.1 
+> cat /etc/quagga/zebra.conf | grep -A3 tun100
+interface tun100
+ ip address 10.222.100.2/30
+
+
+# ------+++------
+

@@ -1,0 +1,77 @@
+# perl-commandline.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# replace all occurances in a file:
+# see: man perlrun
+perl -pi -e 's/bar/baz/' testfile
+for x in $(find -type f -not -path '*v1.2*' -prune  -name '*.htm*'); do echo $x; perl -pi -e 's/></>\n</g' $x; done
+
+for file in `grep -l reverse *.zone` ; do echo $file; done
+
+# on MacOX CWD=~/Library/Application Support/VanDyke/SecureCRT/Config/Sessions/
+> find . -type f -name '*.ini' -exec echo "(( {} ))" \; -exec perl -pi -e 's/d11/d12/g' "{}" \;
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# in DNS zone files update serial (date)
+for file in $( find . -name '*zone' -mmin -60 ); do 
+	echo "$file"; 
+	perl -pi -e 's/^(\s+)\d{6,}\s*;.*?serial.*$/${1}0801212103 ; serial in YYMMDDHHMM/' "$file";
+	#perl -pi -e 's/^(\s+)\d{6,}\s*;.*?serial.*$/${1}2008012105 ; serial/' "$file" ; 
+done
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# grep with Regular Expression from perl:
+cat /etc/services | perl -ne 'print if /\d0\d{3}/'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# pipe-string-functions (size in 9 digits, and the dots in between)
+du -sb * | perl -ne '/^(\d+)\s+(.*)$/;$n=sprintf"%09d",$1;$f=$2;$n=~/(\d{3})(\d{3})(\d{3})/;printf"%s.%s.%s  %s\n",$1,$2,$3,$f;' | sort
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# rename files:
+for x in March\ 2007\ Image*; do echo $x; y=`echo $x|perl -ne '$_=~ /^.*?(Image)(\d+)\.psp/;print $1;printf("%03d.psp",$2)'`; echo "$y"; mv "$x" "$y"; done;
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# compact a config file:
+cat /etc/smokeping/config | perl -ne 'print if $_!~/^[\s|#]/'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# convert ABN AMRO mutatie regels:
+
+# example (format from TXT file download mutaties ABN):
+cat > x
+28-9-2009	51.77.12.245	517712792	EUR	20090928	269,4	374,59	20090928	848,39	 51.77.12.245 HA DE BOER CJ      HET LABYRINTH 21                 3823 DS  AMERSFOORT              Betaling declaratie zaaknr       2009J45613HJ, mr. J. Chr. de     Jonge, aktedatum 010909 15:30   
+28-9-2009	BEA	517712792	EUR	20090928	269,4	374,59	20090926	-30,34	BEA   NR:72B21L   26.09.09/18.26 Albert Heijn 1501 AMERSF,PAS211 
+28-9-2009	51.77.12.245	517712792	EUR	20090928	269,4	374,59	20090928	1692	 51.77.12.245 HA DE BOER CJ      HET LABYRINTH 21                 3823 DS  AMERSFOORT              restant huwelijksarrangement     050909 (152+3040-1500aanbet)     CONTRACTNR 8609 FACT 901971     
+30-9-2009	BEA	517712792	EUR	20090930	269,4	374,59	20090930	-52,61	BEA   NR:R1KGJ4   30.09.09/15.53 Albert Heijn 1501 AMERSF,PAS201 
+
+# add 2 columns before original text: 1=DATA 2=Tegenrekening(=eerste string in omschrijving)
+cat x | perl -ne '$l=$_;$_=~/^(\d+)\t(\w+)\t(\d+)\t([\d,\-]+)\t([\d,\-]+)\t(\d+)\t([\d,\-]+)\t(.*)$/;$d=$3;$o=$8;$d=~/(\d{4})(\d{2})(\d{2})/;$dn="$3-$2-$1";$o=~/^\s?(\S+)\s/;$t=$1;print "$dn\t$t\t$l";'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# convert multi-line adresses to one-liners with tab-delimiters
+
+in:
+<start>
+single line
+
+Hielkje en Libbe
+Het Labyrinth 19
+3823 DS Amersfoort 
+</end>
+
+out:
+<start>
+Hielkje en Libbe	Het Labyrinth 19	3823 DS Amersfoort 
+</end>
+
+cat d101225-1503-AdressenGeboortekaartjeKeesje.txt | perl -ne 'while($l=<>){chomp $l;if ($l=~/^\s*$/) { if ($count>1) {print "$com\n";} $count=0;$com="";} else {$count++; if ($count==1) {$com="$l";} else {$com.="\t$l";};}; }'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# move 2011-01-01 dirs to 2011_01_01 dirs:
+
+find . -type d -name '2011-*' -maxdepth 1 -print | perl -ne '$_=~/.*?(\d\d\d\d)-(\d\d)-(\d\d)(.*)$/;$y=$1;$m=$2;$d=$3;$x=$4;$old="${y}-${m}-${d}${x}";$new="${y}_${m}_${d}${x}";print "mkdir \"$new\"; mv \"$old\"/* \"$new\"\n"'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

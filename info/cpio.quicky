@@ -1,0 +1,49 @@
+# cpio.quicky
+
+To copy an entire filesystem it is important to preserve all file
+permissions and ownership.
+
+cd /
+find -print0 -xdev -H crc | cpio -p0vdum /misc
+
+* TIP: use null-terminated (find -print0 | cpio -0 ..)
+
+-p			pass-through mode (no de/compress)
+-0			zero-based
+-d			make directories (as printed by find)
+-m			preserve modification time
+-u			unconditional (do copy if if destination file exists and is newer)
+-v			verbose (print files as we copy)
+-H crc	use new 'crc' format instead of default 'bin' format (CRC added!)
+
+############
+
+# create CPIO
+find -print0 | cpio -ov0 > ../rmvh_v3.cpio
+
+# test CPIO
+cat rmvh_v3.cpio | cpio -ivt
+
+# extract CPIO
+cat rmvh_v3.cpio | cpio -ivdum
+
+##################################################################
+Over the network:
+
+[Create]
+src> cd \ ; find -print0 | gzip | cpio -ov0 -H crc | nc 172.24.1.10 1212
+dst> nc -l -p 1212 > partition.cpio.gz
+
+[Restore]
+src> cat partition.cpio.gz | nc 172.24.1.1 1212
+dst> cd \ ; nc -l -p 1212 | cpio -ivdum
+
+###################################################################
+
+
+# ---
+# convert rpm to cpio
+
+> rpm2cpio freeradius-1.1.3-1.5.el5_4.i386.rpm > freeradius-1.1.3-1.5.el5_4.i386.cpio
+
+# ---

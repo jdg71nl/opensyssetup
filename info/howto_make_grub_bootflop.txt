@@ -1,0 +1,8 @@
+     # cd /usr/share/grub/i386-pc
+     # dd if=stage1 of=/dev/fd0 bs=512 count=1
+     1+0 records in
+     1+0 records out
+     # dd if=stage2 of=/dev/fd0 bs=512 seek=1
+     153+1 records in
+     153+1 records out
+     #

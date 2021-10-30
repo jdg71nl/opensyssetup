@@ -1,0 +1,49 @@
+#
+--
+http://www.postfix.org/
+http://www.postfixvirtual.net/
+http://www.courier-mta.org/maildrop/
+--
+maildrop:
+http://www.postfix.org/MAILDROP_README.html
+http://www.postfixvirtual.net/postfixconf.html#couriermaildrop
+http://www.courier-mta.org/maildrop/documentation.html
+--
+# show postfix version:
+> postconf mail_version
+# note: this is just a variable in main.cf.default
+--
+
+# delete all mail in the DEFERRED queue
+postsuper -d  ALL  deferred
+
+--
+# to delete all mails in mail-queue
+mailq | tail +2 | awk  ´BEGIN { RS = "" }
+	# $7=sender, $8=recipient1, $9=recipient2
+	{ if ($8 == "apache@smallbizconcepts.nl" && $9 == "")
+	print $1 }
+´ | tr -d ’*!’ | postsuper -dv -
+
+# jdg - tested above, problems, this works:
+mailq | tail +2 | awk 'BEGIN { RS = "" } { if ($7 == "apache@smallbizconcepts.nl") print $1}' | postsuper -d -
+
+--
+# resolve alias (in one table, one answer):
+postmap -q john@de-graaff.net mysql:/etc/postfix/mysql_virtual_alias_maps.cf
+--
+# resolve alias recursively
+http://www.webservertalk.com/archive281-2005-3-949548.html
+> Is there a way to do manual recursive alias expansion lookups? I know
+> `postmap -q`, but that's only 1 map to query.
+>
+> I would like to see the way in which an incoming email-adress would be
+> rewritten via virtual alias maps, local alias maps etc... without having
+> to send an email and watching the pf logs...
+>
+> Does such a tool exist?
+Postfix 2.1 and later:
+% sendmail -bv user@domain
+Wietse
+--
+

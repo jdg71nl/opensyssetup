@@ -1,0 +1,37 @@
+# icmp-redir.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+--
+http://www.faqs.org/docs/securing/chap5sec57.html
+
+> vi /etc/rc.d/rc.local
+for f in /proc/sys/net/ipv4/conf/*/accept_redirects; do
+	echo 0 > $f
+done
+
+> vi /etc/sysctl.conf
+# Disable ICMP Redirect Acceptance
+net.ipv4.conf.all.accept_redirects = 0
+									               
+--
+http://www.insecure.org/sploits/arp.games.html
+-> do not accept ICMP redir
+--
+http://support.microsoft.com/?kbid=195686
+
+Windows NT Specifics: A host route learned by means of an ICMP Redirect will be added to the route table for 10 minutes, after which time it is removed and must be relearned through another ICMP Redirect.
+--> 10 MIN
+
+--
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# send redirs:
+
+> cat /etc/sysctl.conf | grep net.ipv4.conf.all.send_redirects
+#net.ipv4.conf.all.send_redirects = 0
+
+> cat /proc/sys/net/ipv4/conf/all/send_redirects 
+1
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

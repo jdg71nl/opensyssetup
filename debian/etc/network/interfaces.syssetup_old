@@ -1,0 +1,166 @@
+# Used by ifup(8) and ifdown(8). See the interfaces(5) manpage or
+# /usr/share/doc/ifupdown/examples for more information.
+
+# jdg:
+# Debian reference:
+# http://www.debian.org/doc/manuals/reference/ch-gateway.en.html
+#
+# MAN pages:
+# man interfaces
+# man vlan-interfaces
+# man bridge-utils-interfaces
+
+# ---------------------------------------------------------------------------
+# loopback
+
+auto lo
+iface lo inet loopback
+
+# ---------------------------------------------------------------------------
+# eth0
+
+auto eth0
+iface eth0 inet static
+	address 10.0.0.1
+	netmask 255.255.255.0
+	broadcast 10.0.0.255
+	gateway 10.0.0.254
+
+# ---------------------------------------------------------------------------
+# eth1
+
+auto eth1
+iface eth1 inet static
+	address 10.0.1.1
+	netmask 255.255.255.0
+	broadcast 10.0.1.255
+
+# ---------------------------------------------------------------------------
+# eth2
+
+auto eth2
+iface eth2 inet static
+	address 10.0.2.1
+	netmask 255.255.255.0
+	broadcast 10.0.2.255
+
+# ---------------------------------------------------------------------------
+# DHCP
+
+#allow-hotplug eth0
+#iface eth0 inet dhcp
+
+# ---------------------------------------------------------------------------
+# ethernet interface
+
+#auto eth0
+#iface eth0 inet static
+#	address 192.168.1.1
+#	netmask 255.255.255.0
+#	broadcast 192.168.1.255
+#	gateway 192.168.1.254
+
+# ---------------------------------------------------------------------------
+#jdg - MAC address jdgbvhp3 nc6320 -- needed for Casema Kabel Internet
+#ifconfig eth0 hw ether 00:17:A4:D3:3F:67
+
+#auto eth0
+#iface eth0 inet dhcp
+	#pre-up ifconfig eth0 hw ether 00:17:A4:D3:3F:67
+	#hwaddress ether 00:17:A4:D3:3F:67
+	#up   route add -net 83.80.0.0 netmask 255.255.0.0 gw 83.85.184.1 dev $IFACE
+	#down route add -net 83.80.0.0 netmask 255.255.0.0 gw 83.85.184.1 dev $IFACE
+
+# ---------------------------------------------------------------------------
+# hinsts for scripting:
+
+#iface eth2 inet dhcp
+#	up   route del default gw 192.168.1.254 dev eth2
+#	up   cat /etc/resolv.conf.ok > /etc/resolv.conf
+#
+
+# ---------------------------------------------------------------------------
+# umts
+
+#auto ppp0
+#iface ppp0 inet wvdial
+#	provider VodafoneNL
+#	# provider VodafoneNL : will call 'wvdial VodaFone'
+#	# and this uses the section [Dialer VodafoneNL] in /etc/wvdial.conf
+
+# ---------------------------------------------------------------------------
+# interface alias
+
+#auto eth1:1
+#iface eth1:1 inet static
+#	address 172.0.2.1
+#	netmask 255.255.255.0
+#	broadcast 172.0.2.255
+
+# ---------------------------------------------------------------------------
+# vlan interface
+# apt-get install vlan
+
+#auto vlan2
+#iface vlan2 inet static
+#	vlan_raw_device eth1
+#	address 172.16.2.254
+#	netmask 255.255.255.0
+#	broadcast 172.16.2.255
+
+# ---------------------------------------------------------------------------
+# vlan interface with DHCP
+
+#auto vlan3
+#iface vlan3 inet static
+#	vlan_raw_device eth1
+#	# carefull to NOT accept a default gateway through dhcp-client:
+#	up route del default dev $IFACE
+#	#up route del default gw 172.16.40.1
+
+# ---------------------------------------------------------------------------
+# vlan alias interface
+
+#auto vlan2:1
+#iface vlan2:1 inet static
+#	vlan_raw_device eth1
+#	address 172.16.2.254
+#	netmask 255.255.255.0
+#	broadcast 172.16.2.255
+
+# ---------------------------------------------------------------------------
+# CAPTURE port, interface up, no ip address
+
+#auth eth1
+#iface eth1 inet manual
+#	up ifconfig eth1 0.0.0.0 up
+#	down ifconfig eth1 down
+
+# ---------------------------------------------------------------------------
+# bridge interface (the physical/vlan-interface have no config 'bridge_ports')
+# apt-get install bridge-utils
+
+#auto br0
+#iface br0 inet static
+#   bridge_ports eth0 eth1
+#   bridge_stp off
+#   address 91.198.178.10
+#   netmask 255.255.255.0
+#   broadcast 91.198.178.255
+#   gateway 91.198.178.1
+
+# ---------------------------------------------------------------------------
+#auto wlan0
+#iface wlan0 inet static
+#        address 10.1.10.1
+#        netmask 255.255.255.0
+#        broadcast 10.1.10.255
+#       network 192.168.1.0
+#       broadcast 192.168.1.255
+#       gateway 192.168.1.1
+#       pre-up iwpriv ath1 wds 1
+#       up iwpriv ath0 mode 3
+#			up nat.sh wlan0 eth0 "10.1.10.0/24"
+#       post-down wlanconfig ath0 destroy
+
+# ---------------------------------------------------------------------------

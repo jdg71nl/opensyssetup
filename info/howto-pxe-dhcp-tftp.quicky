@@ -1,0 +1,310 @@
+# howto-pxe-dhcp-tftp.quicky
+
+# this howto is largely based on:
+# http://howtoforge.com/pxe_booting_debian
+
+# this is also documented on:
+# http://appolos.net/wiki/doku.php/appolos/pxe
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# EXTRA: howto setup PXE-Server in a Virtual Machine (VMware) and connected via VLAN
+
+# on host system - setup VLANs
+# debian example:
+
+> cat /etc/network/interfaces
+
+auto vlan2
+iface vlan2 inet static
+	vlan_raw_device eth0
+	address 172.16.2.60
+	netmask 255.255.255.0
+	broadcast 172.16.2.255
+
+# in VMware Workstation - start "Virtual Network Editor" and set:
+#   vmnet2 'brdiged' to interface 'vlan2'
+# (note: default VMware is: vmnet0=bridged-to-host-eth0, vmnet1=host-only, vmnet8=nat-to-host-with-internal-dhcp)
+> grep vlan2 /etc/vmware/networking 
+add_bridge_mapping vlan2 2
+
+# in the virtual machine: create a second network adapter and attach this to /dev/vmnet2
+# not 'eth1' in the VM (untagged) will be connected to vlan2 (tagged) on the host machine
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# txt copy from:
+# http://appolos.net/wiki/doku.php/appolos/pxe
+
+PXE System
+
+This is the documentation of how to build the Appolos Production System.
+
+It is based on PXE, which is used to boot a pristine system (Appolos/RMV unit with blank harddisk), and load an Appolos image onto it.
+
+The “howto” on this page is largely taken from this page:
+http://howtoforge.com/pxe_booting_debian
+
+However, I have changed and corrected some things.
+
+This procedure is done using the “jars” Virtual Machine, which is pre-build VMware Virtual Machine with Ubuntu 8.04 and vmware-tools installed.
+Download: http://jars.de/linux/ubuntu-804-vmware-image-download
+VMware Host environment
+
+I am using VLANs in my office, so I wanted to use the (one) physical interface on my host-machine in VLAN-mode, and then use VLAN1 for the normal LAN and VLAN2 for the Appolos-PXE-LAN.
+
+My host-machine is CentOS (Redhat) and this is the syntax:
+
+vi /etc/sysconfig/network-scripts/ifcfg-vlan2 
+
+#
+VLAN=yes
+VLAN_NAME_TYPE=VLAN_PLUS_VID_NO_PAD
+DEVICE=vlan2
+PHYSDEV=eth0
+BOOTPROTO=static
+ONBOOT=yes
+TYPE=Ethernet
+
+NETMASK=255.255.255.0
+IPADDR=172.16.2.60
+BROADCAST=172.16.2.255
+NETWORK=172.16.2.0
+
+Activate the VLAN2 interface:
+
+ifup vlan2
+
+Setup the VLAN-switch and test.
+
+Now attach a VMware virtual-bridge to VLAN2, using device vmnet2.
+
+> vmware-config.pl 
+...
+Would you like to skip networking setup and keep your old settings as they are?
+(yes/no) [yes] no
+...
+What type of virtual network do you wish to set vmnet2? 
+(bridged,hostonly,nat,none) [none] bridged
+
+Configuring a bridged network for vmnet2.
+
+Your computer has multiple ethernet network interfaces available: eth1, vlan2, 
+vmnet1, vmnet8. Which one do you want to bridge to vmnet2? [eth0] vlan2
+...
+
+> ps aux | grep bridge
+root      5704  0.0  0.0   1632   120 ?        Ss   14:38   0:00 /usr/bin/vmnet-bridge -d /var/run/vmnet-bridge-0.pid /dev/vmnet0 eth0
+root      5724  0.0  0.0   1632   116 ?        Ss   14:38   0:00 /usr/bin/vmnet-bridge -d /var/run/vmnet-bridge-2.pid /dev/vmnet2 vlan2
+
+On my machine I get this bridge:
+
+> psg vmnet2
+root      4776  0.0  0.0   1644    60 ?        Ss   Aug17   0:00 /usr/bin/vmnet-bridge -d /var/run/vmnet-bridge-2.pid /dev/vmnet2 vlan2
+
+On my machine the bridging did not immediately work. But after this command it did:
+
+ifconfig vlan2 promisc
+
+Jars environment
+
+I have add an Ethernet interface in the jars Virtual Machine (this will alter the vmx file) and attach it to vmnet2
+
+This is how the vmx file looks:
+
+> cat Ubuntu_Appolos.vmx | grep ethernet1
+ethernet1.present = "TRUE"
+ethernet1.connectionType = "custom"
+ethernet1.vnet = "/dev/vmnet2"
+ethernet1.wakeOnPcktRcv = "FALSE"
+ethernet1.addressType = "generated"
+ethernet1.generatedAddress = "00:0c:29:e0:50:ce"
+ethernet1.generatedAddressOffset = "10"
+
+Within jars, the new interface is eth3 (the first one was eth2, dont know why it is not eth0 and eth1…)
+
+Give the 2nd interface a fixed address 172.16.2.200 /24:
+
+vi /etc/network/interfaces 
+
+# eth2 is attached to the host-system LAN with Internet access (to get packages, etc)
+auto eth2
+iface eth2 inet dhcp
+
+# eth3 is attached to a physical seperate LAN, used to PXE-boot the Appolos-units
+auto eth3
+iface eth3 inet static
+address 172.16.2.200
+netmask 255.255.255.0
+
+Test with ping if the bridge works:
+
+from jars: ping 172.16.2.60
+from host: ping 172.16.2.200
+
+Setup PXE environment on jars
+
+You need these packages on jars:
+
+apt-get install tftpd-hpa dhcp3-server debootstrap nfs-kernel-server openssh-server
+
+This will setup the pxeroot directory (debootstrap will fetch files directly from internet and takes some time!):
+
+mkdir /pxeroot
+cd /pxeroot
+debootstrap etch /pxeroot
+
+The Appolos-unit will mount the /pxeboot directory as its root-filesystem.
+
+Prepare the interfaces file for the Appolos-unit:
+
+vi /pxeroot/etc/network/interfaces
+
+auto lo
+iface lo inet loopback
+
+# set eth0 to manual because it will do if-ip and trigger ntpdate
+# do not set dhcp, because that has been done at kernel-boot
+auto eth0
+iface eth0 inet manual
+
+echo pxeboot > /pxeroot/etc/hostname
+vi /pxeroot/etc/hosts
+
+127.0.0.1 localhost pxeboot
+# The following lines are desirable for IPv6 capable hosts
+::1 ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+
+vi /pxeroot/etc/fstab
+
+# /etc/fstab: static file system information.
+# <file system>   <mount point>   <type>   <options>   <dump>    <pass>
+/dev/ram0  /       ext2   defaults    0   0
+proc       /proc      proc   defaults    0   1
+tmpfs      /tmp       tmpfs  defaults    0   1
+
+Edit the issue file:
+
+vi /pxeroot/etc/issue
+
+Debian GNU/Linux 4.0 \n \l
+
+You can login as 'root' with password 'root'.
+Note that the root-filesystem is a read/write-NFS mount and that all changes to it are persistent.
+
+
+Uncomment the serial-console line in the inittab (for console-less systems)
+
+vi /pxeroot/etc/inittab 
+
+# Example how to put a getty on a serial line (for a terminal)
+#
+T0:23:respawn:/sbin/getty -L ttyS0 9600 vt100
+#T1:23:respawn:/sbin/getty -L ttyS1 9600 vt100
+
+Prepare the pxe-runtime system (on top of what debootstrap did):
+
+chroot /pxeroot
+
+Set the root password to 'root':
+
+passwd
+
+apt-get install linux-image-2.6.18-6-486
+
+Some warnings will appear because your system might not be bootable because there is no boot loader on the system (grub, lilo,…). Don't stop the script by answering “no” when it aks if you want to stop the installation.
+
+These packages might be needed in pxeboot runtime (can be dynamically installed later, because NFS is read/write mount)
+
+apt-get install partimage rsync ssh parted lsof arping
+
+Exit the CHROOT:
+
+exit
+
+Setup DHCP
+
+On the jars system:
+
+vi /etc/dhcp3/dhcpd.conf
+
+authoritative;
+ddns-update-style none;
+default-lease-time 6000;
+max-lease-time 72000;
+log-facility local7;
+subnet 172.16.2.0 netmask 255.255.255.0 {
+    range 172.16.2.100 172.16.2.199;
+    option subnet-mask 255.255.255.0;
+    option broadcast-address 172.16.2.255;
+    option routers 172.16.2.254;
+    option domain-name-servers 172.16.2.254;
+    option dhcp-server-identifier 172.16.2.254;
+    option domain-name "appolos.net";
+    filename "pxelinux.0";
+    next-server 172.16.2.52;
+    option root-path "172.16.2.52:/pxeroot";
+}
+
+/etc/init.d/dhcp3-server restart
+
+Setup TFTP
+
+On the jars system:
+
+vi /etc/default/tftpd-hpa
+
+RUN_DAEMON="yes"
+OPTIONS="-l -s /var/lib/tftpboot"
+
+/etc/init.d/tftpd-hpa restart
+
+Setup PXE Boot
+
+On the jars system:
+
+cd /var/lib/tftpboot
+wget http://ftp.debian.org/debian/dists/etch/main/installer-i386/current/images/netboot/pxelinux.0
+cp /pxeroot/vmlinuz ./
+cp /pxeroot/initrd.img ./
+mkdir pxelinux.cfg
+
+vi /var/lib/tftpboot/pxelinux.cfg/default
+
+DISPLAY boot.txt
+F1 f1.txt
+
+SAY Enter 'linux' or 'serial' (after 5 seconds defaults to 'linux')
+
+DEFAULT linux
+
+LABEL linux
+    kernel vmlinuz
+    append vga=normal initrd=initrd.img ramdisk_size=14332 root=/dev/nfs nfsroot=172.16.2.200:/pxeroot rw --
+
+LABEL serial
+    kernel vmlinuz
+    append vga=normal console=ttyS0,9600n8 quiet initrd=initrd.img ramdisk_size=14332 root=/dev/nfs nfsroot=172.16.2.200:/pxeroot rw --
+
+SERIAL 0 9600
+PROMPT 1
+TIMEOUT 50
+
+details on:
+http://syslinux.zytor.com/wiki/index.php/SYSLINUX
+Setup NFS
+
+On the jars system:
+
+vi /etc/exports
+
+/pxeroot    172.16.2.0/255.255.255.0(rw,sync,no_root_squash,no_subtree_check)
+
+/etc/init.d/nfs-kernel-server restart
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

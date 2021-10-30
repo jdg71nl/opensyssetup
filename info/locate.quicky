@@ -1,0 +1,22 @@
+# locate.quicky
+
+cd /tmp/search_results/
+find -type l -print -exec rm "{}" \;
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+locate -i -r ".*word.*\.ext$" | tee /dev/stderr | xargs -i ln -s "{}" .
+#or 
+find /data/ -type f -regex ".*word.*\.ext$" -print | sort | tee /dev/stderr | xargs -i ln -s "{}" .
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# find ISO:
+
+locate -i -r ".*office.*\.iso$"
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# find files then use 'xargs' to feed into 'du'
+
+locate -i asus | grep -i a7 | grep -i pdf |  xargs -i du -b "{}" | convertsize.pl | sort
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

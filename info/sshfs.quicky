@@ -1,0 +1,12 @@
+# sshfs.quicky
+
+# Use SSHFS to edit remote files locally
+# SSHFS use OSXFUSE http://osxfuse.github.com/ (better than MacFuse http://code.google.com/p/macfuse/ for Lion)
+
+sshfs jdgncnl@172.30.3.106:SSHFS/ /Users/jdg/Documents/SSHFS/portal/ 
+umount /Users/jdg/Documents/SSHFS/portal
+
+# keepalive
+sshfs -p2221 -o ServerAliveInterval=30 user@server:dir local-dir
+
+

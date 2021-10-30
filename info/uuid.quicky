@@ -1,0 +1,15 @@
+# uuid.quicky
+
+# MacOS has a generator:
+
+> uuidgen
+E8454A6B-494D-4DAD-AF28-8F8F38DBD4AA
+
+> file /usr/bin/uuidgen 
+/usr/bin/uuidgen: Mach-O universal binary with 3 architectures: [x86_64:Mach-O 64-bit executable x86_64] [x86_64h:Mach-O 64-bit executable x86_64h] [arm64e:Mach-O 64-bit executable arm64e]
+/usr/bin/uuidgen (for architecture x86_64):     Mach-O 64-bit executable x86_64
+/usr/bin/uuidgen (for architecture x86_64h):    Mach-O 64-bit executable x86_64h
+/usr/bin/uuidgen (for architecture arm64e):     Mach-O 64-bit executable arm64e
+
+#-EOF
+

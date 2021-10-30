@@ -1,0 +1,4 @@
+# juniper-ssg.quicky 
+
+cat a2.txt | grep -B2 -A1 'set log session-init' | sed 's/set log session-init/unset log session-init/' | grep -v '\-\-'
+

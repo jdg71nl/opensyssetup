@@ -1,0 +1,38 @@
+# vnc.quicky
+#
+
+# 1) sysconfig/vncservers
+VNCSERVERS="1:vnc"
+VNCSERVERARGS[1]="-geometry 1024x768"
+
+# 2) adduser vnc
+# passwd vnc
+# set vncpassword under actual user:
+su - vnc
+vncpassword
+
+# 3) edit session:
+vi ~/vnc/.vnc/xstartup 
+
+#twm &
+icewm &
+vmware -x /home/vnc/vmware/win_xp_sbc-vpc-admin/Windows\ XP\ Professional.vmx /home/vnc/vmware/debain_31r2/debain_31r2.vmx &
+
+# chkconfig --level 345 vncserver on
+/etc/init.d/vncserver start
+
+--
+#note:
+I think vncpasswd creates a file:
+~/.vnc/xstartup
+which comes from: /usr/bin/vncserver
+so: edit '/usr/bin/vncserver' to use icewm, not twm
+--
+download: icewm:
+http://dag.wieers.com/packages/icewm/
+rpm -Uvh ...
+
+# can edit/link
+/etc/X11/xinit/Xclient -> /etc/X11/xinit/Xclient.icewm
+--
+

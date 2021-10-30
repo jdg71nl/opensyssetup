@@ -1,0 +1,9 @@
+#
+
+# cannot flush dns cache (local resolver), but can if you use 'nscd'
+
+apt-get install nscd
+
+flush:
+/etc/init.d/nscd restart
+

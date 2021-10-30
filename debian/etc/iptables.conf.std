@@ -1,0 +1,73 @@
+# iptables.conf
+
+# ------------------------------------------------------------------------------------
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+
+-A INPUT -p tcp -m tcp --dport 2221 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+
+# allow for all
+# ping
+-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+# replies
+-A INPUT -p icmp -m icmp --icmp-type 0 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 3 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 4 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 11 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 12 -j ACCEPT
+-A INPUT -p udp -m udp --sport 53 --dport 1024:65523 -j ACCEPT
+
+-A INPUT -j DROP
+
+# ------------------------------------------------------------------------------------
+
+-A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+-A FORWARD -j ACCEPT
+
+# ------------------------------------------------------------------------------------
+
+-A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+-A OUTPUT -j ACCEPT
+
+# only commit at end of table, not at end of every chain
+COMMIT
+
+# ------------------------------------------------------------------------------------
+*mangle
+
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+COMMIT
+
+# ------------------------------------------------------------------------------------
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+
+# DNAT
+#-A PREROUTING -d 172.24.1.10 -p tcp -m tcp --dport 12022 -j DNAT --to-destination 192.168.44.2:22
+#-A PREROUTING -d 83.85.188.205 -p tcp -m tcp --dport 22000 -j DNAT --to-destination 172.24.2.200:2000
+#-A PREROUTING -d 192.168.1.1  -p tcp -m tcp --dport 22000 -j DNAT --to-destination 172.24.2.200:2000
+
+# SNAT
+#-A POSTROUTING -s 172.24.2.0/24 -j SNAT --to-source 172.24.1.10
+#-A POSTROUTING -s 172.24.2.0/24 -j MASQUERADE
+
+COMMIT
+
+# ------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------
+

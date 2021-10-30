@@ -1,0 +1,58 @@
+# sqlite.quicky
+
+http://www.sqlite.org/download.html
+
+apt-get install sqlite3 libdbd-sqlite3-perl php5-sqlite libsqlite3-0
+
+# ---
+# create SQLite db
+cat wlanmon.sql
+
+CREATE TABLE tbl_switches (
+	switchip		TEXT,
+	switchname	TEXT,
+	switchsnmp	TEXT
+);
+
+echo '.read wlanmon.sql' | sqlite3 wlanmon.db
+
+# ---
+# List table
+
+SQL="SELECT * FROM tbl ORDER BY column;"; echo -e ".mode column\n.header on\n$SQL" | sqlite3 sqlite.db
+
+
+# ---
+# SQLite Perl example
+
+use DBI;
+
+my $dbh = DBI->connect("dbi:SQLite:$file_db","","",{});
+
+my $hash_switches = $dbh->selectall_hashref("SELECT * FROM tbl_switches", "switchip");
+die "$DBI::errstr" if $dbh->err();
+
+$dbh->do("INSERT INTO tbl_devices VALUES(".
+         "'$apserial','$switchname','$switchip','$switchsnmp','$switchportindex','$switchportdescr'".
+			      ");");
+
+$dbh->disconnect();
+
+# ---
+# Dump tables
+
+> cat ./dump-db.sh 
+#!/bin/sh
+cd /opt/wlanmon
+echo '.dump' | sqlite3 wlanmon.db
+
+# or:
+sqlite3 myapp.db ".dump"
+
+# ---
+# mega join
+
+echo ".mode list\n.header on\n.separator '\t'\nSELECT * FROM table;\n" | sqlite3 wlanmon.db
+
+# ---
+

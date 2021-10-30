@@ -1,0 +1,47 @@
+# centos.quicky
+
+# ---
+#
+rpm --import http://mirror.centos.org/centos/RPM-GPG-KEY-centos4
+
+# ---
+# errors on fd0 on console and /var/log/messages
+
+end_request: I/O error, dev fd0, sector 0
+Buffer I/O error on device fd0, logical block 0
+
+# this is because floppy is not attached, but floppy driver is loaded
+# see: http://www.cyberciti.biz/faq/linux-end_request-ioerror-dev-fd0-sector0/
+
+# add in blacklist:
+> vi /etc/modprobe.d/blacklist
+blacklist floppy
+
+# then reboot
+
+# ---
+# on Redhat/Centos disable dhcp-behavior (169.254.0.0 in route-table):
+echo 'NOZEROCONF=1' >> /etc/sysconfig/network 
+
+> cat /etc/sysconfig/network
+NOZEROCONF=1
+
+# ---
+# build essentials:
+
+yum install gcc gcc-c++ kernel-devel
+
+# ---
+# typical package list
+
+yum install arp-scan dhcp iperf iptables mtr mysql ntp pcre redir samba unison vim-enhanced wireshark openvpn
+
+
+# ---
+# if copying VM then MAC changes, CentOS will add new ethX to MAC.
+# edit this file:
+
+# persistent relation between MAC address and ethX interface name:
+vi /etc/udev/rules.d/70-persistent-net.rules
+
+# ---

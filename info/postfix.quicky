@@ -1,0 +1,105 @@
+# postfix.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+http://www.postfix.org/
+http://www.postfixvirtual.net/
+http://www.courier-mta.org/maildrop/
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install postfix with MySQL support from CentOSplus:
+
+yum install postgresql
+rpm --nodeps -e postfix
+yum --disablerepo=* --enablerepo=centosplus list all | grep postfix
+yum --disablerepo=* --enablerepo=centosplus install postfix
+
+> rpm -q postfix
+postfix-2.3.3-2.1.centos.mysql_pgsql
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+maildrop:
+http://www.postfix.org/MAILDROP_README.html
+http://www.postfixvirtual.net/postfixconf.html#couriermaildrop
+http://www.courier-mta.org/maildrop/documentation.html
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# show postfix version:
+> postconf mail_version
+# note: this is just a variable in main.cf.default
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# delete all mail in the DEFERRED queue
+postsuper -d  ALL  deferred
+
+# show mailq only lines with queue-id
+mailq | perl -ne 'print if /^[\w]/'
+
+# SEE this python script !!!!!!!!!!!!!!!!!!!!!!!!!
+mq
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# to delete all mails in mail-queue
+mailq | tail +2 | awk  ´BEGIN { RS = "" }
+	# $7=sender, $8=recipient1, $9=recipient2
+	{ if ($8 == "apache@smallbizconcepts.nl" && $9 == "")
+	print $1 }
+´ | tr -d ’*!’ | postsuper -dv -
+
+# jdg - tested above, problems, this works:
+mailq | tail +2 | awk 'BEGIN { RS = "" } { if ($7 == "apache@smallbizconcepts.nl") print $1}' | postsuper -d -
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# resolve alias (in one table, one answer):
+postmap -q john@de-graaff.net mysql:/etc/postfix/mysql_virtual_alias_maps.cf
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# resolve alias recursively
+http://www.webservertalk.com/archive281-2005-3-949548.html
+> Is there a way to do manual recursive alias expansion lookups? I know
+> `postmap -q`, but that's only 1 map to query.
+>
+> I would like to see the way in which an incoming email-adress would be
+> rewritten via virtual alias maps, local alias maps etc... without having
+> to send an email and watching the pf logs...
+>
+> Does such a tool exist?
+Postfix 2.1 and later:
+% sendmail -bv user@domain
+Wietse
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# debuggin (check alias expansion etc)
+
+# set "-v" flag on service "smtp":
+> vi /etc/postfix/master.cf
+smtp      inet  n       -       n       -       -       smtpd -v
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# test if postfix has PCRE build-in
+
+> ldd /usr/libexec/postfix/smtpd  | grep pcre
+	libpcre.so.0 => /lib64/libpcre.so.0 (0x00002b927a211000)
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# log all emails (http://www.seaglass.com/postfix/faq.html#lgsbj)
+
+> grep header_checks /etc/postfix/main.cf
+header_checks = pcre:/etc/postfix/header_checks
+
+> cat /etc/postfix/header_checks | egrep -B2 '(#!/usr/sbin/postmap|WARN)'
+#!/usr/sbin/postmap /etc/postfix/header_checks
+#jdg
+# log all emails (http://www.seaglass.com/postfix/faq.html#lgsbj)
+/^subject:/      WARN
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# send test-email:
+
+TO="test.jdg@networkconcepts.nl"; echo -e "FROM: test-email\nTO: $TO\nSUBJECT: test-email\n\nThis is a test email\n" | sendmail $TO
+
+TO="ipbackup.jdg@networkconcepts.nl";FROM="$TO";SUBJECT="User 'root' just logged in on ipbackup";BODY="$SUBJECT";echo -e "FROM: $FROM\nTO: $TO\nSUBJECT: $SUBJECT\n\n$BODY\n" | /usr/sbin/sendmail $TO
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# select email to drop:
+
+> grep -sinH null /etc/aliases /etc/postfix/virtual-alias.pcre
+/etc/aliases:4:devnull: /dev/null
+/etc/postfix/virtual-alias.pcre:7:/^firewall-overbetuwe.jdgraaff@networkconcepts.nl$i   devnull
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

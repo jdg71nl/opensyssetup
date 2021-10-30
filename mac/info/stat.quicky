@@ -1,0 +1,5 @@
+# mac: stat.quicky
+
+# simulate 'stat' from linux:
+stat -x file
+

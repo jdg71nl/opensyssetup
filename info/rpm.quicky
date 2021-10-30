@@ -1,0 +1,78 @@
+# rpm.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+Installing package: (Update, verbose, hash=progress bar)
+/bin/rpm -Uvh package.rpm
+
+Uninstalling package:
+/bin/rpm -e package
+
+Querying package or package-database:
+/bin/rpm -qa			list all installed packages in dbase
+/bin/rpm -qf /file		list package in dbase that contains /file
+/bin/rpm -qp package.rpm	list specified package
+Query options:
+/bin/rpm -qpi package.rpm	info of package
+/bin/rpm -qpl package.rpm	list all files of package
+/bin/rpm -qpd package.rpm	list documentation files of package
+/bin/rpm -qpc package.rpm	list configuration files of package
+/bin/rpm -qps package.rpm	list state of all file of package
+
+Check MD5 of package:
+/bin/rpm --checksig --nogpg package.rpm
+
+Find an installed package:
+/bin/rpm -qa | grep name
+
+Rebuild the database:
+/bin/rpm --rebuilddb
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# tell me the version:
+rpm -q --queryformat '%{VERSION}\n' centos-release
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# dump list of all packages using just names:
+rpm -q -a --queryformat '%{NAME}\n'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# find/clean duplicat packages:
+
+# first install:
+yum install yum-utils
+
+package-cleanup --dupes
+package-cleanup --cleandupes
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# %{name}-%{version}-%{release}.%{arch}.rpm
+cat /var/log/rpmpkgs | perl -ne '$_=~/^(.*)-(.*)-(.*)\.([^\.]+)\.rpm/;$name=$1;$version=$2;$release=$3;$arch=$4;print"$name-$version-$release.$arch.rpm\n"'
+cat /var/log/rpmpkgs | perl -ne '$_=~/^(.*)-(.*)-(.*)\.([^\.]+)\.rpm/;$name=$1;$version=$2;$release=$3;$arch=$4;print"$name "' > yum.install.list
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# get info from RPM:
+
+rpm -qp package.i386.rpm --qf '%{NAME}-%{VERSION}-%{RELEASE} vendor:%{VENDOR} dist:%{DISTRIBUTION}\n'
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# show packages with size
+
+rpm -qa --queryformat '%010{size} %{name}-%{version}-%{release}\n' | sort -n | tail
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# on CentOS 6 rpmpkgs is missing:
+
+lt /var/log/rpmpkgs
+
+# CentOS 5
+> rpm -qf /etc/cron.daily/rpm 
+rpm-4.4.2.3-28.el5_8
+
+# CentOS 6
+> rpm -qf /etc/cron.daily/rpm   
+rpm-cron-4.8.0-27.el6.noarch
+
+yum install rpm-cron
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

@@ -1,0 +1,22 @@
+# undelete.quicky
+
+# ---
+# done on 20 dec 2011, kvm-hlm-01, delete file 'xen-haarlem-01_LV_d3_web1.bin' which was image for KVM machine.
+
+--[CWD=~]--[23:53:47 Tue 20-Dec-2011 CET]--[root@kvm-hlm-01]--[CentOS-5.5-KVM]------
+> cat /etc/fstab 
+/dev/VolGroup00/LV_TMP  /mnt/LV_TMP/            ext3    defaults        0 0
+> lvs
+  LV           VG         Attr   LSize  Origin Snap%  Move Log Copy%  Convert
+  LV_TMP       VolGroup00 -wi-a- 20.00G                                      
+
+# undelete hint from:
+http://carlo17.home.xs4all.nl/howto/undelete_ext3.html
+
+yum install ext3grep
+# enough space:
+cd /mnt/LV_TMP2/
+ext3grep $IMAGE --restore-file xen-haarlem-01_LV_d3_web1.bin
+
+# ---
+

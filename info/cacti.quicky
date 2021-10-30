@@ -1,0 +1,117 @@
+# cacti.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# cacti on debian/4/etch:
+
+# info on: http://www.debianadmin.com/cacti-bandwith-monitoring-tool-in-debian-etch.html
+
+# Error
+Fatal error: Call to undefined function: mysql_pconnect() in /usr/share/php/adodb/drivers/adodb-mysql.inc.php on line 367
+# Solution
+dpkg-reconfigure php4-mysql
+
+# did not work, this did:
+apt-get install php5-mysql php5-snmp
+apt-get install mysql-server apache2 libapache2-mod-php5 php5-mysql php5-cli php5-snmp
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Debian 5 cacti default webUI login: admin / admin
+
+# huh:
+# first login: cacti / cacti
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# pwd reset:
+
+use cacti; UPDATE user_auth SET password=MD5("admin") WHERE username='admin';
+
+echo "use cacti; UPDATE user_auth SET password=MD5('admin') WHERE username='admin';" | mysql -u root -p
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# upgrade cacti on etch (backports)
+
+add in sources.list:
+# http://mediakey.dk/~cc/debian-backports/
+deb http://www.backports.org/debian etch-backports main contrib non-free
+
+apt-get -t etch-backports install cacti
+
+at next web connect, it will auto run:
+http://172.20.150.1/cacti/install/index.php
+
+Cacti Installation Guide
+Upgrade results:
+0.8.6k -> 0.8.7
+[Success] ALTER TABLE `graph_templates_graph` ADD COLUMN `t_slope_mode` CHAR(2) DEFAULT 0 AFTER `vertical_label`, ADD COLUMN `slope_mode` CHAR(2) DEFAULT 'on' AFTER `t_slope_mode`;
+...
+0.8.7 -> 0.8.7a
+[Success] ALTER TABLE `graph_templates_item` ADD COLUMN `alpha` CHAR(2) DEFAULT 'FF' AFTER `color_id`;
+...
+0.8.7a -> 0.8.7b
+[Success] ALTER TABLE `graph_templates_item` ADD INDEX `task_item_id` ( `task_item_id` )
+...
+
+#---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# on debian5, cacti does not show graphs.
+
+# info on: http://groups.google.com/group/linux.debian.bugs.dist/browse_thread/thread/e857e066c59f4983
+The fix is to set it up to use RRDTool 1.2.x (by default, it's using version 1.0.x) in:
+Configuration -> Settings -> General -> Required Tool Versions -> RRDTool Utility Version 
+
+#---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install on CentOS (RPM from dagwieers):
+
+# http://plone.lucidsolutions.co.nz/web/management/Installing-Cacti-v0.8.7-and-Spine-v0.8.7-on-CentOS.1
+
+yum install postfix vixie-cron crontabs screen mlocate man which logrotate
+yum install cacti cacti-spine mysql-server net-snmp-utils
+
+# manually create DB:
+mysqladmin -u root -p create cacti
+
+mysql -u root -p <<HERE
+GRANT USAGE ON *.* TO 'cactiuser'@'localhost' IDENTIFIED BY 'cactiuser'; 
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, LOCK TABLES, ALTER ON cacti.* TO 'cactiuser'@'localhost'; 
+flush privileges;
+HERE
+
+mysql cacti -u cactiuser -p < /var/www/cacti/cacti.sql 
+
+# change pwd:
+vi /var/www/cacti/include/config.php 
+vi /etc/spine.conf 
+
+# check spine
+> spine 
+SPINE: Using spine config file [/etc/spine.conf]
+SPINE: Version 0.8.7b starting
+11/29/2010 12:40:11 AM - SPINE: Poller[0] ERROR: SNMP Library Version Mismatch (5.3.1 vs 5.3.2.2) (Spine parent)
+
+# spine breaks with some SNMP errors....
+# update SPINE
+# http://www.cacti.net/spine_install_rhlnx.php
+wget -c http://www.cacti.net/downloads/spine/cacti-spine-0.8.7g.tar.gz
+tar xvzf cacti-spine-0.8.7g.tar.gz
+cd spine-0.8.7g
+./configure
+make
+make install
+# on Centos (with cacti-spine rpm from dag wieers) d0:
+cp spine /usr/bin/spine 
+cd /usr/local/spine/etc/
+ln -s /etc/spine.conf .
+
+
+# now test:
+> spine 
+SPINE: Using spine config file [/etc/spine.conf]
+SPINE: Version 0.8.7g starting
+SPINE: Time: 0.5242 s, Threads: 1, Hosts: 3
+
+# damn : still get errors in cacti log
+# set poll-interval = cron interval = 1 min, poller=spine, now no SQL errros
+
+
+
+#---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

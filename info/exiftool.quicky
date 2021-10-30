@@ -1,0 +1,16 @@
+# exiftool.quicky
+
+# get exiftool (win/mac binary, also perl module):
+# http://owl.phy.queensu.ca/~phil/exiftool/exiftool_pod.html
+
+# man exiftool
+
+# set file modtime for all files in dir accoording to EXIF date:
+> exiftool '-DateTimeOriginal>FileModifyDate' .
+
+# 
+> exiftool -DateTimeOriginal-='0:0:0 8:00:0' .
+
+# print all files with timestamp in current dir:
+exiftool -p '$filename has date $dateTimeOriginal' -q -f .
+

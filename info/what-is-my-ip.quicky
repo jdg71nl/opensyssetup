@@ -1,0 +1,11 @@
+# what-is-my-ip.quicky
+#
+
+# http://www.go2linux.org/what-is-my-public-ip-address-with-linux
+wget -q -O - http://www.networkconcepts.nl/whatismyip.php | grep -i 'Your IP is'
+wget -q -O - checkip.dyndns.org|sed -e 's/.*Current IP Address: //' -e 's/<.*$//'
+curl -s checkip.dyndns.org|sed -e 's/.*Current IP Address: //' -e 's/<.*$//'
+curl -s http://whatismyip.org/
+lynx -dump checkip.dyndns.org
+lynx -dump www.whatismyip.com | grep 'Your IP'
+

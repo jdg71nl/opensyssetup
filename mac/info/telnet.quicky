@@ -1,0 +1,13 @@
+# telnet.quicky
+
+# ---
+# https://www.cisl.ucar.edu/nets/intro/staff/siemsen/tools/telnet/
+# When using the Mac telnet client to access some Cisco switches, telnet may display
+#   Kerberos: No default realm defined for Kerberos! 
+# To fix this, put this into your ~/.telnetrc file:
+
+> vi ~/.telnetrc 
+default unset autologin 
+
+# ---
+

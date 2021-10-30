@@ -1,0 +1,241 @@
+--- rancid.ori	2013-08-25 10:05:48.000000000 +0200
++++ rancid	2013-11-20 21:36:00.000000000 +0100
+@@ -913,6 +913,222 @@
+     return(0);
+ }
+ 
++# jdg
++sub ShowCDP {
++   print STDERR "    In ShowCDP: $_" if ($debug);
++   my($lines) = 0;
++   while (<INPUT>) {
++               tr/\015//d;
++               last if (/^$prompt/);
++               next if (/^(\s*|\s*$cmd\s*)$/);
++               return(1) if /Line has invalid autocommand /;
++               return(1) if /(Invalid input detected|Type help or )/;
++               return(-1) if (/command authorization failed/i);
++               # the pager can not be disabled per-session on the PIX
++               if (/^(<-+ More -+>)/) {
++                        my($len) = length($1);
++                        s/^$1\s{$len}//;
++               }
++
++               # diff -U 4 -r1.18 172.20.150.200
++               #   !CDP: Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
++               # - !CDP:                  Gig 0/2           175             R S I  WS-C3560G Gig 0/1
++               # + !CDP:                  Gig 0/2           122             R S I  WS-C3560G Gig 0/1
++               #
++               # remove temporal information from line to prevent cvs-changes:
++               # 
++               $_ =~ s/(\s+)(\d+)(\s+)/$1 <removed> $3/;
++
++               ProcessHistory("COMMENTS","keysort","T1","!CDP: $_");
++               $lines++;
++   } # while
++   if ($lines) {
++       ProcessHistory("COMMENTS","keysort","T1","!\n");
++   }
++   return(0);
++}
++
++# jdg
++sub ShowLLDP {
++   print STDERR "    In ShowLLDP: $_" if ($debug);
++   my($lines) = 0;
++   while (<INPUT>) {
++               tr/\015//d;
++               last if (/^$prompt/);
++               next if (/^(\s*|\s*$cmd\s*)$/);
++               return(1) if /Line has invalid autocommand /;
++               return(1) if /(Invalid input detected|Type help or )/;
++               return(-1) if (/command authorization failed/i);
++               # the pager can not be disabled per-session on the PIX
++               if (/^(<-+ More -+>)/) {
++                        my($len) = length($1);
++                        s/^$1\s{$len}//;
++               }
++
++	#Capability codes:
++	#    (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
++	#    (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
++	#
++	#Device ID           Local Intf     Hold-time  Capability      Port ID
++	#MBH07-MER1-COR01    Gi1/0/48       120        B,R             Gi1/0/16
++	#MBH07-MER1-COR01    Gi1/0/47       120        B,R             Gi1/0/15
++	#09E5002229          Gi1/0/45       120        W               0026.3e3e.b9c0
++	#09E5002232          Gi1/0/46       120        W               0026.3e3e.ba80
++	#
++               # remove temporal information from line to prevent cvs-changes:
++               # 
++               $_ =~ s/(\d\s+)(\d+)(\s+)/$1 <removed> $3/;
++
++               ProcessHistory("COMMENTS","keysort","T2","!LLDP: $_");
++               $lines++;
++   } # while
++   if ($lines) {
++       ProcessHistory("COMMENTS","keysort","T2","!\n");
++   }
++   return(0);
++}
++
++# jdg
++sub ShowDHCP {
++   print STDERR "    In ShowDHCP: $_" if ($debug);
++   my($lines) = 0;
++   while (<INPUT>) {
++               tr/\015//d;
++               last if (/^$prompt/);
++               next if (/^(\s*|\s*$cmd\s*)$/);
++               return(1) if /Line has invalid autocommand /;
++               return(1) if /(Invalid input detected|Type help or )/;
++               return(-1) if (/command authorization failed/i);
++               # the pager can not be disabled per-session on the PIX
++               if (/^(<-+ More -+>)/) {
++                        my($len) = length($1);
++                        s/^$1\s{$len}//;
++               }
++
++	# !DHCP: Bindings from all pools not associated with VRF:
++	# !DHCP: IP address          Client-ID/               Lease expiration        Type
++	# !DHCP:              Hardware address/
++	# !DHCP:              User name
++	# !DHCP: 10.7.16.20          013c.94d5.7229.40       Aug 26 2013 06:09 AM    Automatic
++	# !DHCP: 10.7.16.21          013c.94d5.717f.c0       Aug 26 2013 06:10 AM    Automatic
++               #
++               # remove temporal information from line to prevent cvs-changes:
++               # 
++               $_ =~ s/(\s+)([A-Za-z]{3}\s[A-Za-z\s\d\:]{16})(\s+)/$1 <removed> $3/;
++
++               ProcessHistory("COMMENTS","keysort","T3","!DHCP: $_");
++               $lines++;
++   } # while
++   if ($lines) {
++       ProcessHistory("COMMENTS","keysort","T3","!\n");
++   }
++   return(0);
++}
++
++# jdg
++sub ShowPOWER {
++   print STDERR "    In ShowPOWER: $_" if ($debug);
++   my($lines) = 0;
++   while (<INPUT>) {
++               tr/\015//d;
++               last if (/^$prompt/);
++               next if (/^(\s*|\s*$cmd\s*)$/);
++               return(1) if /Line has invalid autocommand /;
++               return(1) if /(Invalid input detected|Type help or )/;
++               return(-1) if (/command authorization failed/i);
++               # the pager can not be disabled per-session on the PIX
++               if (/^(<-+ More -+>)/) {
++                        my($len) = length($1);
++                        s/^$1\s{$len}//;
++               }
++
++               ProcessHistory("COMMENTS","keysort","T4","!POWER: $_");
++               $lines++;
++   } # while
++   if ($lines) {
++       ProcessHistory("COMMENTS","keysort","T4","!\n");
++   }
++   return(0);
++}
++
++# jdg
++sub ShowIFACES {
++   print STDERR "    In ShowIFACES: $_" if ($debug);
++   my($lines) = 0;
++   while (<INPUT>) {
++               tr/\015//d;
++               last if (/^$prompt/);
++               next if (/^(\s*|\s*$cmd\s*)$/);
++               return(1) if /Line has invalid autocommand /;
++               return(1) if /(Invalid input detected|Type help or )/;
++               return(-1) if (/command authorization failed/i);
++               # the pager can not be disabled per-session on the PIX
++               if (/^(<-+ More -+>)/) {
++                        my($len) = length($1);
++                        s/^$1\s{$len}//;
++               }
++
++               ProcessHistory("COMMENTS","keysort","T5","!IFACES: $_");
++               $lines++;
++   } # while
++   if ($lines) {
++       ProcessHistory("COMMENTS","keysort","T5","!\n");
++   }
++   return(0);
++}
++
++# jdg
++sub ShowCHANNELS {
++   print STDERR "    In ShowCHANNELS: $_" if ($debug);
++   my($lines) = 0;
++   while (<INPUT>) {
++               tr/\015//d;
++               last if (/^$prompt/);
++               next if (/^(\s*|\s*$cmd\s*)$/);
++               return(1) if /Line has invalid autocommand /;
++               return(1) if /(Invalid input detected|Type help or )/;
++               return(-1) if (/command authorization failed/i);
++               # the pager can not be disabled per-session on the PIX
++               if (/^(<-+ More -+>)/) {
++                        my($len) = length($1);
++                        s/^$1\s{$len}//;
++               }
++
++               ProcessHistory("COMMENTS","keysort","T6","!CHANNELS: $_");
++               $lines++;
++   } # while
++   if ($lines) {
++       ProcessHistory("COMMENTS","keysort","T6","!\n");
++   }
++   return(0);
++}
++
++# jdg
++sub ShowSTP {
++   print STDERR "    In ShowSTP: $_" if ($debug);
++   my($lines) = 0;
++   while (<INPUT>) {
++               tr/\015//d;
++               last if (/^$prompt/);
++               next if (/^(\s*|\s*$cmd\s*)$/);
++               return(1) if /Line has invalid autocommand /;
++               return(1) if /(Invalid input detected|Type help or )/;
++               return(-1) if (/command authorization failed/i);
++               # the pager can not be disabled per-session on the PIX
++               if (/^(<-+ More -+>)/) {
++                        my($len) = length($1);
++                        s/^$1\s{$len}//;
++               }
++
++               ProcessHistory("COMMENTS","keysort","T7","!STP: $_");
++               $lines++;
++   } # while
++   if ($lines) {
++       ProcessHistory("COMMENTS","keysort","T7","!\n");
++   }
++   return(0);
++}
++
+ # This routine parses "show diagbus"
+ # This will create arrarys for hw info.
+ sub ShowDiagbus {
+@@ -1934,6 +2150,15 @@
+ 	{'show vtp status'		=> 'ShowVTP'},
+ 	{'show vlan'			=> 'ShowVLAN'},
+ 	{'show vlan-switch'		=> 'ShowVLAN'},
++	#jdg
++	{'show cdp neighbors'		=> 'ShowCDP'},
++	{'show lldp neighbors'		=> 'ShowLLDP'},
++	{'show ip dhcp binding'		=> 'ShowDHCP'},
++	{'show power inline'		=> 'ShowPOWER'},
++	{'show interfaces status'	=> 'ShowIFACES'},
++	{'show etherchannel summary'	=> 'ShowCHANNELS'},
++	{'show spanning-tree vlan 1,101'	=> 'ShowSTP'},
++	#
+ 	{'show debug'			=> 'ShowDebug'},
+ 	{'more system:running-config'	=> 'WriteTerm'},	# ASA/PIX
+ 	{'show running-config'		=> 'WriteTerm'},

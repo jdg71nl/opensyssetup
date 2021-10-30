@@ -1,0 +1,95 @@
+# yum.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+info op: http://www.centos.org/docs/5/html/yum/index.html
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+NICE TOOL: YUM-EXTENDER:
+
+> yum install yumex
+> yumex
+--
+Group change mirror:
+/var/syssetup/common/root/etc/yum.repos.d/yum-repo-restore.sh
+/var/syssetup/common/root/etc/yum.repos.d/yum-repo-change.sh
+
+--
+Mirror:
+http://ftp.surfnet.nl/ftp/pub/os/Linux/distr/fedora/
+
+--
+info:
+http://www.fedoratracker.org/
+http://www.fedora-linux.nl/wiki/index.php/Yum
+see what updates do:
+http://fedoraproject.org/wiki/FWN/Issue81
+--
+Problems:
+
+d070331 yum keeps try to download from <link>/RPMS/file... where should not be!
+solution:
+> yum clean metadata
+> yum clean dbcache
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# if 'yum update' crashes:
+
+# tip 1:
+set 'dag.repo' on enable=0
+
+# tip 2:
+yum clean all
+yum update
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# tricks if not enough disk space:
+
+# do first:
+yum update yum
+or
+yum update yum rpm* sqlite python-sqlite2
+
+# update 
+yum update [a-e]*
+yum update [f-j]*
+yum update [k-m]*
+yum update [m-p]*
+yum update [q-w]*
+yum update [x-z]*
+yum update [A-M]*
+yum update [O-Z]*
+yum update
+yum-complete-transaction
+
+# Inserting a
+yum clean all
+# between transactions might help some users.
+
+# Note that yum is critical as are rpm tools and sqlite. The first line might be improved
+yum update yum rpm* sqlite python-sqlite2
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# list/search package in repository:
+
+> yum list python*
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# find package that provides a certain file (regexp)
+
+yum provides */file
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# put certain package on 'hold' so it gets no update
+
+vi /etc/yum.conf 
+[main]
+exclude=apache, mysql, php*
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# group install
+
+yum grouplist
+yum groupinstall Base
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

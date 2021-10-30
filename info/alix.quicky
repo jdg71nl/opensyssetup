@@ -1,0 +1,56 @@
+# alix.quicky
+
+# ---
+Alix with CompactFlash disk:
+* HDD = /dev/hda
+* Serial = 38400 N81
+* at boot time hit 's' for setup.
+
+# ---
+PC Engines ALIX.2 v0.98
+640 KB Base Memory
+261120 KB Extended Memory
+
+*9* 9600 baud (2) 19200 baud (3) 38400 baud (5) 57600 baud (1) 115200 baud
+*C* CHS mode (L) LBA mode
+(W) HDD wait
+(S) HDD slave
+*R* Serial console enable
+(E) Etherboot enable
+(X) Xmodem upload
+(Q) Quit
+
+Save changes Y/N ?
+
+# ---
+# see voyage.quicky for HOWTO install voyage on Alix with LiveCD and PXE
+ 
+# ---
+# disable DHCP-server !!
+
+mv /etc/dnsmasq.pxe.conf /etc/dnsmasq.pxe.conf.disabled
+mv /etc/dnsmasq.more.conf /etc/dnsmasq.more.conf.disabled
+touch /etc/dnsmasq.more.conf
+/etc/init.d/dnsmasq restart
+
+# ---
+# prep kernel for smooth time: disable with keyword nomfgpt:
+> cat /boot/grub/menu.lst
+title voyage-linux-08Oct09-nomfgpt
+        root (hd0,0)
+        kernel /vmlinuz root=LABEL=ROOT_FS  console=ttyS0,9600n8 nomfgpt
+
+# ---
+# set root pwd
+passwd
+
+# ---
+
+Follow:
+/usr/local/syssetup/info/voyage.quicky 
+
+Follow:
+/usr/local/syssetup/info/rmv-debian5.quicky 
+
+# ---
+

@@ -1,0 +1,33 @@
+# cdrom-burn.quicky
+#
+cdrecord -scanbus
+cdrecord -v speed=8 dev=$dev $iso
+cdrecord -v dev=/dev/cdrom1 -checkdrive
+cdrecord -v dev=/dev/cdrom1 -toc
+
+--
+# make a bootable linux cdrom:
+
+mkisofs -r -b isolinux.bin -boot-info-table -no-emul-boot -boot-load-size 4 -o ../BurnMe.iso .
+
+# first download ISOLINUX
+# see: http://syslinux.zytor.com/iso.php
+# http://ping.windowsdream.com/ping/doc/bootiso.html
+--
+# dos/windows bootable CD with floppy image:
+
+mkisofs -o /tmp/final_iso_name.iso -R -V "Volume name or Label" -v -J -T -d -D -b original-image.img -c eltorito.boot -A "Application ID"
+--
+# from: http://www.bartendavid.be/doc/howto/multimedia/cd/mkisofs.html
+
+mkisofs -o backup.iso -r -T -J /home/user/backup
+
+* -o is om aan te geven dat daarchter de image naam staat.
+* -r staat voor het RockRidge file formaat dat gebruikt word door UNIX en Linux.
+* -T is voor het genereren van zogenaamde 'vertalingstabellen' voor sytemen die geen lange filenames ondersteunen.
+* -J is voor als je je cd ook in windows wil lezen, staat voor het Joliet formaat.
+--
+# ghost bootable CD:
+mkisofs -o ../netbootdisk593-with-ghost2003.iso -R -V "ghost2003" -v -J -T -d -D -b netboot593_xp-bootable_144.img -c eltorito.boot -A "Application ID" .
+--
+

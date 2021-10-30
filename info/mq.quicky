@@ -1,0 +1,246 @@
+# mq.quicky
+
+# from: http://mail.python.org/pipermail/mailman-developers/2002-January/010542.html
+
+[Mailman-Developers] Postfix mailq formatter/dumper/searcher: mq
+Dan Mick Dan Mick <dmick@utopia.West.Sun.COM>
+Wed, 30 Jan 2002 00:04:23 -0800 (PST)
+
+    * Previous message: [Mailman-Developers] bounce processing in 2.1CVS
+    * Next message: [Mailman-Developers] pending.db dumper
+    * Messages sorted by: [ date ] [ thread ] [ subject ] [ author ]
+
+I use Mailman with Postfix, and every so often, I would like to
+examine the outgoing mail queue and kill some messages.  Postfix
+supplies "postsuper" to do this given that you know the queue ID,
+but won't, say, take an address and find all mail to that address
+and dequeue it.  Also, I sorta hate the output format of
+mailq.
+
+So I hacked together a Python program that:
+
+1) formats the mailq output more nicely, in two different ways: a
+verbose format:
+
+id: E78C251BDD*
+size: 4317
+datetime: Tue Jan 29 15:25:50
+sender: <listname>-bounces@dom.ain
+recipients: ['luser1@dom.ain', 'luser2@dom.ain2']
+
+and a one-per-line greppable format:
+
+id=E78C251BDD* size=4317 datetime=Tue Jan 29 15:25:50 sender=<listname>-bounces@dom.ain recipients=['luser1@dom.ain','luser2@dom.ain2']
+
+Both formats can optionally include the 'remote SMTP error message'.
+
+2) filter by looking for any one-recipient queued messages that match
+a regular expression:
+
+mailq -v luser1@dom.ain  might show
+
+id: E78C251BDD
+size: 4317
+datetime: Tue Jan 29 15:25:50
+sender: <listname>-bounces@dom.ain
+recipients: ['luser1@dom.ain']
+
+3) output just the queue ID, useful in combination with 2) above,
+so that one can do
+
+postsuper -d `mq -i luser1@dom.ain`
+
+and delete all the queued messages going just to luser1@dom.ain.
+
+Here's a usage message:
+
+mailq [-vie] [--verbose] [--id-only] [--show-errors] [recip RE]
+      show the queued mail (using mailq)
+      -v/--verbose: show a multiline view of each queued mail
+        (default is one line per queue item)
+      -i/--id-only: show only the queue IDs
+      -e/--show-errors: show SMTP errors for each recipient
+      recip RE: a regular expression to filter by recipient
+        if that recipient is the only one for a queue item
+
+Example: mailq -i foo@bar.com shows queue IDs for any mails
+         queued for foo@bar.com only
+Example: mailq -v shows all queue items in verbose format
+
+
+and here's the code.  Use as you wish; any comments on Python style
+are especially welcome.
+
+I'd be happy to adapt this to other mailq output formats if I
+find out about them; obviously it's pretty fragile wrt the
+Postfix output format.  It's either that or get my fingers into
+the queue directories, which is a less-stable interface, IMO.
+But if someone can document the sendmail format I'll see if I can't
+adapt to it as well.
+
+
+#!/usr/bin/env python
+
+import os
+import sys
+import re
+import getopt
+
+class MyRec:
+        def __init__(self, id):
+                self.id = id
+                self.size = 0
+                self.sender = self.datetime = ''
+                self.recipients = []
+        
+        def __str__(self):
+                return self.makestr(1)
+        
+        def makestr(self, errors):
+                if errors:
+                        reciplist = self.recipients
+                else:
+                        reciplist = map(lambda x: x[0], self.recipients)
+                return '\n'.join((
+                        "id: %s" % self.id,
+                        "size: %d" % self.size,
+                        "datetime: %s" % self.datetime,
+                        "sender: %s" % self.sender,
+                        "recipients: %s" % repr(reciplist)))
+
+        def __repr__(self):
+                return self.__str__()
+
+        def oneline(self, errors):
+                if errors:
+                        reciplist = self.recipients
+                else:
+                        reciplist = map(lambda x: x[0], self.recipients)
+                return ' '.join((
+                        "id=%s" % self.id,
+                        "size=%d" % self.size,
+                        "datetime=%s" % self.datetime,
+                        "sender=%s" % self.sender,
+                        "recipients=%s" % repr(reciplist)))
+
+        def multiline(self, errors):
+                return self.makestr(errors) + '\n'
+
+def parsemailq():
+        hre = re.compile('.*Queue ID.*')
+        idre = re.compile(r"""
+                ^(?P<id>[0-9A-Z\*]+)
+                \s+(?P<size>[0-9]+)
+                \s+(?P<dow>\S+)
+                \s+(?P<mon>\S+)
+                \s+(?P<day>[0-9]+)
+                \s+(?P<time>\S+)
+                \s+(?P<sender>\S+)
+                """, re.VERBOSE)
+        reasonre = re.compile('^\s*\(')
+        recre = re.compile('^\s+(?P<recip>[^@]+@[^@]+)')
+        sepre = re.compile('^$')
+
+        recs = []
+
+        mq = os.popen("mailq", "r")
+        for line in mq.readlines():
+
+                line = line.rstrip()
+                if hre.search(line): continue
+
+                mo = idre.match(line)
+                if mo:
+                        r = MyRec(mo.group('id'))
+                        reason = ''
+                        r.size = int(mo.group('size'))
+                        r.datetime = ' '.join((mo.group('dow'), mo.group('mon'),
+                                mo.group('day'), mo.group('time')))
+                        r.sender = mo.group('sender')
+                        continue
+                mo = reasonre.match(line)
+                if mo:
+                        reason = line.strip()
+                        continue
+
+                mo = recre.match(line)
+                if mo:
+                        r.recipients.append([mo.group('recip'), reason]);
+                        reason = ''
+                        continue
+
+                mo = sepre.match(line)
+                if mo:
+                        recs.append(r)
+        mq.close()
+        return recs
+
+def usage():
+        print >> sys.stderr, """
+mailq [-vie] [--verbose] [--id-only] [--show-errors] [recip RE]
+      show the queued mail (using mailq)
+      -v/--verbose: show a multiline view of each queued mail
+        (default is one line per queue item)
+      -i/--id-only: show only the queue IDs
+      -e/--show-errors: show SMTP errors for each recipient
+      recip RE: a regular expression to filter by recipient
+        if that recipient is the only one for a queue item
+
+Example: mailq -i foo@bar.com shows queue IDs for any mails
+         queued for foo@bar.com only
+Example: mailq -v shows all queue items in verbose format"""
+
+        
+def main():
+        lookfor = None
+        try:
+                (optlist, trail) = getopt.getopt(sys.argv[1:], 'vieh', 
+                        ['verbose', 'id-only', 'show-errors', 'help'])
+        except getopt.GetoptError, v:
+                print v
+                usage()
+                sys.exit(1)
+
+        verbose = idonly = errors = 0
+        for (o, a) in optlist:
+                if o in ("-v", "--verbose"):
+                        verbose = 1
+                if o in ("-i", "--id-only"):
+                        idonly = 1
+                if o in ("-e", "--show-errors"):
+                        errors = 1
+                if o in ("-h", "--help"):
+                        usage()
+                        sys.exit(0)
+
+        if trail:
+                lookfor = re.compile(trail[0])
+
+        recs = parsemailq()
+
+        for r in recs:
+                if lookfor: 
+                        if len(r.recipients) == 1 and \
+                                lookfor.search(r.recipients[0][0]):
+                                        dump(r, idonly, verbose, errors)
+                else:
+                        dump(r, idonly, verbose, errors)
+
+def dump(r, idonly, verbose, errors):
+
+        if idonly:
+                print r.id
+        elif verbose:
+                print r.multiline(errors)
+        else:
+                print r.oneline(errors)
+
+main()
+
+
+
+
+    * Previous message: [Mailman-Developers] bounce processing in 2.1CVS
+    * Next message: [Mailman-Developers] pending.db dumper
+    * Messages sorted by: [ date ] [ thread ] [ subject ] [ author ]
+

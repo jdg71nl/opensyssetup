@@ -1,0 +1,52 @@
+# mount.quicky
+# mount.quicky
+#
+# mount ISO image
+mount /mnt/hda5/1.iso /mnt/cd1 -o loop
+
+# samba-fs
+mkdir /mnt/helmsdeep/
+/bin/mount -t smbfs -o username=samba,password=samba,fmask=700,dmask=700 //172.24.2.10/samba /mnt/helmsdeep
+
+# In FC6 smbfs is replaced with CIFS:
+/bin/mount -t cifs -o username=samba,password=samba,file_mode=700,dir_mode=700 //172.28.2.9/samba /mnt/helmsdeep
+# if srv supports UNIX extentions, no need for mode:
+/bin/mount -t cifs -o username=samba,password=samba //172.28.2.9/samba /mnt/helmsdeep
+
+# bind option
+mount --bind olddir newdir
+mount -o ro --bind /var/smartbackup/master/jdg/backuped/latest/ /samba/jdgdata/backuped/jdg/
+mount -o ro --bind /var/smartbackup/master/jdg/encrypted/latest/ /samba/jdgdata/encrypted/jdg/
+mount -o ro --bind /var/smartbackup/master/sbc-office/encrypted/latest/ /samba/jdgdata/encrypted/sbc/
+
+--
+> cat /etc/fstab 
+/dev/VolGroup00/LVcentos /                       ext3    defaults        1 1
+LABEL=/boot             /boot                   ext3    defaults        1 2
+devpts                  /dev/pts                devpts  gid=5,mode=620  0 0
+tmpfs                   /dev/shm                tmpfs   defaults        0 0
+proc                    /proc                   proc    defaults        0 0
+sysfs                   /sys                    sysfs   defaults        0 0
+/dev/VolGroup00/LogVol01 swap                    swap    defaults        0 0
+/var/smartbackup/master/jdg/backuped/latest/ /samba/jdgdata/backuped/jdg/    none bind,defaults 0 0
+/var/smartbackup/master/jdg/encrypted/latest/ /samba/jdgdata/encrypted/jdg/  none bind,defaults 0 0
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# howto mount UFS (FreeBSD/FreeNAS) filesystem on Linux:
+
+> fdisk -l
+...
+WARNING: GPT (GUID Partition Table) detected on '/dev/sdb'! The util fdisk doesn't support GPT. Use GNU Parted.
+...
+	   Device Boot      Start         End      Blocks   Id  System
+		/dev/sdb1               1      121126   976756783+  ee  GPT
+
+
+> mount /dev/sdb1 /mnt/sdb1/ -t ufs -o ro,ufstype=ufs2
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# mount proc
+
+mount -t proc none /proc
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

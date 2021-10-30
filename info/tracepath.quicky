@@ -1,0 +1,80 @@
+# tracepath.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# tracepath is like traceroute but also traces "path mtu"
+
+# example on gloria (self), path is:
+# - gloria (self)
+# - router1 (172.24.2.231) with GRE tunnel (10.0.201.1 ptp .2)
+# - router2 (172.24.2.232) with GRE tunnel (10.0.201.2 ptp .1)
+# - rmv (172.1.1.230)
+
+> tracepath 172.1.1.230
+1:  gloria.de-graaff.local (172.24.2.60)                   0.127ms pmtu 1500
+1:  172.24.2.231 (172.24.2.231)                            0.565ms 
+1:  172.24.2.231 (172.24.2.231)                            0.534ms 
+2:  172.24.2.231 (172.24.2.231)                            0.555ms pmtu 1476
+2:  10.0.201.2 (10.0.201.2)                                1.017ms 
+3:  172.1.1.230 (172.1.1.230)                              1.291ms reached
+Resume: pmtu 1476 hops 3 back 62 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# ping in above setting (note IP-packet-size = ping-packet-size + 28 ; 20bytes ip-header, 8-bytes icmp-header):
+
+> ping -M do 172.24.2.60 -c 3 -s 1448
+PING 172.24.2.60 (172.24.2.60) 1448(1476) bytes of data.
+1456 bytes from 172.24.2.60: icmp_seq=1 ttl=62 time=1.50 ms
+1456 bytes from 172.24.2.60: icmp_seq=2 ttl=62 time=1.43 ms
+1456 bytes from 172.24.2.60: icmp_seq=3 ttl=62 time=1.48 ms
+
+--- 172.24.2.60 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2008ms
+rtt min/avg/max/mdev = 1.431/1.474/1.505/0.031 ms
+
+> ping -M do 172.24.2.60 -c 3 -s 1449
+PING 172.24.2.60 (172.24.2.60) 1449(1477) bytes of data.
+From 172.1.1.230 icmp_seq=1 Frag needed and DF set (mtu = 1476)
+From 172.1.1.230 icmp_seq=1 Frag needed and DF set (mtu = 1476)
+From 172.1.1.230 icmp_seq=1 Frag needed and DF set (mtu = 1476)
+
+--- 172.24.2.60 ping statistics ---
+0 packets transmitted, 0 received, +3 errors
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# iperf in above setting (all 100Mbps-ethernet, router1/2 is alix2d3,cpu=500Mhz)
+# note: with '-m' setting to print MSS
+
+> iperf -c 172.1.1.230 -i1 -t5 -w83000 -m
+------------------------------------------------------------
+Client connecting to 172.1.1.230, TCP port 5001
+TCP window size:   162 KByte (WARNING: requested 81.1 KByte)
+------------------------------------------------------------
+[  3] local 172.24.2.60 port 56352 connected with 172.1.1.230 port 5001
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 1.0 sec  11.0 MBytes  92.4 Mbits/sec
+[  3]  1.0- 2.0 sec  11.0 MBytes  92.5 Mbits/sec
+[  3]  2.0- 3.0 sec  10.9 MBytes  91.1 Mbits/sec
+[  3]  3.0- 4.0 sec  10.9 MBytes  91.4 Mbits/sec
+[  3]  4.0- 5.0 sec  11.0 MBytes  92.5 Mbits/sec
+[  3]  0.0- 5.0 sec  54.8 MBytes  91.9 Mbits/sec
+[  3] MSS size 1424 bytes (MTU 1500 bytes, ethernet)
+
+# this is iperf from gloria-rmv directly (no GRE tunnel with 24 bytes overhead):
+
+> iperf -c 172.24.2.230 -i1 -t5 -w83000 -m
+------------------------------------------------------------
+Client connecting to 172.24.2.230, TCP port 5001
+TCP window size:   162 KByte (WARNING: requested 81.1 KByte)
+------------------------------------------------------------
+[  3] local 172.24.2.60 port 45706 connected with 172.24.2.230 port 5001
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 1.0 sec  11.3 MBytes  94.8 Mbits/sec
+[  3]  1.0- 2.0 sec  11.2 MBytes  93.9 Mbits/sec
+[  3]  2.0- 3.0 sec  11.2 MBytes  93.7 Mbits/sec
+[  3]  3.0- 4.0 sec  11.2 MBytes  93.7 Mbits/sec
+[  3]  4.0- 5.0 sec  11.2 MBytes  93.7 Mbits/sec
+[  3]  0.0- 5.0 sec  56.0 MBytes  93.9 Mbits/sec
+[  3] MSS size 1448 bytes (MTU 1500 bytes, ethernet)
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----

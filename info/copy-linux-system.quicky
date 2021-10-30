@@ -1,0 +1,54 @@
+# copy-linux-system.quicky
+#
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# on ubuntu 8.10:
+# copy /dev/sda to /dev/sdb
+
+> cat /etc/fstab
+/dev/sdb3	/mnt/sdb3		ext3	defaults 0 0
+/dev/sdb1	/mnt/sdb3/boot	ext3	defaults 0 0
+/dev/sdb5	/mnt/sdb3/data	ext3	defaults 0 0
+
+# copy but stay on filesystem:
+> rsync -av -Pi -x / /mnt/sdb3/
+
+# change the UUIDs
+> blkid 
+/dev/sda1: UUID="42df1f6d-a9df-42c4-9b11-0589c3d10f99" TYPE="ext3" 
+/dev/sda2: TYPE="swap" UUID="806005ac-32fb-4dff-ad4f-c34e9aeb6673" 
+/dev/sda3: UUID="745f219f-b11d-4575-9b8d-f043be5a834f" TYPE="ext3" 
+/dev/sda5: UUID="bcf9150f-1d44-4cb7-84ad-c042bf692063" TYPE="ext3" 
+/dev/sdb1: UUID="7e7aa647-3556-41c5-98b9-22bc0422dcc3" SEC_TYPE="ext2" TYPE="ext3" 
+/dev/sdb2: TYPE="swap" UUID="7da80a06-ebdd-4049-9bc7-9afc5c7c645e" 
+/dev/sdb3: UUID="b161341e-9588-4c3a-92e2-812df66b8844" SEC_TYPE="ext2" TYPE="ext3" 
+/dev/sdb5: UUID="593dc626-00ee-403d-a754-6503d294c93e" SEC_TYPE="ext2" TYPE="ext3" 
+
+perl -pi -e 's/42df1f6d-a9df-42c4-9b11-0589c3d10f99/7e7aa647-3556-41c5-98b9-22bc0422dcc3/' /mnt/sdb3/boot/grub/menu.lst 
+perl -pi -e 's/806005ac-32fb-4dff-ad4f-c34e9aeb6673/7da80a06-ebdd-4049-9bc7-9afc5c7c645e/' /mnt/sdb3/boot/grub/menu.lst
+perl -pi -e 's/745f219f-b11d-4575-9b8d-f043be5a834f/b161341e-9588-4c3a-92e2-812df66b8844/' /mnt/sdb3/boot/grub/menu.lst
+perl -pi -e 's/bcf9150f-1d44-4cb7-84ad-c042bf692063/593dc626-00ee-403d-a754-6503d294c93e/' /mnt/sdb3/boot/grub/menu.lst
+
+perl -pi -e 's/42df1f6d-a9df-42c4-9b11-0589c3d10f99/7e7aa647-3556-41c5-98b9-22bc0422dcc3/' /mnt/sdb3/etc/fstab 
+perl -pi -e 's/806005ac-32fb-4dff-ad4f-c34e9aeb6673/7da80a06-ebdd-4049-9bc7-9afc5c7c645e/' /mnt/sdb3/etc/fstab
+perl -pi -e 's/745f219f-b11d-4575-9b8d-f043be5a834f/b161341e-9588-4c3a-92e2-812df66b8844/' /mnt/sdb3/etc/fstab
+perl -pi -e 's/bcf9150f-1d44-4cb7-84ad-c042bf692063/593dc626-00ee-403d-a754-6503d294c93e/' /mnt/sdb3/etc/fstab
+
+# DO the following in a Live-CD BOOT !!
+#
+mkdir /mnt/root
+mount /dev/sdb3 /mnt/root
+mount -o bind /dev /mnt/root/dev
+mount -t proc none /mnt/root/proc
+mount -t sysfs none /mnt/root/sys
+chroot /mnt/root /bin/bash
+mount /dev/sdb1 /boot
+grub-install /dev/sdb
+/usr/sbin/update-grub
+
+# install grub
+# DID NOT WORK in CHROOT
+# grub-install --root-directory=/mnt/sdb3/boot/ /dev/sdb
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

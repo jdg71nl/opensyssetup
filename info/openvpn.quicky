@@ -1,0 +1,125 @@
+# openvpn.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+## static-key tunnel:
+
+# Generate a static key:
+openvpn --genkey --secret static.key
+
+# Server configuration file
+proto udp
+dev tun
+;dev tun102
+port 21041
+ifconfig 10.8.0.1 10.8.0.2
+;secret				static.key
+keepalive 5 60
+cipher BF-CBC
+comp-lzo
+persist-key
+persist-tun
+verb 4
+mute 10
+
+# Client configuration file
+proto udp
+dev tun
+;dev tun101
+ifconfig 10.8.0.2 10.8.0.1
+remote 80.69.65.224 21041
+;management 127.0.0.1 21041
+;secret				static.key
+;status				rmv_hub1.status.txt
+;log-append			rmv_hub1.log
+nobind
+cipher BF-CBC
+comp-lzo
+persist-key
+persist-tun
+explicit-exit-notify 2
+verb 4
+mute 3
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+### start openvpn manually
+
+#deamon
+/usr/local/sbin/openvpn --daemon --writepid /var/run/openvpn-rmv_hub1/rmv_hub1.pid --config rmv_hub1.conf --cd /etc/openvpn/rmv_hub1
+
+#test
+/usr/local/sbin/openvpn --cd /etc/openvpn/rmv_hub1 --config rmv_hub1.conf
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# build rpm openvpn-2.1 on centos
+# http://uxsw.blogspot.com/2009/05/how-to-install-openvpn-21-on-centosrhel.html
+
+# build essentials
+yum install gcc gcc-c++ kernel-devel rpm-build
+
+# dependencies
+yum install pam-devel openssl-devel
+
+# need lzo
+yum --enablerepo=rpmforge -y install lzo-devel
+
+# need pkcs11-helper
+# deps:
+yum install doxygen graphviz pkgconfig automake
+# get
+wget ftp://ftp.pbone.net/mirror/download.fedora.redhat.com/pub/fedora/epel/5/SRPMS/pkcs11-helper-1.07-2.el5.1.src.rpm
+# build
+rpmbuild --rebuild pkcs11-helper-1.07-2.el5.1.src.rpm 
+# install resulting rpms
+rpm -ivh /usr/src/redhat/RPMS/i386/pkcs11-helper-1.07-2.1.i386.rpm 
+rpm -ivh /usr/src/redhat/RPMS/i386/pkcs11-helper-devel-1.07-2.1.i386.rpm 
+
+# get openvpn 
+wget http://swupdate.openvpn.net/community/releases/openvpn-2.1.4.tar.gz
+cp openvpn-2.1.4.tar.gz /usr/src/redhat/SOURCES/
+tar xvfz openvpn-2.1.4.tar.gz 
+cd openvpn-2.1.4
+cp -a openvpn.spec /usr/src/redhat/SPECS/
+cd /usr/src/redhat/SPECS/
+rpmbuild -bb openvpn.spec
+rpm -Uvh /usr/src/redhat/RPMS/i386/openvpn-2.1.4-1.i386.rpm 
+
+# install pre-build rpm:
+rpm -Uvh openvpn-2.1.4-1.i386.rpm pkcs11-helper-1.07-2.1.i386.rpm 
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# openvpn-2.0.9 on Vista, use:
+# http://openvpn.net/archive/openvpn-users/2007-07/msg00275.html
+
+route-method exe
+tap-sleep 5
+
+# OpenVPN 2.0.9 can't use the IPAPI route method (which is the default for OpenVPN) due to some internal changes between XP and Vista, and the sleep appears to be necessary in some cases for the tap device to be ready for use.
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# tips on 2.1 (compat 2.0):
+
+
+# compatibility from 2.1-server to 2.0 client:
+topology net30
+
+# configuration file compatibility with previous OpenVPN versions, use:
+script-security 3 system
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# if server has multiple IP addreses (aliases) the bind to only 1:
+# else TLS-AUTH will fail
+
+local 89.106.163.9
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# build TA key
+
+#conf:
+tls-auth						vpnnoc1.vpncert.rmv5.ta-key 0
+
+#generate:
+openvpn --genkey --secret vpnnoc1.vpncert.rmv5.ta-key
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

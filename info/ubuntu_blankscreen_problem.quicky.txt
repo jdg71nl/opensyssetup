@@ -1,0 +1,8 @@
+# ubuntu_blankscreen_problem.quicky.txt
+
+https://wiki.ubuntu.com/X/Troubleshooting/BlankScreen
+
+A common class of kernel or video driver bug is a blank or black screen on boot.
+
+Symptoms: The screen becomes 100% blank (no backlight or indication that the LEDs or CRT phosphors are lit up), or black (the monitor is on and displaying video, it's just 100% pure black), at some point between the BIOS screen and the login page (GDM) being displayed. The black/blank screen never goes away. Aside from video, the system might still be working (e.g. playing the login sounds, responding to pings, etc.) or it could be completely locked up requiring a reboot. The issue can occur every time you boot, only irregularly, or only under certain circumstances (such as with a particular device plugged in). 
+

@@ -1,0 +1,14 @@
+# perl-libwww.quicky
+#
+
+# GET/POST tool = libwww-perl
+
+# on debian/4/etch
+
+> apt-get install libwww-perl
+
+> GET http://172.24.2.154/cacti/
+<br />
+<b>Fatal error</b>:  Call to undefined function mysql_pconnect() in <b>/usr/share/php/adodb/drivers/adodb-mysql.inc.php</b> on line <b>376</b><br />
+
+

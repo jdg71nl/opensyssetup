@@ -1,0 +1,26 @@
+# screen.quicky
+
+'screen' tool can open/detach/reattach terminal screens
+
+# start screen with new terminal
+screen
+screen -S mijnsessie
+
+# IN SESSION
+ctrl-A ?		help
+ctrl-A c		create new
+ctrl-A d		detach session, but keep it running (!)
+ctrl-A n		next session
+ctrl-A p		previous session
+ctrl-A N		info about current session
+
+# reattach
+screen -r 
+screen -r mijnsessie
+
+# show list of sessions
+screen -ls
+
+# share a session
+screen -x
+

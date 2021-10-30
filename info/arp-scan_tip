@@ -1,0 +1,6 @@
+
+ettercap -Nld
+
+-N non-interactive
+-l list machines
+-d don't resolve

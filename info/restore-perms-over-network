@@ -1,0 +1,12 @@
+
+d040412 
+I have made a litte error:
+the command '/root> chmod -R ug-rwx .*' destroyed many perms also in the root '/' and beyond...
+This is how I repaired it:
+
+
+On one PC with correct permissions: print perms and filename, then send over network:
+> find . -printf "%m %p\n" | nc -n 2.10.40.253 3434
+
+On other PC with files/dirs to be corrected: receive strings and foreach line: chmod
+> nc -l -p 3434 | perl -ne 'chdir "/";while(<>){$x=$_;qx"chmod $x";print $x;}'

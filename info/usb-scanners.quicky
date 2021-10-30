@@ -1,0 +1,12 @@
+# usb-scanners.quicky
+
+--
+scanner:
+sane package
+need to edit dll.conf: to only enable EPSON (?)
+edit epson.conf: only 'usb' not scsi
+--
+if usb does not work (did not after upgrade CetOS4.2 on Gloria nov2005):
+	add 'noapic nolapic acpi=off pci=noacpi' to kernel options in grub.conf
+--
+

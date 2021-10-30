@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Firefox
+Type=Application
+Terminal=false
+Name[en_US]=Firefox
+Exec=/usr/bin/firefox
+no-Icon=/usr/lib/firefox/icons/mozicon50.xpm
+Icon=/usr/lib/firefox/icons/mozicon128.png
+StartupNotify=true

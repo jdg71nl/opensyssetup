@@ -1,0 +1,275 @@
+--[CWD=/usr/sslimage/voyage-0.6.2/voyage-0.6.2]--[14:13:17 Fri 07-Aug-2009 UTC]-
+> ./usr/local/sbin/voyage.update 
+What would you like to do?
+  1 - Create new Voyage Linux disk
+  2 - Update existing Voyage configuration
+  3 - Exit
+       (default=1 [Create new Voyage Linux disk]): 1
+
+Where is the Voyage Linux distribution directory?
+  (default=/usr/sslimage/voyage-0.6.2/voyage-0.6.2): 
+
+What would you like to do?
+  1 - Specify Distribution Directory
+  2 - Select Target Profile
+  3 - Select Target Disk
+  4 - Select Target Bootstrap Loader
+  5 - Configure Target Console
+  6 - Copy Distribution to Target
+  7 - Exit
+       (default=2 [Select Target Profile]): 2
+
+Please select Voyage profile:
+  1 - 4501
+  2 - 4511/4521
+  3 - 4801
+  4 - 5501
+  5 - ALIX
+  6 - Generic PC
+  7 - Notebook (pcmcia)
+  8 - WRAP
+       (default=5 [ALIX]): 5
+
+What would you like to do?
+  1 - Specify Distribution Directory
+  2 - Select Target Profile
+  3 - Select Target Disk
+  4 - Select Target Bootstrap Loader
+  5 - Configure Target Console
+  6 - Copy Distribution to Target
+  7 - Exit
+       (default=3 [Select Target Disk]): 3
+
+Partitions information
+major minor  #blocks  name
+
+   3     0     500472 hda
+   3     1     500440 hda1
+
+Which device accesses the target disk [/dev/hde]? /dev/hda
+
+Which partition should I use on /dev/hda for the Voyage system [1]? 
+
+Device information for /dev/hda1
+    Type  = ext2
+    Label = 
+    UUID  = 8e2159bf-b5fc-4f00-ad06-0b0f4a38392f
+
+Where can I mount the target disk [/mnt/cf]? 
+
+Error: /mnt/cf is not a directory!
+Where can I mount the target disk [/mnt/cf]? 
+[1]+  Stopped                 ./usr/local/sbin/voyage.update
+--[CWD=/usr/sslimage/voyage-0.6.2/voyage-0.6.2]--[14:14:24 Fri 07-Aug-2009 UTC]-
+> mkdir /mnt/cf
+--[CWD=/usr/sslimage/voyage-0.6.2/voyage-0.6.2]--[14:14:28 Fri 07-Aug-2009 UTC]-
+> fg
+./usr/local/sbin/voyage.update
+
+
+Error:  is not a directory!
+Where can I mount the target disk [/mnt/cf]? 
+
+What would you like to do?
+  1 - Specify Distribution Directory
+  2 - Select Target Profile
+  3 - Select Target Disk
+  4 - Select Target Bootstrap Loader
+  5 - Configure Target Console
+  6 - Copy Distribution to Target
+  7 - Exit
+       (default=4 [Select Target Bootstrap Loader]): 4
+
+Which loader do you want (grub or lilo) [grub]? 
+
+Which partition is used for bootstrap [1]? 
+
+What would you like to do?
+  1 - Specify Distribution Directory
+  2 - Select Target Profile
+  3 - Select Target Disk
+  4 - Select Target Bootstrap Loader
+  5 - Configure Target Console
+  6 - Copy Distribution to Target
+  7 - Exit
+       (default=5 [Configure Target Console]): 5
+
+Select terminal type:
+  1 - Serial Terminal
+  2 - Console Interface
+       (default=1 [Serial Terminal]): 1
+
+Please choose speed:
+  1 - 2400
+  2 - 4800
+  3 - 9600
+  4 - 19200
+  5 - 38400
+  6 - 57600
+  7 - 115200
+       (default=5 [38400]): 3
+
+What would you like to do?
+  1 - Specify Distribution Directory
+  2 - Select Target Profile
+  3 - Select Target Disk
+  4 - Select Target Bootstrap Loader
+  5 - Configure Target Console
+  6 - Copy Distribution to Target
+  7 - Exit
+       (default=6 [Copy Distribution to Target]): 6
+
+
+Configuration details:
+----------------------
+
+Distribution directory:   /usr/sslimage/voyage-0.6.2/voyage-0.6.2
+
+Disk/Flash Device:        /dev/hda
+Installation Partition:   /dev/hda1
+Bootstrap Partition:      /dev/hda1
+
+Will be mounted on:       /mnt/cf
+
+Target system profile:    ALIX
+Target console:           serial
+Target baud rate:         9600
+
+Bootstrap installer:      grub
+Bootstrap partition:      /dev/hda1
+
+OK to continue (y/n)? y
+
+Ready to go ....
+Copying files .... done
+
+Removing pcmcia from update-rc.d
+ Removing any system startup links for /etc/init.d/pcmcia ...
+Removing dnsmasq.pxe.conf in /etc/dnsmasq.more.conf
+copyfiles.sh script completed
+What would you like to do?
+  1 - Specify Distribution Directory
+  2 - Select Target Profile
+  3 - Select Target Disk
+  4 - Select Target Bootstrap Loader
+  5 - Configure Target Console
+  6 - Copy Distribution to Target
+  7 - Exit
+       (default=7 [Exit]): 
+
+--[CWD=/usr/sslimage/voyage-0.6.2/voyage-0.6.2]--[14:16:29 Fri 07-Aug-2009 UTC]-
+> df
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/ram0              19G   12G  6.7G  64% /
+tmpfs                 126M     0  126M   0% /lib/init/rw
+udev                   10M   24K   10M   1% /dev
+tmpfs                 126M  4.0K  126M   1% /dev/shm
+tmpfs                 126M     0  126M   0% /tmp
+--[CWD=/usr/sslimage/voyage-0.6.2/voyage-0.6.2]--[14:16:31 Fri 07-Aug-2009 UTC]-
+> mount /dev/hda1 /mnt/cf/
+--[CWD=/usr/sslimage/voyage-0.6.2/voyage-0.6.2]--[14:16:42 Fri 07-Aug-2009 UTC]-
+> lt
+total 192K
+drwxr-xr-x  2 root root 4.0K Aug 12  2008 sys/
+drwxr-xr-x  2 root root 4.0K Sep 16  2008 selinux/
+-rwx------  1 root root 4.4K Oct 14  2008 README.pxe
+-rwx------  1 root root 4.0K Oct 14  2008 README.live-cd
+drwxr-xr-x  2 root root 4.0K Jun 15 09:28 proc/
+drwxr-xr-x  2 root root 4.0K Jun 15 09:28 mnt/
+drwxr-xr-x  2 root root 4.0K Jun 15 09:28 home/
+-rwxr-xr-x  1 root root  13K Jul  7 14:52 CHANGELOG
+-rwxr-xr-x  1 root root  25K Jul  7 17:47 README
+drwxr-xr-x 13 root root 4.0K Jul  7 21:02 var/
+drwxr-xr-x  2 root root 4.0K Jul  7 21:02 srv/
+drwxr-xr-x  2 root root 4.0K Jul  7 21:02 opt/
+drwxr-xr-x  2 root root 4.0K Jul  7 21:02 media/
+drwxr-xr-x 12 root root 4.0K Jul  8 01:31 lib/
+drwxr-xr-x 11 root root 4.0K Jul  8 01:31 usr/
+drwxr--r--  4 root root 4.0K Jul  8 01:31 tftpboot/
+drwxr-xr-x  3 root root 4.0K Jul  8 01:31 rw/
+drwxr-xr-x  6 root root 4.0K Jul  8 01:31 .svn/
+-rw-r--r--  1 root root 3.2K Jul  8 01:33 voyage.dpkg.list
+-rw-r--r--  1 root root  17K Jul  8 01:33 voyage.dpkg-l
+-rw-r--r--  1 root root    0 Jul  8 01:33 voyage.1st
+-rw-r--r--  1 root root 9.5K Jul  8 01:33 voyage.depends.list
+drwxr-xr-x  5 root root 4.0K Jul  8 01:33 dev/
+drwxr-xr-x  2 root root 4.0K Jul  8 01:34 root/
+drwxr-xr-x  2 root root 4.0K Jul  8 01:35 sbin/
+drwxr-xr-x  2 root root 4.0K Jul  8 01:35 bin/
+drwxrwxrwt  2 root root 4.0K Jul  8 01:35 tmp/
+drwxr-xr-x 50 root root 4.0K Jul  8 01:35 etc/
+drwxr-xr-x  2 root root 4.0K Jul  8 01:36 boot/
+drwxrwxrwx  3 root root 4.0K Aug  7 14:11 ../
+lrwxrwxrwx  1 root root   30 Aug  7 14:11 vmlinuz -> boot/vmlinuz-2.6.26-486-voe
+lrwxrwxrwx  1 root root   33 Aug  7 14:11 initrd.img -> boot/initrd.img-2.6.26-e
+-rw-r--r--  1 root root  367 Aug  7 14:16 test.conf
+-rw-r--r--  1 root root  314 Aug  7 14:16 .voyage-install.conf
+drwxr-xr-x 23 root root 4.0K Aug  7 14:16 ./
+--[CWD=/usr/sslimage/voyage-0.6.2/voyage-0.6.2]--[14:16:43 Fri 07-Aug-2009 UTC]-
+> df
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/ram0              19G   12G  6.7G  64% /
+tmpfs                 126M     0  126M   0% /lib/init/rw
+udev                   10M   24K   10M   1% /dev
+tmpfs                 126M  4.0K  126M   1% /dev/shm
+tmpfs                 126M     0  126M   0% /tmp
+/dev/hda1             474M   81M  369M  18% /mnt/cf
+--[CWD=/usr/sslimage/voyage-0.6.2/voyage-0.6.2]--[14:16:47 Fri 07-Aug-2009 UTC]-
+> cd /mnt/cf/
+--[CWD=/mnt/cf]--[14:16:54 Fri 07-Aug-2009 UTC]--[root@pxeboot]--[Debian4_PXERO-
+> lt
+total 125K
+drwxr-xr-x  2 root root 1.0K Aug 12  2008 sys/
+drwxr-xr-x  2 root root 1.0K Sep 16  2008 selinux/
+-rwx------  1 root root 4.4K Oct 14  2008 README.pxe
+-rwx------  1 root root 4.0K Oct 14  2008 README.live-cd
+drwxr-xr-x  2 root root 1.0K Jun 15 09:28 proc/
+drwxr-xr-x  2 root root 1.0K Jun 15 09:28 mnt/
+drwxr-xr-x  2 root root 1.0K Jun 15 09:28 home/
+-rwxr-xr-x  1 root root  13K Jul  7 14:52 CHANGELOG
+-rwxr-xr-x  1 root root  25K Jul  7 17:47 README
+drwxr-xr-x 13 root root 1.0K Jul  7 21:02 var/
+drwxr-xr-x  2 root root 1.0K Jul  7 21:02 srv/
+drwxr-xr-x  2 root root 1.0K Jul  7 21:02 opt/
+drwxr-xr-x  2 root root 1.0K Jul  7 21:02 media/
+drwxr-xr-x 12 root root 3.0K Jul  8 01:31 lib/
+drwxr-xr-x 11 root root 1.0K Jul  8 01:31 usr/
+drwxr--r--  4 root root 1.0K Jul  8 01:31 tftpboot/
+drwxr-xr-x  3 root root 1.0K Jul  8 01:31 rw/
+-rw-r--r--  1 root root 3.2K Jul  8 01:33 voyage.dpkg.list
+-rw-r--r--  1 root root  17K Jul  8 01:33 voyage.dpkg-l
+-rw-r--r--  1 root root    0 Jul  8 01:33 voyage.1st
+-rw-r--r--  1 root root 9.5K Jul  8 01:33 voyage.depends.list
+drwxr-xr-x  5 root root 1.0K Jul  8 01:33 dev/
+drwxr-xr-x  2 root root 1.0K Jul  8 01:34 root/
+drwxr-xr-x  2 root root 3.0K Jul  8 01:35 sbin/
+drwxr-xr-x  2 root root 2.0K Jul  8 01:35 bin/
+drwxrwxrwt  2 root root 1.0K Jul  8 01:35 tmp/
+drwx------  2 root root  12K Aug  7 14:09 lost+found/
+drwxr-xr-x  5 root root 4.0K Aug  7 14:14 ../
+lrwxrwxrwx  1 root root   30 Aug  7 14:15 vmlinuz -> boot/vmlinuz-2.6.26-486-voe
+lrwxrwxrwx  1 root root   33 Aug  7 14:15 initrd.img -> boot/initrd.img-2.6.26-e
+drwxr-xr-x 23 root root 1.0K Aug  7 14:15 ./
+drwxr-xr-x 50 root root 3.0K Aug  7 14:15 etc/
+drwxr-xr-x  3 root root 1.0K Aug  7 14:15 boot/
+--[CWD=/mnt/cf]--[14:16:55 Fri 07-Aug-2009 UTC]--[root@pxeboot]--[Debian4_PXERO-
+> cat boot/grub/menu.lst 
+#
+# This file generated automatically by /usr/sslimage/voyage-0.6.2/voyage-0.6.2/h
+# on Fri Aug  7 14:16:19 UTC 2009
+#
+serial --speed=9600
+terminal serial
+
+timeout 5
+default 0
+
+title voyage-linux-07Aug09
+root (hd0,0)
+kernel /vmlinuz root=LABEL=ROOT_FS  console=ttyS0,9600n8
+initrd /initrd.img
+
+--[CWD=/mnt/cf]--[14:17:02 Fri 07-Aug-2009 UTC]--[root@pxeboot]--[Debian4_PXERO-
+> e2label /dev/hda1
+ROOT_FS
+--[CWD=/mnt/cf]--[14:17:11 Fri 07-Aug-2009 UTC]--[root@pxeboot]--[Debian4_PXERO-

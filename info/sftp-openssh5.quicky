@@ -1,0 +1,108 @@
+# sftp-openssh5.quicky
+
+# ---
+# In openssh5 there is builtin chroot (in openssh4 need to create chroot-jail...)
+
+# so install version 5 instead of manually create chroot junk !!!
+
+# info:
+http://adamsworld.name/chrootjailv5.php
+http://binblog.info/2009/02/27/packaging-openssh-on-centos/
+
+# get source from mirror:
+# these DONT have spec file:
+http://ftp.bit.nl/mirror/openssh/
+# use these:
+http://ftp.nluug.nl/pub/OpenBSD/OpenSSH/portable/openssh-5.8p1.tar.gz.asc
+
+# get key, verify
+wget -O- http://ftp.bit.nl/mirror/openssh/portable/DJM-GPG-KEY.asc | gpg --import
+gpg openssh-5.2p1.tar.gz.asc
+
+# build essentials
+yum install gcc openssl-devel pam-devel rpm-build
+
+# prep de rpm build:
+tar zxvf openssh-5.2p1.tar.gz
+cp openssh-5.2p1/contrib/redhat/openssh.spec /usr/src/redhat/SPECS/
+cp openssh-5.2p1.tar.gz /usr/src/redhat/SOURCES/
+cd /usr/src/redhat/SPECS
+perl -i.bak -pe 's/^(%define no_(gnome|x11)_askpass)\s+0$/$1 1/' openssh.spec
+
+> diff openssh.spec openssh.spec.bak 
+12c12
+< %define no_x11_askpass 1
+---
+> %define no_x11_askpass 0
+15c15
+< %define no_gnome_askpass 1
+---
+> %define no_gnome_askpass 0
+
+# build using define (without gives error ??)
+rpmbuild -bb openssh.spec
+cd /usr/src/redhat/RPMS/`uname -i`
+# i did:
+rpmbuild -bb openssh.spec --define 'skip_x11_askpass 1'
+
+# install
+cd /usr/src/redhat/RPMS/`uname -i`
+> cp -a openssh-5.5p1-1.i386.rpm openssh-server-5.5p1-1.i386.rpm openssh-clients-5.5p1-1.i386.rpm ~
+rpm -Uvh openssh-*
+
+# use NEW config file
+cp /etc/ssh/sshd_config.rpmnew /etc/ssh/sshd_config
+
+# add chroot info (use group-membership as key):
+> cat sshd_config | tail 
+Subsystem       sftp    internal-sftp
+Match Group sftponly
+	ChrootDirectory /home/%u
+	ForceCommand internal-sftp
+	AllowTcpForwarding no
+>
+
+# create group:
+groupadd sftponly
+chown root:root /home
+chmod 755 /home
+
+# add user which is sftponly:
+useradd mark
+passwd mark
+#
+usermod -g sftponly mark
+usermod -s /bin/false mark
+usermod -d /home/mark mark
+chmod 755 /home/mark
+chown root:root /home/mark
+mkdir /home/mark/files
+chown mark:sftponly /home/mark/files/
+
+> cat /etc/passwd | tail -n 1
+mark:x:505:505::/home/mark:/bin/false
+
+# user Script:
+generate-sftp-user.sh
+
+# ---
+# change create mask for SFT~P users:
+
+# info: http://serverfault.com/questions/70876/how-to-put-desired-umask-with-sftp
+
+Since OpenSSH 5.4p1 I think, you can use the "-u" option, for example:
+Subsystem sftp /usr/lib/openssh/sftp-server -u 022
+.
+From the man page:
+ -u umask
+         Sets an explicit umask(2) to be applied to newly-created files
+         and directories, instead of the user's default mask.
+
+# other tip: change subsystem to sh with umask:
+vi /etc/ssh/sshd_config
+# Subsystem sftp /usr/lib/openssh/sftp-server
+Subsystem sftp /bin/sh -c 'umask 0007; /usr/lib/openssh/sftp-server'
+
+
+# ---
+

@@ -1,0 +1,31 @@
+# linux-txt-console-cmdline.quicky
+# # tags: TTY
+
+# grub:
+#
+# https://askubuntu.com/questions/18444/how-do-i-increase-console-mode-resolution
+# https://www.pendrivelinux.com/vga-boot-modes-to-set-screen-resolution/
+# https://help.ubuntu.com/community/ChangeTTYResolution
+#
+> vi /etc/default/grub
+GRUB_CMDLINE_LINUX_DEFAULT="vga=792"
+> update-grub
+> reboot -r now
+#
+
+# debian (afer grub boot):
+#
+> fbset 
+mode "3840x2160"
+    geometry 3840 2160 3840 2160 32
+    timings 0 0 0 0 0 0 0
+    accel true
+    rgba 8/16,8/8,8/0,0/0
+endmode
+#
+
+> cat /etc/default/console-setup | grep VIDEO
+VIDEOMODE=
+#VIDEOMODE="1280x1024-60"
+
+

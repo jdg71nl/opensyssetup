@@ -1,0 +1,5 @@
+# unison.quicky
+
+get MacPorts
+sudo port install unison
+

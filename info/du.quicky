@@ -1,0 +1,5 @@
+# du.quicky
+--
+du -xb --max-depth=2 * | perl -e 'while(<>){print STDERR $_;$_=~/(\d+)\s+(.*)$/;$s=$1;$f=$2;if($s){print "$s ($h)\t$f\n"}};print STDERR "\n\nSorted:\n\n";' | sort -nr | head
+--
+

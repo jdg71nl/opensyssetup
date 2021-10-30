@@ -1,0 +1,63 @@
+# x11.quicky
+
+# d2102
+# on debian for x11-via-ssh (xeyes etc.) you only need (no: xorg-..):
+apt install x11-apps x11-utils 
+
+
+# d200509
+--[CWD=~]--[1589043113 18:51:53 Sat 09-May-2020 CEST]--[root@dev-apu2]--[Debian-10(buster)-linux-4.19.0-8-amd64]------
+> apt-get install xserver-xorg-core xorg
+
+
+# ------+++------
+# d1611 can also do:
+
+> aptitude install xauth x11-utils x11-apps
+The following NEW packages will be installed:
+  . . . x11-apps x11-common{a} x11-utils . . .
+
+# NOTE: on SecureCRT, need to ENABLE Forward X11 Packets and DISABLE Force X11 Authentication
+
+# ------+++------
+# X11 forwarding on Debian
+
+# need xauth on X-server.
+
+aptitude install xbase-clients
+
+# NOTE: this may install TOO much...
+
+--[CWD=~]--[1479904855 13:40:55 Wed 23-Nov-2016 CET]--[root@rmv800-dev-debian]--[Debian8]------
+> aptitude install xbase-clients
+The following NEW packages will be installed:
+  libegl1-mesa{a} libegl1-mesa-drivers{a} libepoxy0{a} libevdev2{a} libgbm1{a} libmtdev1{a} libopenvg1-mesa{a} libutempter0{a} libwayland-client0{a} 
+  libwayland-egl1-mesa{a} libwayland-server0{a} libxatracker2{a} libxcb-util0{a} libxcb-xfixes0{a} libxfont1{a} libxvmc1{a} x11-session-utils{a} x11-xkb-utils{a} 
+  x11-xserver-utils{a} xbase-clients xfonts-base{a} xfonts-encodings{a} xfonts-utils{a} xinit{a} xserver-common{a} xserver-xorg{a} xserver-xorg-core{a} 
+  xserver-xorg-input-all{a} xserver-xorg-input-evdev{a} xserver-xorg-input-mouse{a} xserver-xorg-input-synaptics{a} xserver-xorg-input-vmmouse{a} 
+  xserver-xorg-input-wacom{a} xserver-xorg-video-all{a} xserver-xorg-video-ati{a} xserver-xorg-video-cirrus{a} xserver-xorg-video-fbdev{a} xserver-xorg-video-intel{a} 
+  xserver-xorg-video-mach64{a} xserver-xorg-video-mga{a} xserver-xorg-video-modesetting{a} xserver-xorg-video-neomagic{a} xserver-xorg-video-nouveau{a} 
+  xserver-xorg-video-openchrome{a} xserver-xorg-video-qxl{a} xserver-xorg-video-r128{a} xserver-xorg-video-radeon{a} xserver-xorg-video-savage{a} 
+  xserver-xorg-video-siliconmotion{a} xserver-xorg-video-sisusb{a} xserver-xorg-video-tdfx{a} xserver-xorg-video-trident{a} xserver-xorg-video-vesa{a} 
+  xserver-xorg-video-vmware{a} xterm{a} 
+0 packages upgraded, 55 newly installed, 0 to remove and 0 not upgraded.
+Need to get 22.7 MB of archives. After unpacking 47.8 MB will be used.
+Do you want to continue? [Y/n/?] n
+
+
+# ------+++------
+# note
+> cat /etc/ssh/sshd_config  | grep X
+X11Forwarding yes
+X11DisplayOffset 10
+
+> echo $DISPLAY
+localhost:10.0
+
+# on CentOS:
+yum install xauth
+> cat /etc/ssh/sshd_config  | grep X
+X11Forwarding yes
+
+# ------+++------
+

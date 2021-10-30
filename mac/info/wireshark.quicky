@@ -1,0 +1,6 @@
+# wireshark.quicky
+
+# http://josephhall.org/nqb2/index.php/2009/07/21/wrshrkinstll
+
+sudo chown -R root:wheel /Library/StartupItems/ChmodBPF
+

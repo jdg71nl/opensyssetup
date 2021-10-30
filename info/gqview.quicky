@@ -1,0 +1,11 @@
+# gqview.quicky
+
+# std image viewer op redhat/centos:
+yum install gqview
+
+# connect with 'X':
+ssh -X ip.addr
+
+# view a file: 
+gqview jpgfile
+

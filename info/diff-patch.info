@@ -1,0 +1,93 @@
+
+--
+diff -cr dir1/ dir2/ > patchfile
+patch < patchfile
+--
+
+info from: 
+http://www.math.ru.nl/onderwijs/unixman/node120.html
+
+Content:
+
+diff, patch 
+diff [-c[#]|e|f|h|n] [-bitw] file1 file2  
+diff [-c[#]|e|f|h|n] [-bitw] [-lrs] dir1 dir2  
+diff [-Dstring] [-bitw] file1 file2  
+
+Diff  (difference) vergelijkt twee files en geeft als output de verschillen die tussen de twee files gevonden worden met de bijbehorende regelnummers. Ook kunnen twee directory's file voor file met elkaar vergeleken worden en met de -r (recursive) optie zelfs inclusief gemeenschappelijke subdirectory's. Andere opties voor de directory-variant zijn -l (long output format) waarmee de resultaten uitgebreider worden afgedrukt en -s waardoor ook files die hetzelfde zijn genoemd worden. Diff  is een intelligent programma; het is bijvoorbeeld in staat één enkele toegevoegde regel in een van de files er uit te pikken. 
+
+De -Dstring optie is bedoeld om in combinatie met patch  uit een aantal versies van een programma één algemene versie samen te stellen, die door middel van het C preprocessor  (cpp ) #ifdef  mechanisme voor meerdere machines geschikt gemaakt kunnen worden. 
+
+Gemeenschappelijke optie van alle drie de varianten:
+
+-b 
+Blank. Negeer spaties en TAB s (blanks ) aan het einde van de regels en beschouw willekeurige reeksen van één of meerdere blanks  als gelijkwaardig. 
+-i 
+Ignore. Maak geen onderscheid tussen hoofdletters en kleine letters. 
+-t 
+Tab. Vertaal TAB s eerst naar spaties. De normale en de ``context'' (-c) output van diff  (zie hieronder) hebben aan het begin van de regels extra tekens staan, waardoor indentatieverschillen met het origineel kunnen ontstaan. Met -t blijft de relatieve indentatie gelijk. 
+-w 
+Whitespace. Negeer alle spaties en TAB s. Met deze optie zijn de uitdrukkingen ``IF (VAR1 .GT. VAR2)'' en ``IF(VAR1.GT.VAR2)'' hetzelfde.
+De overige opties bepalen de vorm waarin diff  de resultaten presenteert. Met -e produceert diff  een reeks commando's die, uitgevoerd door de editor ed  het eerste file omzetten in het tweede file. In het volgende voorbeeld worden de verschillen tussen old en new opgeslagen in een file ed.cmds. Door nu dit file te ``voeren'' aan de editor ed  met als inputfile old, verandert old in new. Het nut van dit alles is natuurlijk dat het beschrijven van de wijzigingen die nodig zijn om old in new om te zetten gemechaniseerd wordt. Het is voldoende om aan alle mensen die old gebruiken het filetje ed.cmds te sturen, waarmee ze zelf de verbeterde versie new kunnen maken, hetgeen veel tijd bespaart als old heel groot en het aantal veranderingen gering is.  
+
+% diff -e old new > ed.cmds
+% ed old < ed.cmds
+% cmp old new
+%
+
+De optie -c genereert een zogenaamd ``context diff '', waarin de regels die verschillen in hun ``context'' (een aantal regels, gewoonlijk drie, erboven en eronder) worden afgedrukt. De ``context'' kan groter of kleiner gemaakt worden door achter -c een ander aantal op te geven. 
+In de output staat in de eerste kolom van de regels die afwijken een minteken, een plusteken of een uitroepteken, respectievelijk om aan te geven dat de betreffende regel in file1 ontbreekt; juist in file2 niet voorkomt; dan wel er veel op lijkt, maar niet helemaal hetzelfde is. 
+
+
+patch [options] orig patchfile [+ [options] orig]  
+
+Zowel de normale als de met -e of -c verkregen output van diff  is geschikt om door te geven aan het programma patch , dat speciaal bedoeld is om snel op een aantal verschillende plaatsen updates van files te creëren, door het oude file orig middels het patchfile in het nieuwe om te zetten. Patch  maakt een backup van het oude file met een extra extensie  .orig . 
+
+Als er bijvoorbeeld een aantal kleine veranderingen (bug fix es bijvoorbeeld) nodig zijn voor een programma, dat door veel mensen op verschillende plaatsen wordt gebruikt, dan is het vaak handiger om een lijst van wijzigingen aan alle gebruikers op te sturen, dan om alle source-file s opnieuw te distribueren. Het diff +patch  systeem standaardiseert het maken van zo'n update en voert de veranderingen snel en automatisch, dus betrouwbaar, uit. Een klein voorbeeldje: 
+
+
+% diff -c old new > patchfile
+% cat patchfile
+*** old	Mon Dec 30 11:58:12 1991
+--- new	Wed Jan 08 01:31:28 1992
+***************
+*** 2,6 ****
+  
+  main()
+  {
+!    printf("hello, world");
+  }
+--- 2,6 ----
+  
+  main()
+  {
+!    printf("hello, world\n");
+  }
+%
+
+Het uitroepteken geeft aan waar old en new verschillen. Omdat in een patchfile ook staat welk(e) file(s) er ``opgelapt'' moet(en) worden, kan het zoeken van de files helemaal aan patch  overgelaten worden. Meestal wordt patch  daarom gewoon op de volgende manier (in de juiste directory!) aan het werk gezet. 
+% patch < patchfile
+Hmm...  Looks like a new-style context diff to me...
+The text leading up to this was:
+--------------------------
+|*** old	Mon Dec 30 11:58:12 1991
+|--- new	Wed Jan 08 01:31:28 1992
+--------------------------
+Patching file old using Plan A...
+Hunk #1 succeeded at 2.
+done
+%
+
+
+
+
+
+--------------------------------------------------------------------------------
+
+Ben Polman 
+1998-07-06 
+
+--------------------------------------------------------------------------------
+Last changed on Jul 8 1999,polman
+--------------------------------------------------------------------------------
+ 

@@ -1,0 +1,109 @@
+# rsync.quicky
+# rsync.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+rsync client:
+
+-a	archive, which means -rlptgoD
+which is:
+-r	recursive
+-l	links
+-t	times
+-g	group
+-o	owner
+-D	devices
+
+# So if you only want to sync files (not symlinks etc) do: 
+rsync -rvz
+# instead of:
+rsync -avz
+
+other typical arguments:
+--port 1873
+--max-size=1.5m
+-P							use on cmdline to view progress, this is: --partial --progress
+
+--partial				means it will keep half-transfered files
+-i							show what will happen to transfer
+--
+Instead of -a, if you just want recurse with times use: -rt 
+
+Example:
+rsync -n -rtvz -b --backup-dir=/tmp/stelzer-eng.nl --delete rsync://172.24.2.2/www/stelzer-eng.nl /www/stelzer-eng.nl
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+Hard-links:
+
+cp -avl <source-dir> <dest-dir>
+rsync ...
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+Example on excludes:
+
+rsync -azv \
+	--exclude='file*.ext' \
+	--exclude='dir*/' \
+	--exclude='onedir/' \
+	172.28.2.1::CentOS/ /var/mirror/yum/CentOS/
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+Example Rsync server:
+
+# vi /etc/rsyncd.conf
+
+# uid/gid -> file access uses this uid/gid, can be global or in section
+uid = 0
+gid = 0
+use chroot = no
+max connections = 80
+syslog facility = local5
+timeout = 300
+pid file = /var/run/rsyncd.pid
+
+[rmvuv3]
+	path = /var/rmv/rmvu/v3/
+	comment = rmvu v3
+	read only = false
+	write only = false
+	auth users = rsyncuser
+	secrets file = /etc/rsyncd.secrets
+	hosts allow = 2.0.0.0/8, 172.24.0.0/13
+	hosts deny = 0.0.0.0/0
+
+[smartbackup]
+	path = /var/smartbackup/
+	comment = SmartBackup
+	read only = false
+	write only = false
+	hosts allow = 172.24.0.0/13
+	uid = samba
+	gid = samba
+
+# cat /etc/rsyncd.secrets 
+rsyncuser:passwordincleartext
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# Rsync over SSL: use stunnel
+
+# see: http://www.netbits.us/docs/stunnel_rsync.html
+
+# example from http://www.bytemark.co.uk/support/technical_documents/backuprsyncssl
+# --++--
+	#!/bin/sh                                            
+
+	PID=/var/run/rsync.stunnel.$$.pid          
+	PORT=3334
+
+	stunnel -c -d localhost:$PORT -r joebloggs.backup.bytemark.co.uk:8873 -P $PID
+	sleep 0.5
+
+	RSYNC_PASSWORD=123456 rsync \
+	--relative --archive --port=$PORT\
+	/home /etc /other/directories/to/backup
+	mymachine-backup@localhost::myuser-backup/
+
+	kill `cat $PID`
+# --++--
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

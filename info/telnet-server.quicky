@@ -1,0 +1,14 @@
+# telnet-server.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+
+# debian 4:
+> apt-get install telnetd
+
+# will put this in inet:
+> grep telnet /etc/inetd.conf 
+telnet		stream	tcp	nowait	telnetd	/usr/sbin/tcpd	/usr/sbin/in.telnetd
+
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+#

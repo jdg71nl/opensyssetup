@@ -1,0 +1,15 @@
+# supermicro_superdoctor.quicky
+
+latest version:
+ftp://ftp.supermicro.com/utility/Supero_Doctor_II/
+
+extract
+./quickinstall
+done
+
+it uses i2c modules in kernel
+works with centos4.0 (2.6.9)
+
+command console:
+# sdt
+

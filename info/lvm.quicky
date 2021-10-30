@@ -1,0 +1,90 @@
+# lvm.quicky
+--
+HOWTO create LVM:
+
+# change part.type
+fdisk /dev/hda
+	Command (m for help): t
+	Partition number (1-4): 3
+	Hex code (type L to list codes): 8e
+	Changed system type of partition 3 to 8e (Linux LVM)
+
+# Physical Volume
+pvcreate /dev/hda4
+# Volume Group
+vgcreate VolGroup00 /dev/hda4
+vgextend VolGroup00 /dev/hda3
+# Activate
+vgchange -a y VolGroup00
+
+# -L80 = 80MB -- "A size suffix of K for kilobytes, M for megabytes, G for gigabytes, T for terabytes, Default unit is megabytes."
+# 
+lvcreate -L80 -nLV_backup VolGroup00
+lvcreate -L120 -nLV_data VolGroup00
+# vi /etc/fstab (carefull: need to format, or will hang at next boot fsck!!)
+	#/dev/hda3                 /var/sbc/data           ext3    defaults        1 2
+	#/dev/hda4                 /var/sbc/backup         ext3    defaults        1 2
+	/dev/VolGroup00/LV_data    /var/sbc/data           ext3    defaults        1 2
+	/dev/VolGroup00/LV_backup  /var/sbc/backup         ext3    defaults        1 2
+# Format:
+mkfs.ext3 /dev/VolGroup00/LV_backup
+mkfs.ext3 /dev/VolGroup00/LV_data
+# test mount
+mount -a
+
+# remove / delete:
+lvremove /dev/VG00/LV_d1
+
+--
+HOWTO display information:
+
+pvscan
+pvdisplay
+vgscan
+vgdisplay
+lvscan
+lvdisplay
+
+--
+ref: http://www.ibiblio.org/pub/Linux/docs/HOWTO/other-formats/html_single/LVM-HOWTO.html
+--
+# To make a Log Vol active do:
+lvchange -ay VolGroup01/LogVol02
+--
+# d1804 resize:
+http://www.geoffstratton.com/expand-hard-disk-ubuntu-lvm
+
+vgextend ubuntu-1004 /dev/sda4
+lvextend -l+100%FREE /dev/ubuntu-1004/root
+resize2fs /dev/mapper/ubuntu--1004-root
+
+--
+# old?
+HOWTO resize ext2/ext3 filesystem and partition with LVM:
+
+# Boot CDROM/DVD in rescue mode ("linux rescue")
+
+# start lvm manually:
+> lvm
+lvm> vgscan
+lvm> vgchange --available y VolGroup00
+lvm> exit
+
+> e2fsck -f /dev/VolGroup00/LogVol00          # check & repair
+> resize2fs -p /dev/VolGroup00/LogVol00 20G   # resize to 20G
+> e2fsck -f /dev/VolGroup00/LogVol00          # check & repair
+
+> lvm
+lvm> lvreduce -L20G /dev/VolGroup00/LogVol00
+lvm> exit
+> e2fsck -f /dev/VolGroup00/LogVol00          # check & repair
+
+> lvm
+lvm> lvcreate -L55.25G -nhome              # create volume for /home
+lvm> exit
+> mkfs -t ext3 /dev/VolGroup00/home
+> e2fsck -f /dev/VolGroup00/home              # check & repair
+--
+
+--
+

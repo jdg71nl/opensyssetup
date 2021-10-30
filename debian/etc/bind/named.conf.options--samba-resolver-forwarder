@@ -1,0 +1,60 @@
+options {
+	directory "/var/cache/bind";
+
+	// If there is a firewall between you and nameservers you want
+	// to talk to, you may need to fix the firewall to allow multiple
+	// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+
+	// If your ISP provided one or more IP addresses for stable 
+	// nameservers, you probably want to use them as forwarders.  
+	// Uncomment the following block, and insert the addresses replacing 
+	// the all-0's placeholder.
+
+	// forwarders {
+	// 	0.0.0.0;
+	// };
+
+	//========================================================================
+	// If BIND logs error messages about the root key being expired,
+	// you will need to update your keys.  See https://www.isc.org/bind-keys
+	//========================================================================
+	dnssec-validation auto;
+
+	listen-on-v6 { any; };
+
+	//jdg
+	forwarders {
+		193.70.42.208;	// vps4.dgt-bv.com
+		5.157.83.103; 	// vps5.dgt-bv.com
+		194.109.6.66;	// resolver.xs4all.nl
+		194.109.9.99;	// resolver.xs4all.nl
+	};
+	//
+        auth-nxdomain no;    # conform to RFC1035
+	//
+        // jdg:
+        // 89.106.160.0/21      = TWSNET ISP1
+        // 185.3.176.0/22       = TWSNET ISP2
+        // 80.100.229.147       = JDG-AFOORT-XS4ALL-Fiber
+        // 80.127.201.64/29     = JDG-XS4ALL-Fiber-Subnet
+        // 80.100.97.87         = JDG-AFOORT-XS4ALL-DSL ??
+        // 91.184.11.145        vps1-hn
+        // 149.210.188.138      vps2-ti
+        // 141.138.205.158      vps3-cv
+        // 193.70.42.208        vps4-ov
+        // 5.157.83.103         vps5-yh
+        // 185.82.187.9         = Yes!Delft FFT room2.17
+        // 185.82.186.0/23      = Yes!Delft entire block
+        // 144.43.224.0/20      = Logius govroam AS48037
+        //allow-recursion { 127.0.0.1; 80.100.229.147; 80.127.201.64/29; 91.184.11.145; 149.210.188.138; 141.138.205.158; 193.70.42.208; 5.157.83.103; 144.43.224.0/20; };
+	//
+        allow-recursion { 127.0.0.1; 10.21.0.0/16; };
+        // ??
+        allow-query { any; };
+	//
+        // https://www.sidn.nl/a/dnssec/dnssec-validatie-op-bind-named
+        dnssec-enable yes;
+        //dnssec-lookaside auto;
+	//
+
+};

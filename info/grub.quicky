@@ -1,0 +1,46 @@
+# grub.quicky
+# grub 
+
+--
+# In ubuntu it uses UUID instead of /dev/ names.
+
+# Universally Unique Identifier (UUID), zie: http://en.wikipedia.org/wiki/UUID
+
+#List all UUID on block-devices:
+> blkid 
+/dev/sda1: UUID="0b158301-3a56-4178-ac41-c07908bd027d" SEC_TYPE="ext2" TYPE="ext3" 
+/dev/sda2: UUID="d4d66726-d7dd-4175-8d30-dbc4022f1711" SEC_TYPE="ext2" TYPE="ext3" 
+/dev/sda4: UUID="2bea2bd5-db17-4187-b77a-db6f3d64bc0c" SEC_TYPE="ext2" TYPE="ext3" 
+/dev/sdb1: UUID="7f5bbd2f-237a-42b4-ba14-5da6d5ebc75a" SEC_TYPE="ext2" TYPE="ext3" 
+/dev/sdb2: UUID="6864c816-8bc4-4cc0-83cf-557878321585" SEC_TYPE="ext2" TYPE="ext3" 
+/dev/sdb3: TYPE="swap" UUID="8cf8053e-024a-4110-bc85-b9977006be45" 
+/dev/sdb4: UUID="512ac0e3-77ec-4698-bca2-e233e08c4f1c" TYPE="ext3" 
+
+
+--
+howto add Memtest to grub:
+
+title Memtest86 (memtest86+-1.26)
+   kernel (hd0,1)/boot/memtest86+-1.26
+
+# not: this is old: memtest86-v3.0.bin
+--	
+some hardware (usb scanner gloria) requires disabling of ACPI.
+As boot option:
+grub.conf:
+	kernel /vmlinuz-2.6.9-22.0.1.EL ro root=LABEL=/-gloria40 rhgb acpi=off pci=noacpi
+--
+> grub
+grub> root (hd0,0)
+grub> setup (hd0)
+grub> quit
+
+--
+# install grub on MBR with ubuntu:
+
+mount /dev/sda3 /mnt/sda3/
+mount /dev/sda1 /mnt/sda3/boot/
+grub-install --root-directory=/mnt/sda3/ /dev/sda
+
+--
+

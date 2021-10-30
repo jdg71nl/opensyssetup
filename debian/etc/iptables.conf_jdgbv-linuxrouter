@@ -1,0 +1,121 @@
+#
+
+# Lexcom-Light:
+# eth0: Casema Cable    500/1600 kpbs  IP:83.85.188.205
+# eth1: LAN + VLANs
+# eth2: XS4ALL ADSL     512/3072 kpbs  IP:192.168.1.1 (Router=192.168.1.254,Pub-IP:80.100.97.87)
+#
+# DDCD-kastje:
+# eth0: XS4ALL ADSL     512/3072 kpbs  IP:192.168.1.1 (Router=192.168.1.254,Pub-IP:80.100.97.87)
+# eth1: LAN + VLANs
+
+# ------------------------------------------------------------------------------------
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 2221 -j ACCEPT
+-A INPUT -i eth1 -p tcp -m tcp --dport 22 -j ACCEPT
+
+# allow for all
+# ntp
+-A INPUT -p udp -m udp --dport 123 -j ACCEPT
+# ping
+-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+# replies
+-A INPUT -p icmp -m icmp --icmp-type 0 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 3 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 4 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 11 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 12 -j ACCEPT
+-A INPUT -p udp -m udp --sport 53 --dport 1024:65523 -j ACCEPT
+
+# eth0: Casema Cable
+# eth1: LAN + VLANs
+# eth2: XS4ALL ADSL
+
+-A INPUT -i lo -j ACCEPT
+-A INPUT -i eth1 -j ACCEPT
+-A INPUT -i vlan16 -j ACCEPT
+
+# see: /etc/jdg-iface-hint.txt
+-A INPUT -i vlan2 -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -i vlan2 -j DROP
+-A INPUT -i vlan10 -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -i vlan10 -j DROP
+-A INPUT -i vlan27 -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -i vlan27 -j DROP
+-A INPUT -i vlan28 -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -i vlan28 -j DROP
+
+-A INPUT -j DROP
+
+# ------------------------------------------------------------------------------------
+
+-A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+#-A FORWARD -i vlan10 -o eth0 -p tcp -m tcp --dport 25 -j DROP
+#-A FORWARD -i vlan10 -o eth2 -p tcp -m tcp --dport 25 -j DROP
+-A FORWARD -i vlan10  -p tcp -m tcp --dport 25 -j DROP
+-A FORWARD -i vlan27 -p tcp -m tcp --dport 25 -j DROP
+-A FORWARD -i vlan27 -d 172.24.2.60 -j ACCEPT
+-A FORWARD -s 172.24.2.60 -o vlan27 -j ACCEPT
+
+-A FORWARD -s 172.24.2.0/24 -o tun11 -j ACCEPT
+-A FORWARD -o tun11 -j DROP
+
+#-A FORWARD -i vlan27 -j ACCEPT
+#-A FORWARD -i vlan27 -o eth1 -j ACCEPT
+#-A FORWARD -i eth1 -o vlan27 -j ACCEPT
+
+-A FORWARD -j ACCEPT
+
+# ------------------------------------------------------------------------------------
+-A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A OUTPUT -d 80.69.65.224   -p udp -m udp --dport 21041 -j ACCEPT
+-A OUTPUT -d 84.244.144.194 -p udp -m udp --dport 21042 -j ACCEPT
+-A OUTPUT -d 89.106.162.12  -p udp -m udp --dport 21194 -j ACCEPT
+-A OUTPUT -d 84.244.144.204 -p udp -m udp --dport 21194 -j ACCEPT
+-A OUTPUT -j ACCEPT
+
+COMMIT
+
+# ------------------------------------------------------------------------------------
+*mangle
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+COMMIT
+
+# ------------------------------------------------------------------------------------
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+#DNAT
+#-A PREROUTING -d 172.24.1.10 -p tcp -m tcp --dport 12022 -j DNAT --to-destination 192.168.44.2:22
+#-A PREROUTING -d 83.85.188.205 -p tcp -m tcp --dport 22000 -j DNAT --to-destination 172.24.2.200:2000
+-A PREROUTING -d 192.168.1.1  -p tcp -m tcp --dport 22000 -j DNAT --to-destination 172.24.2.200:2000
+
+# port mappings:
+# bittorrent
+#-A PREROUTING -d 192.168.1.1  -p tcp -m tcp --dport 18996 -j DNAT --to-destination 172.24.2.122
+#-A PREROUTING -d 192.168.1.1  -p udp -m udp --dport 18996 -j DNAT --to-destination 172.24.2.122
+#-A PREROUTING -d 192.168.1.1  -p tcp -m tcp --dport 6881:6889 -j DNAT --to-destination 172.24.2.122
+-A PREROUTING -d 192.168.1.1  -p tcp -m tcp --dport 50123 -j DNAT --to-destination 172.24.2.12
+-A PREROUTING -d 192.168.1.1  -p udp -m udp --dport 50123 -j DNAT --to-destination 172.24.2.12
+-A PREROUTING -d 192.168.1.1  -p tcp -m tcp --dport 51412 -j DNAT --to-destination 172.24.2.12
+-A PREROUTING -d 192.168.1.1  -p tcp -m tcp --dport 51413 -j DNAT --to-destination 172.24.2.12
+
+#-A POSTROUTING -s 172.24.2.0/24 -j SNAT --to-source 172.24.1.10
+#-A POSTROUTING -s 172.24.2.0/24 -j MASQUERADE
+-A POSTROUTING -o eth0 -j MASQUERADE
+-A POSTROUTING -o eth2 -j MASQUERADE
+COMMIT
+
+# ------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------

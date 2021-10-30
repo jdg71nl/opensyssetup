@@ -1,0 +1,48 @@
+# tasksel.debian.quicky
+
+# info on: 
+# http://wiki.debian.org/tasksel
+# http://wiki.debian.org/Gnome#task
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# first, get tasksel:
+
+> apt-get install aptitude tasksel
+
+# just this command will show a menu (same as Debian Installer CDROM):
+tasksel
+
+# show available 'tasks' and which are already installed:
+tasksel --list-tasks
+
+# list the packages in a task:
+> tasksel --task-packages standard
+~pstandard
+~prequired
+~pimportant
+
+# list the packages in a task (resolve references):
+aptitude search ~pstandard ~prequired ~pimportant -F%p
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install X/GNOME afterwards, just like it was installed at install-time (tasksel: desktop)
+
+> tasksel install gnome-desktop --new-install
+
+# The option --new-install ensure we end-up with what DebianInstaller would have installed.
+# The "Gnome Desktop" task is actually the sum of tasksel's common desktop (desktop) and tasksel's selected desktop (gnome-desktop)  
+
+# show the actual command that 'tasksel' generates:
+
+> tasksel -t install gnome-desktop 
+debconf-apt-progress -- aptitude -q --without-recommends -o APT::Install-Recommends=no -y install ~t^desktop$ ~t^gnome-desktop$
+
+> tasksel -t install gnome-desktop --new-install
+debconf-apt-progress -- aptitude -q --without-recommends -o APT::Install-Recommends=no -y install ~t^desktop$ ~t^gnome-desktop$ ~pstandard ~prequired ~pimportant
+
+# show all packages for gnome:
+
+> (tasksel --task-packages desktop ; tasksel --task-packages gnome-desktop) | sort -u
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

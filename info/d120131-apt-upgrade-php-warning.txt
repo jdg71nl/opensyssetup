@@ -1,0 +1,31 @@
+
+--[CWD=/var/www]--[18:04:22 Tue 31-Jan-2012 CET]--[root@portal]--[Debian603-amd64]------
+> apt-get upgrade
+...
+The following packages will be upgraded:
+  base-files dpkg libapache2-mod-php5 libbz2-1.0 libc-bin libc6 libc6-i386 libdata-formvalidator-perl libgnutls26 libperl5.10 libpq5 libssl0.9.8 libxml2 linux-base
+  linux-image-2.6.32-5-amd64 locales module-init-tools mutt nfs-common openssl perl perl-base perl-modules php5-cli php5-common
+...
+php5 (5.3.3-7+squeeze5) squeeze-security; urgency=high
+
+  * The following new directives were added as part of security fixes:
+    - max_input_vars - specifies how many GET/POST/COOKIE input variables
+      may be accepted.  Default value is set to 1000.
+    - xsl.security_prefs - define forbidden operations within XSLT
+      stylesheets.  Write operations are now disabled by default.
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 23 Jan 2012 12:22:26 +0100
+
+php5 (5.3.3-7+squeeze4) squeeze-security; urgency=low
+
+  * Updated blowfish crypt() algorithm fixes the 8-bit character handling
+    vulnerability (CVE-2011-2483) and adds more self-tests.  Unfortunately
+    this change is incompatible with some old (wrong) generated hashes for
+    passwords containing 8-bit characters.  Therefore the new salt prefix
+    '$2x$' was introduced which can be used as a replacement for '$2a$'
+    salt prefix in the password database in case the incompatibility is
+    found.
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 04 Jul 2011 10:31:16 +0200
+...
+--[CWD=/var/www]--[18:07:09 Tue 31-Jan-2012 CET]--[root@portal]--[Debian603-amd64]------

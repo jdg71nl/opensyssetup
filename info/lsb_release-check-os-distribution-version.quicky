@@ -1,0 +1,26 @@
+# lsb_release-check-os-distribution-version.quicky
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# use 'lsb_release' to check the Linux os distribution version
+# LSB = Linux Standard Base
+
+# see:
+man lsb_release
+
+# Examples:
+> /usr/bin/lsb_release -i -s
+CentOS
+
+> /usr/bin/lsb_release -a
+LSB Version:	:core-3.1-ia32:core-3.1-noarch:graphics-3.1-ia32:graphics-3.1-noarch
+Distributor ID:	CentOS
+Description:	CentOS release 5.2 (Final)
+Release:	5.2
+Codename:	Final
+
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+# install lsb on debian:
+
+apt-get install lsb-release
+# ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
+

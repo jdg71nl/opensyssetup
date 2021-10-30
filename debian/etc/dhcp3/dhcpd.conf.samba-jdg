@@ -1,0 +1,41 @@
+# dhcpd.conf
+
+ddns-update-style none;
+authoritative;
+
+option domain-name "de-graaff.lan";
+default-lease-time 600;
+max-lease-time 7200;
+#option wpad-url code 252 = text;
+
+subnet 172.18.2.0 netmask 255.255.255.0 {
+ range 172.18.2.150 172.18.2.179;
+ option broadcast-address 172.18.2.255;
+ option routers 172.18.2.254;
+ option domain-name-servers 172.18.2.50;
+ option dhcp-server-identifier 172.18.2.50;
+ option subnet-mask 255.255.255.0;
+ #option wpad-url "http://172.18.2.50/wpad.dat"; 
+
+ filename "pxelinux.0";
+ next-server 172.18.2.50;
+ option root-path "172.18.2.50:/pxeroot";
+
+}
+
+host jdgncnl-macbook-glan { hardware ethernet 00:1F:5B:EA:60:F4; fixed-address 172.18.2.100; }
+host jdgncnl-macbook-wlan { hardware ethernet 00:1E:C2:BC:46:26; fixed-address 172.18.2.101; }
+host macmini-glan         { hardware ethernet 00:16:cb:ad:ee:97; fixed-address 172.18.2.121; }
+host macmini-wlan         { hardware ethernet 00:1c:b3:b2:56:9a; fixed-address 172.18.2.122; }
+host internetpc-nec	  { hardware ethernet 00:0d:61:e9:39:28; fixed-address 172.18.2.20; }
+
+# v10-wlan-inet
+subnet 10.18.10.0 netmask 255.255.255.0 {
+ range 10.18.10.150 10.18.10.179;
+ option broadcast-address 10.18.10.255;
+ option routers 10.18.10.254;
+ option domain-name-servers 10.18.10.254;
+ option dhcp-server-identifier 10.18.10.254;
+ option subnet-mask 255.255.255.0;
+}
+

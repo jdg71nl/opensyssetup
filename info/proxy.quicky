@@ -1,0 +1,22 @@
+# proxy.quicky
+#
+
+export ftp_proxy=http://172.28.2.1:3128/
+export http_proxy=http://172.28.2.1:3128/
+
+# on RMV:
+export ftp_proxy=http://2.1.0.1:3128/
+export http_proxy=http://2.1.0.1:3128/
+
+# on monitor.networkconcepts.nl 33128
+export ftp_proxy=http://monitor.networkconcepts.nl:33128/
+export http_proxy=http://monitor.networkconcepts.nl:33128/
+#
+export ftp_proxy=http://89.106.162.13:33128/
+export http_proxy=http://89.106.162.13:33128/
+#
+export ftp_proxy=http://172.30.3.101:33128/
+export http_proxy=http://172.30.3.101:33128/
+
+ssh -p22 -L 33128:89.106.162.13:33128 root@syssetup.networkconcepts.nl
+

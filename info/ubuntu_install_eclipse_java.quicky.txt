@@ -1,0 +1,15 @@
+# ubuntu_install_eclipse_java.quicky.txt
+
+> cat /etc/profile | egrep -A7 jdg
+# jdg
+# wikiHow to Install Oracle Java JRE on Ubuntu Linux
+# http://www.wikihow.com/Install-Oracle-Java-JRE-on-Ubuntu-Linux
+#
+JAVA_HOME=/usr/local/java/jdk1.8.0_111
+PATH=$PATH:$HOME/bin:$JAVA_HOME/bin
+export JAVA_HOME
+export PATH
+
+sudo update-alternatives --install "/usr/bin/java"   "java"   "/usr/local/java/jdk1.8.0_111/bin/java"   1
+sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java/jdk1.8.0_111/bin/javaws" 1
+ 
