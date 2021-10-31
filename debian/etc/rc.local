@@ -1,6 +1,10 @@
 #!/bin/sh -e
-# also:
+# /etc/rc.local
+#
+# also do:
 # > chmod +x /etc/rc.local
+#
+# run at startup, see: [syssetup/debian] /etc/systemd/system/rc-local.service
 
 # jdg:
 # https://ritsch.io/2017/08/02/execute-script-at-linux-startup.html
