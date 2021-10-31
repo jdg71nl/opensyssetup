@@ -1,24 +1,7 @@
 #===============================================================
-# $HOME/colorprompt.sh
-#
-# Author: John de Graaff
-#
-# #source file: /usr/local/syssetup/linux/etc/colorprompt.sh
-# source file: $HOME/colorprompt.sh
+# $HOME/opensyssetup/colorprompt.sh
+# Author: John @ de-Graaff .net
 #===============================================================
-
-# INSTALL
-#
-# # on Redhat/CentOS:
-# ln -sf /usr/local/syssetup/linux/etc/colorprompt.sh /etc/colorprompt.sh
-# ln -sf /etc/colorprompt.sh /etc/profile.d/colorprompt.sh
-# #or: /bin/cp -af /usr/local/syssetup/linux/etc/colorprompt.sh /etc/colorprompt.sh
-#
-# # on Debian/Ubuntu/MacOS:
-# ln -sf /usr/local/syssetup/linux/etc/colorprompt.sh /etc/colorprompt.sh
-# echo -e "\n#\n. /etc/colorprompt.sh\n" >> ~/.bashrc 
-# echo -e "\n#\n. /etc/colorprompt.sh\n" >> /etc/skel/.bashrc 
-# #or: /bin/cp -af /usr/local/syssetup/linux/etc/colorprompt.sh /etc/colorprompt.sh
 
 /usr/bin/logger "start colorprompt.sh as user '$USER'"
 
@@ -44,9 +27,7 @@ NOCOLOR='\e[0m'              # No Color
 # PATH
 #===============================================================
 
-#export PATH=/usr/local/syssetup/bin:$PATH
-#export PATH=$HOME/syssetup/bin:$PATH
-export PATH=$HOME/syssetup/bin:$HOME/syssetup/mac/bin:$PATH
+export PATH=$HOME/opensyssetup/bin:$HOME/opensyssetup/mac/bin:$PATH
 
 #===============================================================
 # DISTRO info
@@ -84,14 +65,14 @@ export DISTRO_TYPE=$DISTRO_TYPE
 # git completion and prompt:
 #[ -r /usr/local/syssetup/git-completion.bash ] && source /usr/local/syssetup/git-completion.bash
 #[ -f /usr/local/syssetup/git-prompt.sh ] && source /usr/local/syssetup/git-prompt.sh
-[ -r $HOME/syssetup/git-completion.bash ] && source $HOME/syssetup/git-completion.bash
-[ -f $HOME/syssetup/git-prompt.sh ] && source $HOME/syssetup/git-prompt.sh
+[ -r $HOME/opensyssetup/git-completion.bash ] && source $HOME/opensyssetup/git-completion.bash
+[ -f $HOME/opensyssetup/git-prompt.sh ] && source $HOME/opensyssetup/git-prompt.sh
 #
 RED='\e[1;31m' ; GREEN='\e[1;32m' ; YELLOW='\e[1;33m' ; BLUE='\e[1;34m' ; CYAN='\e[1;36m' ; NOCOLOR='\e[0m'
 #
-[ -f $HOME/syssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+[ -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
 #
-[ ! -f $HOME/syssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+[ ! -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
 #
 
 # IDEA (from Daniel Demirdag @TWS):
