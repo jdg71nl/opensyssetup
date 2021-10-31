@@ -142,9 +142,9 @@ alias cdp='echo "change dir to: `pwd -P` ..";cd "`pwd -P`"'
 alias dusort=' find . -maxdepth 1 -type d -exec du -sbx "{}" \;  | convertsize.pl | append_slash.pl | sort'
 alias duasort='find . -type d -exec du -sbx "{}" \;  | convertsize.pl | append_slash.pl | sort'
 # mac
-alias dusortm="du -skx * | $HOME/syssetup/mac/bin/convertsize.mac.pl | sort"
+alias dusortm="du -skx * | $HOME/opensyssetup/mac/bin/convertsize.mac.pl | sort"
 #alias duasortm='find . -type d -exec du -sx "{}" \;  | convertsize.pl | append_slash.pl | sort'
-alias duasortm='find . -type d -exec du -sx "{}" \;  | $HOME/syssetup/mac/bin/convertsize.mac.pl  | append_slash.pl | sort'
+alias duasortm='find . -type d -exec du -sx "{}" \;  | $HOME/opensyssetup/mac/bin/convertsize.mac.pl  | append_slash.pl | sort'
 # needs gfind from MacPorts: sudo port install findutils
 alias fmm='gfind . \( -path "*.svn*" -prune \) -o \( -path "*/proc/*" -prune \) -o \( -type f -printf "%010T@ [%Tc] (%10s Bytes) %p\n" \) 
 | sort -n | tail'

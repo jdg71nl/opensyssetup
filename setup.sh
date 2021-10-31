@@ -60,9 +60,9 @@ FILE="$HOME/.bashrc"
 if [ -f "${FILE}" ]; then
   if [ "${PLAT}" == "Linux" ]; then
     sed -i 's/^.*colorprompt.sh.*$//' ${FILE}
-    sed -i 's/^.*opensyssetup.*$//'   ${FILE}
-    sed -i '/^(#\s*|\s*)$/d' ${FILE}
-    echo -e "\n. \$HOME/opensyssetup/colorprompt.sh \nexport PATH=${HOME}/opensyssetup/bin:${PATH} \n" >> $FILE
+    sed -i 's/^.*syssetup.*$/# &/'    ${FILE}
+    sed -i '/^(#\s*|\s*)$/d'          ${FILE}
+    echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $FILE
     # ln -sf /usr/local/opensyssetup/linux/etc/colorprompt.sh /etc/colorprompt.sh
     # echo -e "\n#\n. /etc/colorprompt.sh\n" >> ~/.bashrc
     # echo -e "\n#\n. /etc/colorprompt.sh\n" >> /etc/skel/.bashrc
@@ -70,13 +70,15 @@ if [ -f "${FILE}" ]; then
   fi
 fi
 
-FILE="$HOME/.profile"
+#FILE="$HOME/.profile"
+FILE="$HOME/.bashrc"
 if [ -f "${FILE}" ]; then
   if [ "${PLAT}" == "MacOS" ]; then
-    sed -i "" 's/^.*colorprompt.sh.*$//' .bashrc      
-    sed -i "" 's/^.*opensyssetup.*$//'   ${FILE}
-    sed -i "" '/^(#\s*|\s*)$/d' ${FILE}
-    echo -e "\n. \$HOME/opensyssetup/colorprompt.sh \nexport PATH=${HOME}/opensyssetup/bin:${HOME}/bin:${PATH} \n" >> $FILE
+    sed -i "" 's/^.*colorprompt.sh.*$//' ${FILE}
+    sed -i "" 's/^.*syssetup.*$/# &/'    ${FILE}
+    sed -i "" '/^(#\s*|\s*)$/d'          ${FILE}
+    echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $FILE
+    #
     DIR="$HOME/bin"
     if [ -L ${DIR} ]; then 
       rm ${DIR}
