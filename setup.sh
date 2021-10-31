@@ -41,7 +41,7 @@ esac
 
 # - - - 
 if [ "${IS_DEBIAN_DERIVATIVE}" ]; then
-  apt install git curl htop lsof vim apt-transport-https ca-certificates curl gnupg lsb-release
+  sudo apt install git curl htop lsof vim apt-transport-https ca-certificates curl gnupg lsb-release
 fi
 
 if [ "${PLAT}" == "Linux" ]; then
@@ -51,6 +51,10 @@ if [ "${PLAT}" == "Linux" ]; then
   fi
 fi
 
+DIR="$HOME/syssetup"
+if [ -L ${DIR} ]; then 
+  rm ${DIR}
+fi
 
 FILE="$HOME/.bashrc"
 if [ -f "${FILE}" ]; then
