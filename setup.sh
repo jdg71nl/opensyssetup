@@ -41,7 +41,7 @@ esac
 
 # - - - 
 if [ "${IS_DEBIAN_DERIVATIVE}" ]; then
-  sudo apt install git curl htop lsof vim apt-transport-https ca-certificates curl gnupg lsb-release
+  sudo apt install -y git curl htop lsof vim apt-transport-https ca-certificates curl gnupg lsb-release
 fi
 
 if [ "${PLAT}" == "Linux" ]; then
