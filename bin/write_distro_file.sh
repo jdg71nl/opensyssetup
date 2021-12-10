@@ -352,7 +352,7 @@ detect_os ()
 
 main ()
 {
-  echo "## running $BASENAME ..."
+  #echo "## running $BASENAME ..."
   # detect_os
   write_distro
   echo "## done! "
