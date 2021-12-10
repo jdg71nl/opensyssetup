@@ -102,6 +102,17 @@ if [ -f "${FILE}" ]; then
   fi
 fi
 
+# on Mac do:
+#
+# > cat <<HERE > $HOME/.bash_profile 
+# # .bash_profile
+# # https://securitronlinux.com/debian-testing/how-to-get-mac-os-to-read-the-bashrc-file-on-every-login/
+# if [ -s ~/.bashrc ]; then source ~/.bashrc; fi
+# #-EOF
+# HERE
+#
+# > touch $HOME/.bashrc
+
 ODIR="/usr/local/syssetup"
 NDIR="/usr/local/_syssetup"
 if [ -d "${ODIR}" ]; then
