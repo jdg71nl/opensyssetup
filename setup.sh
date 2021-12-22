@@ -82,7 +82,8 @@ fi
 
 #FILE="$HOME/.profile"
 FILE="$HOME/.bashrc"
-if [ -f "${FILE}" ]; then
+# https://stackoverflow.com/questions/19670061/bash-if-false-returns-true-instead-of-false-why
+if true ; then     # ----- NOT: if  [ -f "${FILE}" ]; then
   if [ "${PLAT}" == "MacOS" ]; then
     sed -i "" 's/^.*colorprompt.sh.*$//' ${FILE}
     sed -i "" 's/^.*syssetup.*$/# &/'    ${FILE}
