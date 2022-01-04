@@ -55,52 +55,70 @@ if [ "${PLAT}" == "Linux" ]; then
     cd $HOME
     rm $SFILE
     ln -s ./opensyssetup/bin/$SFILE .
-    echo "# created symlink ./opensyssetup/bin/$SFILE $SFILE"
+    echo "# created symlink ./opensyssetup/bin/$SFILE $SFILE .."
   fi
 fi
 
 DIR="$HOME/syssetup"
 if [ -L ${DIR} ]; then 
   rm ${DIR}
-  echo "# removed symlink ${DIR} "
+  echo "# removed symlink ${DIR} .."
 fi
 
-FILE="$HOME/.bashrc"
-if [ -f "${FILE}" ]; then
-  if [ "${PLAT}" == "Linux" ]; then
-    sed -i 's/^.*colorprompt.sh.*$//' ${FILE}
-    sed -i 's/^.*syssetup.*$/# &/'    ${FILE}
-    sed -i '/^(#\s*|\s*)$/d'          ${FILE}
-    echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $FILE
-    # ln -sf /usr/local/opensyssetup/linux/etc/colorprompt.sh /etc/colorprompt.sh
-    # echo -e "\n#\n. /etc/colorprompt.sh\n" >> ~/.bashrc
-    # echo -e "\n#\n. /etc/colorprompt.sh\n" >> /etc/skel/.bashrc
-    # echo -e "\n#\n. /etc/colorprompt.sh\n" >> /home/jdg/.bashrc 
-    echo "# add source-command in ${FILE} "
-  fi
-fi
+#FILE="$HOME/.bashrc"
+#BASHRC="$HOME/.bashrc"
+#
+#if [ -f "${BASHRC}" ]; then
+#  if [ "${PLAT}" == "Linux" ]; then
+#    sed -i 's/^.*colorprompt.sh.*$//' ${BASHRC}
+#    sed -i 's/^.*syssetup.*$/# &/'    ${BASHRC}
+#    sed -i '/^(#\s*|\s*)$/d'          ${BASHRC}
+#    echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $BASHRC
+#    # ln -sf /usr/local/opensyssetup/linux/etc/colorprompt.sh /etc/colorprompt.sh
+#    # echo -e "\n#\n. /etc/colorprompt.sh\n" >> ~/.bashrc
+#    # echo -e "\n#\n. /etc/colorprompt.sh\n" >> /etc/skel/.bashrc
+#    # echo -e "\n#\n. /etc/colorprompt.sh\n" >> /home/jdg/.bashrc 
+#    echo "# add source-command in ${BASHRC} "
+#  fi
+#fi
 
-#FILE="$HOME/.profile"
-FILE="$HOME/.bashrc"
+BASHRC="$HOME/.bashrc"
+touch $BASHRC
+sed -i "" 's/^.*colorprompt.sh.*$//' ${BASHRC}
+sed -i "" 's/^.*syssetup.*$/# &/'    ${BASHRC}
+sed -i "" '/^(#\s*|\s*)$/d'          ${BASHRC}
+echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $BASHRC
+echo "# added source-command in ${BASHRC} .."
+
+PROFILE="$HOME/.profile"
+BASH_PROFILE="$HOME/.bash_profile"
+#
 # https://stackoverflow.com/questions/19670061/bash-if-false-returns-true-instead-of-false-why
-if true ; then     # ----- NOT: if  [ -f "${FILE}" ]; then
-  if [ "${PLAT}" == "MacOS" ]; then
-    sed -i "" 's/^.*colorprompt.sh.*$//' ${FILE}
-    sed -i "" 's/^.*syssetup.*$/# &/'    ${FILE}
-    sed -i "" '/^(#\s*|\s*)$/d'          ${FILE}
-    echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $FILE
-    #
-    echo "# add source-command in ${FILE} "
-    #
-    DIR="$HOME/bin"
-    if [ -L ${DIR} ]; then 
-      rm ${DIR}
-      ln -s opensyssetup/mac/bin/ ${DIR}
-      echo "# symlink opensyssetup/mac/bin/ to ${DIR} "
-    fi
-    #ln -sf /usr/local/opensyssetup/mac/bin/colorprompt.sh /etc/colorprompt.sh
-    #echo "\n#\n. /etc/colorprompt.sh\n" >> /etc/profile
-  fi
+#f true ; then     # ----- NOT: if  [ -f "${BASHRC}" ]; then
+#
+if [ "${PLAT}" == "MacOS" ]; then
+ #
+ #sed -i "" 's/^.*colorprompt.sh.*$//' ${BASHRC}
+ #sed -i "" 's/^.*syssetup.*$/# &/'    ${BASHRC}
+ #sed -i "" '/^(#\s*|\s*)$/d'          ${BASHRC}
+ #echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $BASHRC
+ #
+ #echo "# add source-command in ${BASHRC} "
+ #
+ DIR="$HOME/bin"
+ if [ -L ${DIR} ]; then 
+ rm ${DIR}
+ ln -s opensyssetup/mac/bin/ ${DIR}
+ echo "# symlink opensyssetup/mac/bin/ to ${DIR} "
+ fi
+ #ln -sf /usr/local/opensyssetup/mac/bin/colorprompt.sh /etc/colorprompt.sh
+ #echo "\n#\n. /etc/colorprompt.sh\n" >> /etc/profile
+ #
+ touch ${BASH_PROFILE}
+ sed -i "" 's/^.*sbashrc.*$/# &/'    ${BASH_PROFILE}
+ echo -e "# .bash_profile \nif [ -r ~/.bashrc ]; then source ~/.bashrc fi \n# \n" >> ${BASH_PROFILE}
+ echo "# added source-command in .bash_profile .."
+ #
 fi
 
 # on Mac do:
@@ -112,7 +130,8 @@ fi
 # #-EOF
 # HERE
 #
-# > touch $HOME/.bashrc
+# or:
+# echo -e "# .bash_profile \nif [ -r ~/.bashrc ]; then source ~/.bashrc fi \n# \n"
 
 ODIR="/usr/local/syssetup"
 NDIR="/usr/local/_syssetup"
@@ -144,3 +163,4 @@ fi
 
 # - - - 
 #-EOF
+
