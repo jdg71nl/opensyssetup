@@ -116,7 +116,7 @@ if [ "${PLAT}" == "MacOS" ]; then
  #
  touch ${BASH_PROFILE}
  sed -i "" 's/^.*sbashrc.*$/# &/'    ${BASH_PROFILE}
- echo -e "# .bash_profile \nif [ -r ~/.bashrc ]; then source ~/.bashrc fi \n# \n" >> ${BASH_PROFILE}
+ echo -e "# .bash_profile \nif [ -r ~/.bashrc ]; then source ~/.bashrc ; fi \n# \n" >> ${BASH_PROFILE}
  echo "# added source-command in .bash_profile .."
  #
 fi
