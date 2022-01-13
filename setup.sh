@@ -9,33 +9,25 @@ fi
 MYUID=$( id -u )
 # 100x for user, 0 for root
 echo "# UID is ${MYUID} "
+# usage: if [ "${MYUID}" == 0 ]; then echo "# detect root user" ; fi
 
 #LOGNAME <== is bash built-in
 # e.g.: "jdg"
 
 IS_DEBIAN_DERIVATIVE="$(which dpkg 2>/dev/null)"
 # for Debian derivatives: "/usr/bin/dpkg"
+# usage: if [ "${IS_DEBIAN_DERIVATIVE}" ]; then echo "# detected Debian derivative" ; fi
 
 # - - - 
 # determine platform:
 case "$(uname -s)" in
-  Darwin)
-    PLAT='MacOS'
-    ;;
-  Linux)
-    PLAT='Linux'
-    ;;
-  CYGWIN*|MINGW32*|MSYS*|MINGW*)
-    PLAT='Windows' 
-    ;;
-  *)
-    PLAT='Unknown' 
-    ;;
+  Darwin)                         PLAT='MacOS' ;;
+  Linux)                          PLAT='Linux' ;;
+  CYGWIN*|MINGW32*|MSYS*|MINGW*)  PLAT='Windows' ;;
+  *)                              PLAT='Unknown' ;;
 esac
-echo "# detected platform ${PLAT} "
-# usage:
-# if [ "${PLAT}" == "Linux" ]; then
-# fi
+echo "# detected platform '${PLAT}' "
+# usage: if [ "${PLAT}" == "Linux" ]; then echo "# detected Linux" ; fi
 
 # - - - 
 #

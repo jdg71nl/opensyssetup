@@ -1,6 +1,18 @@
 # timezone.quicky
 #
 
+# d2201 timezone in Ubuntu:
+# https://linuxize.com/post/how-to-set-or-change-timezone-on-ubuntu-20-04/
+# read:
+timedatectl status
+ls -l /etc/localtime
+cat /etc/timezone 
+timedatectl list-timezones
+# set:
+sudo timedatectl set-timezone Europe/Amsterdam
+#
+
+# - - -
 # info on: 
 # http://www.debian-administration.org/articles/213
 # http://www.debian.org/doc/manuals/system-administrator/ch-sysadmin-time.html
