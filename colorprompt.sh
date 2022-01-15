@@ -193,6 +193,11 @@ ffm ()   { echo "# bash-function, see 'type ffm':"; gfind . -iname '*'$1'*'; }
 # fifm on basis of brew:
 # brew install findutils
 fifm ()  { echo "# bash-function, see 'type fifm':"; gfind . -xtype f -iname '*'$2'*' -print0 | gxargs -0i grep -sinH "$1" "{}"; }
+#
+# alt:
+#brew install ffind
+#brew install git-xargs
+#fifm ()  { echo "# bash-function, see 'type fifm':"; ffind . -xtype f -iname '*'$2'*' -print0 | git-xargs -0i grep -sinH "$1" "{}"; }
 
 # -i causes Less to search '/' with case-insensitive
 # -S chop long-lines
