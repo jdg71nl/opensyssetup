@@ -1,4 +1,7 @@
 #!/bin/bash
+# display every line executed in this bash script:
+set -o xtrace
+#
 
 BASENAME=$(basename $0)
 #FILE="/etc/distro.info"
