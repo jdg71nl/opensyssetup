@@ -43,6 +43,10 @@ export DISTRO_TYPE=$DISTRO_TYPE
 # Shell prompt
 #===============================================================
 
+# idea from: https://david.newgas.net/return_code/
+#export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "returned \033[01;31m$ret\033[00;00m"; fi'
+export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "#( bash[PROMPT_COMMAND]: prev.cmd returned non-zero code: \033[01;31m$ret\033[00;00m )"; fi'
+
 # version 1:
 #
 # --[22:26:19 jdegraaff@multi-delft-01]-------------------------------------------

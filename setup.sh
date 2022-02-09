@@ -76,9 +76,10 @@ fi
 
 BASHRC="$HOME/.bashrc"
 touch $BASHRC
-sed -i "" 's/^.*colorprompt.sh.*$//' ${BASHRC}
-sed -i "" 's/^.*syssetup.*$/# &/'    ${BASHRC}
-sed -i "" '/^(#\s*|\s*)$/d'          ${BASHRC}
+# remove this line: . $HOME/syssetup/colorprompt.sh 
+sed -i 's/^.*colorprompt\.sh.*$/# &/' ${BASHRC}
+#sed -i 's/^.*syssetup.*$/# &/'    ${BASHRC}
+#sed -i "" '/^(#\s*|\s*)$/d'          ${BASHRC}
 echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $BASHRC
 echo "# added source-command in ${BASHRC} .."
 
