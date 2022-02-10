@@ -29,6 +29,9 @@ NOCOLOR='\e[0m'              # No Color
 
 export PATH=$HOME/opensyssetup/bin:$HOME/opensyssetup/mac/bin:$PATH
 
+# jdg-tokenme:
+alias sti='sudo -u tokenme -i' 
+
 #===============================================================
 # DISTRO info
 #===============================================================
