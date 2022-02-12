@@ -23,8 +23,9 @@
 # activate and start:
 # > sudo exportfs -vra
 # > /usr/sbin/rpc.statd
+# > /sbin/rpc.statd
 #
-# echo -e "# /etc/rc.local \n\n# jdg: required for nfs: \n/usr/sbin/rpc.statd\n\n# need to exit with code 0 .. \n\nexit 0 \n" >> /etc/rc.local ; chmod 755 /etc/rc.local ; vi /etc/rc.local
+# echo -e "# /etc/rc.local \n\n# jdg: required for nfs: \n/usr/sbin/rpc.statd\n# or?: /sbin/rpc.statd\n\n# need to exit with code 0 .. \n\nexit 0 \n" >> /etc/rc.local ; chmod 755 /etc/rc.local ; vi /etc/rc.local
 #
 #/home/jdg 100.64.0.0/10(insecure,rw,all_squash,anonuid=1000,anongid=1000,no_subtree_check)
 #/home/jdg 10.212.0.0/16(insecure,rw,all_squash,anonuid=1000,anongid=1000,no_subtree_check)
