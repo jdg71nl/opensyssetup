@@ -1,7 +1,8 @@
 #!/bin/bash
 myfile=$( realpath $0 )
 #expected="/home/jdg/update_dns-deploy_reload.sh"
-expected="/usr/local/syssetup/bin/update_dns-deploy_reload.sh"
+#expected="/usr/local/syssetup/bin/update_dns-deploy_reload.sh"
+expected="/home/jdg/opensyssetup/bin/update_dns-deploy_reload.sh"
 deploydir="/var/local/dns/dns-deploy"
 #
 if [[ "$myfile" != "$expected" ]]; then
