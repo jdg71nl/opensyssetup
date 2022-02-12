@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>512</string>
+	<key>AMApplicationVersion</key>
+	<string>2.10</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>2.0.3</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<dict/>
+					<key>CheckedForUserDefaultShell</key>
+					<dict/>
+					<key>inputMethod</key>
+					<dict/>
+					<key>shell</key>
+					<dict/>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run Shell Script.action</string>
+				<key>ActionName</key>
+				<string>Run Shell Script</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<string>#!/bin/bash
+# Drop_File_Touch_Timestamp.sh
+# Create Automator script Drop_File_Touch_Timestamp.app using "Run Shell Script" and copy/paste there contents of this .sh file
+
+function dolog {
+        echo $1
+        echo "$(date +d%y%m%d-%H%M%S)&gt; $1" &gt;&gt; "/Users/jdg/Downloads/Drop_File_Touch_Timestamp.txt"
+}
+
+for FILE in "$@" ; do
+
+if [[ -d "$FILE" ]]; then TAG=$( date +%y%m%d-%H%M%S ) ; dolog "touch \"$FILE/d$TAG-file.txt\""; touch "$FILE/d$TAG-file.txt" ; continue ; fi
+
+# bank periodic statements, filename example: 0587192089_001000CRC#RASF0_20120430_20120004.pdf
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?RASF0_20(\d{2}\d{2}\d{2})_[^\\\\\/]*$/\1/i" ) ; TAGHM="${TAG}0101"
+if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
+
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})\-(\d{4}\d{2})[^\\\\\/]*$/\1\2.\3/i" ) ; TAGHM="${TAG}"
+if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
+
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})\-(\d{4})[^\\\\\/]*$/\1\2/i" ) ; TAGHM="${TAG}"
+if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
+
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6})[^\\\\\/]*$/\1/i" ) ; TAGHM="${TAG}0101"
+if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
+
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{4})[^\\\\\/]*$/\1/i" ) ; TAGHM="${TAG}010101"
+if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
+
+#TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{2})[^\\\\\/]*$/\1/i" ) ; TAGHM="${TAG}01010101"
+#if [[ "$FILE" != "$TAG" ]]; then touch -t $TAGHM "$FILE" ; continue ; fi
+
+dolog "touch \"$FILE\""
+touch "$FILE"
+
+done
+ 
+# &gt; cat /usr/local/syssetup/bin/touch-nametag.sh
+#dolog "       format: &lt;file-dYYYYMMDD-HHMMSS-name.ext&gt;"
+#dolog "       will set the modified-time/date to YYYYMMDD HH:MM:SS"
+#dolog "       format: &lt;file-dYYYYMMDD-HHMM-name.ext&gt;"
+#dolog "       will set the modified-time/date to YYYYMMDD HH:MM"
+#dolog "       format: &lt;file-dYYMMDD-HHMM-name.ext&gt;"
+#dolog "       will set the modified-time/date to YYMMDD HH:MM"
+#dolog "       format: &lt;file-dYYMMDD-name.ext&gt;"
+#dolog "       will set the modified-time/date to YYMMDD 01:01am"
+#dolog "       format: &lt;file-dYYMM-name.ext&gt;"
+#dolog "       will set the modified-time/date to YYMM01 01:01am"
+#dolog "       format: &lt;file-dYY-name.ext&gt;"
+#dolog "       will set the modified-time/date to YY0101 01:01am"
+</string>
+					<key>CheckedForUserDefaultShell</key>
+					<true/>
+					<key>inputMethod</key>
+					<integer>1</integer>
+					<key>shell</key>
+					<string>/bin/bash</string>
+					<key>source</key>
+					<string></string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.RunShellScript</string>
+				<key>CFBundleVersion</key>
+				<string>2.0.3</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunShellScriptAction</string>
+				<key>InputUUID</key>
+				<string>A67CFBC4-05F6-45DB-970E-631FD6A38364</string>
+				<key>Keywords</key>
+				<array>
+					<string>Shell</string>
+					<string>Script</string>
+					<string>Command</string>
+					<string>Run</string>
+					<string>Unix</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>2794C10D-6550-4BE7-8B6A-0AC412B5150C</string>
+				<key>UUID</key>
+				<string>E47B799F-5FE0-49E7-828E-937669AF281C</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<integer>0</integer>
+						<key>name</key>
+						<string>inputMethod</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+					<key>1</key>
+					<dict>
+						<key>default value</key>
+						<false/>
+						<key>name</key>
+						<string>CheckedForUserDefaultShell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>1</string>
+					</dict>
+					<key>2</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>2</string>
+					</dict>
+					<key>3</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>COMMAND_STRING</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>3</string>
+					</dict>
+					<key>4</key>
+					<dict>
+						<key>default value</key>
+						<string>/bin/sh</string>
+						<key>name</key>
+						<string>shell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>4</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<integer>1</integer>
+				<key>location</key>
+				<string>309.000000:252.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/Base.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict/>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.application</string>
+	</dict>
+</dict>
+</plist>
