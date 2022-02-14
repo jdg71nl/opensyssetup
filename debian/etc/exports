@@ -9,9 +9,11 @@
 # /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
 #
 
-#jdg
-# https://serverfault.com/questions/716350/mount-nfs-volume-on-ubuntu-linux-server-from-macos-client
-# also do:
+# jdg:
+# create/edit this file:
+# > cat ~/opensyssetup/debian/etc/exports >> /etc/exports ; vi /etc/exports
+#
+# idea from: https://serverfault.com/questions/716350/mount-nfs-volume-on-ubuntu-linux-server-from-macos-client
 # > apt install nfs-kernel-server
 #
 # check 'uid' of specific user:
@@ -21,6 +23,9 @@
 # activate and start:
 # > sudo exportfs -vra
 # > /usr/sbin/rpc.statd
+# > /sbin/rpc.statd
+#
+# echo -e "# /etc/rc.local \n\n# jdg: required for nfs: \n/usr/sbin/rpc.statd\n# or?: /sbin/rpc.statd\n\n# need to exit with code 0 .. \n\nexit 0 \n" >> /etc/rc.local ; chmod 755 /etc/rc.local ; vi /etc/rc.local
 #
 #/home/jdg 100.64.0.0/10(insecure,rw,all_squash,anonuid=1000,anongid=1000,no_subtree_check)
 #/home/jdg 10.212.0.0/16(insecure,rw,all_squash,anonuid=1000,anongid=1000,no_subtree_check)

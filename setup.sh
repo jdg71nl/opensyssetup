@@ -76,14 +76,16 @@ fi
 
 BASHRC="$HOME/.bashrc"
 touch $BASHRC
-# remove this line: . $HOME/syssetup/colorprompt.sh 
-sed -i 's/^.*colorprompt\.sh.*$/# &/' ${BASHRC}
-#sed -i 's/^.*syssetup.*$/# &/'    ${BASHRC}
-#sed -i "" '/^(#\s*|\s*)$/d'          ${BASHRC}
-echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $BASHRC
-echo "# added source-command in ${BASHRC} .."
+if [ "${PLAT}" == "Linux" ]; then
+  # remove this line: . $HOME/syssetup/colorprompt.sh 
+  sed -i 's/^.*colorprompt\.sh.*$/# &/' ${BASHRC}
+  #sed -i 's/^.*syssetup.*$/# &/'    ${BASHRC}
+  #sed -i "" '/^(#\s*|\s*)$/d'          ${BASHRC}
+  echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $BASHRC
+  echo "# added source-command in ${BASHRC} .."
+fi
 
-PROFILE="$HOME/.profile"
+#PROFILE="$HOME/.profile"
 BASH_PROFILE="$HOME/.bash_profile"
 #
 # https://stackoverflow.com/questions/19670061/bash-if-false-returns-true-instead-of-false-why
@@ -91,12 +93,11 @@ BASH_PROFILE="$HOME/.bash_profile"
 #
 if [ "${PLAT}" == "MacOS" ]; then
  #
- #sed -i "" 's/^.*colorprompt.sh.*$//' ${BASHRC}
+ sed -i "" 's/^.*colorprompt.sh.*$//' ${BASHRC}
  #sed -i "" 's/^.*syssetup.*$/# &/'    ${BASHRC}
  #sed -i "" '/^(#\s*|\s*)$/d'          ${BASHRC}
- #echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $BASHRC
- #
- #echo "# add source-command in ${BASHRC} "
+ echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $BASHRC
+ echo "# add source-command in ${BASHRC} "
  #
  DIR="$HOME/bin"
  if [ -L ${DIR} ]; then 
@@ -108,7 +109,7 @@ if [ "${PLAT}" == "MacOS" ]; then
  #echo "\n#\n. /etc/colorprompt.sh\n" >> /etc/profile
  #
  touch ${BASH_PROFILE}
- sed -i "" 's/^.*sbashrc.*$/# &/'    ${BASH_PROFILE}
+ sed -i "" 's/^.*bashrc.*$/# &/'    ${BASH_PROFILE}
  echo -e "# .bash_profile \nif [ -r ~/.bashrc ]; then source ~/.bashrc ; fi \n# \n" >> ${BASH_PROFILE}
  echo "# added source-command in .bash_profile .."
  #

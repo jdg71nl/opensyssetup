@@ -16,7 +16,13 @@ sudo /sbin/route add 10.220.0.0/16 10.21.10.50
 #
 networksetup -listallnetworkservices
 networksetup -getadditionalroutes Ethernet
+#
+# add route:
 sudo networksetup -setadditionalroutes Ethernet 10.220.0.0 255.255.0.0 10.21.10.50
 networksetup -getadditionalroutes Ethernet
 #
+# remove table:
+sudo networksetup -setadditionalroutes Ethernet 
+#
+#-EOF
 
