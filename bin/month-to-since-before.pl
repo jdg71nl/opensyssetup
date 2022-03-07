@@ -2,11 +2,7 @@
 #= month-to-since-before.pl
 # 2022(c) John@de-Graaff.net 
 
-# Usage: 
-# > ./month-to-since-before.pl 2022-02
-# 2022-01-30 2022-02-28
-
-#NOT: Usage: 
+# Usage, and Example: 
 # > ./month-to-since-before.pl 2022-02
 # 2022-01-31 2022-03-01
 
@@ -27,7 +23,8 @@ my $date_before = DateTime->new(
   day   => 1,
 );
 
-$date_before->add( months => 1 )->subtract( days => 1 );
+# $date_before->add( months => 1 )->subtract( days => 1 );
+$date_before->add( months => 1 );
 
 my $date_since = $date_before->clone;
 
