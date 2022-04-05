@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# NOTE: can also use 'jq', sudo apt install jq
 require 'json'
 in_json = ""
 while STDIN.gets

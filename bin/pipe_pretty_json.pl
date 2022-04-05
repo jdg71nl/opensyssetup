@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 #= pipe_pretty_json.pl
+# NOTE: can also use 'jq', sudo apt install jq
 use strict;
 use warnings;
 use constant TRUE => 1; # perl: <>0

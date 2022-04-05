@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# NOTE: can also use 'jq', sudo apt install jq
 
 # alternative to:
 # echo "{ \"var\": \"value\" }" | python -mjson.tool
