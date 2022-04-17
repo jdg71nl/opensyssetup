@@ -12,15 +12,17 @@ HOST="vps5.dgt-bv.com"
 PORT="2221"
 REPO="ssh://$USER@$HOST:$PORT$DIR"
 ORIG="vps5"
+BIN="/home/jdg/opensyssetup/bin/git-create-repo-user-git.sh"
 
 REPNAME="$1"
 REPDIR="$DIR/$REPNAME.git"
 
 #CMD="ssh -t -p $PORT jdg@$HOST 'REPO=\"RepoName\" ; /usr/local/syssetup/bin/git-create-repo-user-git.sh \$REPO' "
 #CMD="ssh -t -p $PORT jdg@$HOST '/usr/local/syssetup/bin/git-create-repo-user-git.sh $REPNAME'"
-CMD="ssh -t -p $PORT jdg@$HOST '/usr/local/syssetup/bin/git-create-repo-user-git.sh repo-name '"
+#CMD="ssh -t -p $PORT jdg@$HOST '/usr/local/syssetup/bin/git-create-repo-user-git.sh repo-name '"
 #CMD="ssh -t -p $PORT jdg@$HOST '/bin/bash -c \"/usr/local/syssetup/bin/git-create-repo-user-git.sh $REPNAME\" '"
 #CMD="echo \"/usr/local/syssetup/bin/git-create-repo-user-git.sh $REPNAME\" | ssh -t -p $PORT jdg@$HOST '/bin/bash -l -s' "
+CMD="ssh -t -p $PORT jdg@$HOST '$BIN repo-name-without-.git '"
 
 BASENAME=`basename $0`
 usage() {
