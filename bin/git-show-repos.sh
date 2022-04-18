@@ -12,7 +12,9 @@ HOST="vps5.dgt-bv.com"
 PORT="2221"
 REPO="ssh://$USER@$HOST:$PORT$DIR"
 ORIG="vps5"
-CMD="ssh -t -p $PORT jdg@$HOST '/usr/local/syssetup/bin/git-show-repos.sh' "
+BIN="/home/jdg/opensyssetup/bin/git-show-repos.sh"
+#CMD="ssh -t -p $PORT jdg@$HOST '/usr/local/syssetup/bin/git-show-repos.sh' "
+CMD="ssh -t -p $PORT jdg@$HOST '$BIN' "
 
 BASENAME=`basename $0`
 usage() {
