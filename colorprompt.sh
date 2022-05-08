@@ -137,7 +137,8 @@ alias path='echo -e ${PATH//:/\\n}'
 alias cls='clear'
 
 alias hig='history | grep'
-alias ng='lsof -i -n -P | grep'
+#alias ng='lsof -i -n -P | grep'
+alias ng='lsof -i -n -P +c0 | egrep' # cando? include COMMAND in egrep?? > lsof -i -n -P +c0 | egrep "COMMAND|LISTEN"
 alias psg='ps aux | grep'
 alias fm='/usr/bin/find . \( -path "*.svn*" -prune \) -o \( -path "*/proc/*" -prune \) -o \( -type f -printf "%010T@ [%Tc] (%10s Bytes) %p\n" \) | sort -n | tail'
 #alias ifc="/sbin/ifconfig | egrep 'encap|addr|MTU'"
