@@ -101,8 +101,10 @@ RED='\e[1;31m' ; GREEN='\e[1;32m' ; YELLOW='\e[1;33m' ; BLUE='\e[1;34m' ; CYAN='
 # 28800     8 hours
 # 43200     12 hours
 # 86400     1 day (24 hours)
+# 172800    2 day  (48 hours)
 
-TMOUT=43200
+#TMOUT=43200
+TMOUT=172800
 
 #===============================================================
 # FTP Passive
