@@ -14,6 +14,9 @@ fi
 echo "# > /sbin/route add 10.21.0.0/16 10.21.10.254 "
 /sbin/route add 10.21.0.0/16 10.21.10.254
 #
+echo "# > /sbin/route add 192.168.178.0/24 10.21.10.254 "
+/sbin/route add 192.168.178.0/24 10.21.10.254
+#
 echo "# "
 echo "# show route table on MacOS: "
 echo "# > sudo netstat -nr -f inet "
