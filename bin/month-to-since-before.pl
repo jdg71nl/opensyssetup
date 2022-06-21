@@ -3,8 +3,10 @@
 # 2022(c) John@de-Graaff.net 
 
 # Usage, and Example: 
-# > ./month-to-since-before.pl 2022-02
-# 2022-01-31 2022-03-01
+# OLD: > ./month-to-since-before.pl 2022-02
+# OLD: 2022-01-31 2022-03-01
+# > ./bin/month-to-since-before.pl 2022-02
+# 2022-02-01 2022-03-01
 
 # debian: > sudo apt install -y libdatetime-perl
 use DateTime;
@@ -29,7 +31,8 @@ $date_before->add( months => 1 );
 my $date_since = $date_before->clone;
 
 # $date_since->add( months => 1 )->subtract( days => 1 );
-$date_since->subtract( months => 1 )->subtract( days => 1 );
+# $date_since->subtract( months => 1 )->subtract( days => 1 );
+$date_since->subtract( months => 1 );
 
 # print "date_since=" .  $date_since->ymd('-')  . "\n";
 # print "date_before=" . $date_before->ymd('-') . "\n";
