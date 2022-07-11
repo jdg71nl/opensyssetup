@@ -225,6 +225,9 @@ write_distro()
       "11.3")
         FRIENDLY="Big Sur"
         ;;
+      "11.4")
+        FRIENDLY="Big Sur"
+        ;;
       *)
         FRIENDLY=""
         ;;
@@ -232,8 +235,14 @@ write_distro()
     #
     OSSTRING="os:MacOS-${FRIENDLY}-${SWVERS}"
     KERNSTRING=""
+    # following misreads on M1, see: https://forum.latenightsw.com/t/detect-arm64-or-intel-architecture/2803/2
     ISA=$(uname -m)
     # x86_64
+    # alternative: check this file exists (only on M1):
+    if [ -f /System/Library/Extensions/AppleARMPMU.kext/Contents/MacOS/AppleARMPMU ]; then
+      ISA="arm64"
+    fi 
+
   fi
 
   # - - - - - - - - + + + - - - - - - - - 
