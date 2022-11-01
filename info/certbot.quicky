@@ -1,0 +1,6 @@
+# certbot.quicky
+
+sudo apt install certbot python-certbot-apache
+
+#-eof
+
