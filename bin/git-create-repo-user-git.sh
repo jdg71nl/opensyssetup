@@ -8,10 +8,12 @@
 
 USER="git"
 DIR="/opt/git"
-HOST="vps5.dgt-bv.com"
+#HOST="vps5.dgt-bv.com"
+HOST="jbase.j71.nl"
 PORT="2221"
 REPO="ssh://$USER@$HOST:$PORT$DIR"
-ORIG="vps5"
+#ORIG="vps5"
+ORIG="jbase"
 BIN="/home/jdg/opensyssetup/bin/git-create-repo-user-git.sh"
 
 REPNAME="$1"
@@ -88,9 +90,9 @@ echo
 echo "# next use these commands to add and setup remote:"
 cat <<HERE
 git-show-repos.sh 
-git remote add vps5 ssh://git@vps5.dgt-bv.com:2221/opt/git/$REPNAME.git 
-git push --set-upstream vps5 master
-git branch --set-upstream-to=vps5/master master
+git remote add jbase ssh://git@$$HOST:2221/opt/git/$REPNAME.git 
+git push --set-upstream jbase main
+git branch --set-upstream-to=jbase/main main
 HERE
 echo "# that's it folks!"
 
