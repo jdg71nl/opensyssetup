@@ -1,0 +1,15 @@
+# brew.quicky
+
+# install Brew on Mac:
+# https://brew.sh/
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# this will yield 'findutils':
+brew search --desc --eval-all xargs
+
+# actually install findutils (to get: gfind gxargs):
+brew install findutils
+
+#-eof
+
