@@ -91,12 +91,16 @@ write_distro()
 	"Raspberry Pi 4 Model B Rev 1.4")
           HARD='RPI4b-1.4'
           ;;
+	"Raspberry Pi 4 Model B Rev 1.5")
+          HARD='RPI4b-1.5'
+          ;;
         "long string")
           HARD='shortstring'
           ;;
         *)
           #HARD='Unkn' 
-          HARD=""
+          #HARD=""
+          HARD="${MODELSTRING}"
           ;;
       esac
     fi
