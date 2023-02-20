@@ -30,9 +30,15 @@ echo "# detected platform '${PLAT}' "
 # usage: if [ "${PLAT}" == "Linux" ]; then echo "# detected Linux" ; fi
 
 # - - - 
-#
 echo "# running $HOME/opensyssetup/bin/write_distro_file.sh .."
 . $HOME/opensyssetup/bin/write_distro_file.sh
+
+# - - - 
+echo "# copy default \$HOME/.vimrc .."
+SOURCE="$HOME/opensyssetup/debian/root/dot.vimrc"
+TARGET="$HOME/.vimrc"
+[ -f $TARGET ] && cp -a $TARGET $TARGET.back
+cp -v $SOURCE $TARGET
 
 # - - - 
 if [ "${IS_DEBIAN_DERIVATIVE}" ]; then
