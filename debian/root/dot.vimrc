@@ -6,7 +6,7 @@ set autoindent
 set smartindent
 set hlsearch
 syntax on
-"set background=dark
+set background=dark
 "set background=light
 "
 " http://vim.wikia.com/wiki/Show_current_function_name_in_C_programs
