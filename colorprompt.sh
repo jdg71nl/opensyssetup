@@ -214,6 +214,10 @@ fifm ()  { echo "# bash-function, see 'type fifm':"; gfind . -xtype f -iname '*'
 # -F exit if one-screen
 LESS='-i -S'
 
+# https://superuser.com/questions/1251360/messed-layout-in-htop
+# "I solved this problem by adding an alias for htop in ~/.bashrc: alias htop='TERM=xterm-color htop' "
+alias htop='TERM=xterm-color htop'
+
 #===============================================================
 #===============================================================
 
