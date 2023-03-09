@@ -1,5 +1,13 @@
 # sudo.quicky
 
+# typical usage:
+#
+# > visudo
+Defaults editor=/usr/bin/vim
+%sudo ALL=(ALL) NOPASSWD:ALL
+
+#
+
 # ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
 # on Fedora (centos, redhat?) add user jdg to group wheel:
 
