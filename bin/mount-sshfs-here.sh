@@ -4,7 +4,7 @@
 # (c)2017 John de Graaff @ DGI
 
 echo
-echo "# DONT use this script !!"
+echo "# ===>====>====> DON'T use this script !!"
 echo "# instead create a local shell script for each SSHFS dir, like this:"
 echo
 cat <<HERE

@@ -1,10 +1,14 @@
 #!/bin/bash
 #= mount_sshfs_here.sh
-# (c)2021 John@de-Graaff.net
+# (c)2023 John@de-Graaff.net
+#
+# Note: on Mac install these apps from: https://osxfuse.github.io/
+# - macFUSE 4.4.2 macOS 10.9 or later 
+# - SSHFS   2.5.0 macOS 10.5 or later
 #
 BASENAME=`basename $0`
 usage() {
-  echo "# usage: $BASENAME [ -h hostname ] { -u username } { -p portnr } " 1>&2 
+  echo "# usage: $BASENAME [ -h hostname ] [ -r remote_dir] [ -l local_dir ] { -p port_nr } { -u username }" 1>&2 
   exit 1
 }
 #
@@ -15,23 +19,28 @@ usage() {
 # fi
 #
 # defaults
-USER="jdg"
 HOST=""
+USER="jdg"
 PORT="22"
-re_isa_num='^[0-9]+$'
-re_isa_host='^[a-z0-9\-\.]+$'
-re_isa_ip='^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$'
+RDIR=""
+LDIR=""
 #
-while getopts ":u:h:p:" options; do
+while getopts ":h:u:p:r:l:" options; do
   case "${options}" in
-    u)
-      USER=${OPTARG}
-      ;;
     h)
       HOST=${OPTARG}
       ;;
+    u)
+      USER=${OPTARG}
+      ;;
     p)
       PORT=${OPTARG}
+      ;;
+    r)
+      RDIR=${OPTARG}
+      ;;
+    l)
+      LDIR=${OPTARG}
       ;;
     :)
       echo "Error: -${OPTARG} requires an argument."
@@ -43,49 +52,16 @@ while getopts ":u:h:p:" options; do
   esac
 done
 #
-if [[ $HOST =~ '\/$' ]]; then
-  HOST=${HOST}
+if [[ -z $HOST || -z $USER || -z $PORT || -z $RDIR || -z $LDIR ]]; then
+  usage
 fi
 #
-#       if ! [[ $YYYY =~ $re_isanum ]] ; then
-#         echo "Error: YYYY must be a four-digit number."
-#         usage
-#       elif [ $YYYY -eq "0000" ]; then
-#         echo "Error: YYYY must be greater than zero."
-#         usage
-#       fi
-#       #
+echo "# > mkdir -pv ${LDIR} "
+mkdir -pv ${LDIR}
 #
-#       if ! [[ $MMDD =~ $re_isanum ]] ; then
-#         echo "Error: MMDD must be a four-digit number."
-#         usage
-#       elif [ $MMDD -eq "0000" ]; then
-#         echo "Error: MMDD must be greater than zero."
-#         usage
-#       fi
-#       #
-#       if ! [[ $HHMM =~ $re_isanum ]] ; then
-#         echo "Error: HHMM must be a four-digit number."
-#         usage
-#       fi
-#       #
-#       #if [[ -z $SS ]] ; then
-#       #fi
-#       if ! [[ $SS =~ $re_isasec ]] ; then
-#         echo "Error: SS must be a two-digit number."
-#         usage
-#       fi
+echo "# > sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@${HOST}:${RDIR} ${LDIR} "
 #
-DIR=${HOST}
-#
-echo "# command correct, executing .."
-#
-echo "# > mkdir -pv ${DIR} "
-mkdir -pv ${DIR}
-#
-echo "# > sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@${HOST}:. ${DIR} "
-sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@${HOST}:. ${DIR}
+sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@${HOST}:${RDIR} ${LDIR}
 #
 exit 0
 #
-
