@@ -2,6 +2,9 @@
 #= template.sh | updated: d220705
 # (c)2022 John@de-Graaff.net
 #
+# display every line executed in this bash script:
+#set -o xtrace
+#
 BASENAME=`basename $0`
 echo "# running: $BASENAME ... "
 SCRIPT=`realpath -s $0`  # man says: "-s, --strip, --no-symlinks : don't expand symlinks"
