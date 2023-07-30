@@ -15,10 +15,14 @@ RSYNC_TARGET="185.84.140.52"
 RSYNC_USER="smartback4"
 #
 # Note: $RSYNC_DIR is the server-side dir, which should be a symlink:
+# # DO THIS ON THE SERVER:
 # > sudo mkdir -pv /var/backups/smartback4
 # > sudo chown smartback4.smartback4 /var/backups/smartback4/
 # > sudo -u smartback4 ln -s /var/backups/smartback4/ /home/smartback4/
 # now '/home/smartback4/smartback4/' exists...
+# # DO THIS ON THE SERVER:
+# sudo apt install rsync
+#
 RSYNC_DIR="smartback4"
 #
 CONF_DIR="/etc/smartback4"

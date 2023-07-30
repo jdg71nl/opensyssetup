@@ -1,6 +1,6 @@
 #= /etc/cron.d/smartback4-cron.cron   
 
-0  1 *     *    *    root /var/backups/mysql/smartback4-mysql.sh
+#0  1 *     *    *    root /var/backups/mysql/smartback4-mysql.sh
 0  2 *     *    *    root /root/opensyssetup/bin/smartback4.sh
 
 #
