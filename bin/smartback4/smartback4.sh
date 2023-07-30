@@ -17,7 +17,7 @@ CONF_DIR="/etc/smartback4"
 CONF_SH="$CONF_DIR/config.sh"
 CLIENT_CONF="$CONF_DIR/client.sh"
 FILELIST="$CONF_DIR/sources.txt"
-CONF_TEMPL_DIR="~/opensyssetup/bin/smartback4/_smartback4"
+CONF_TEMPL_DIR="/root/opensyssetup/bin/smartback4/_smartback4"
 CONF_TEMPL_SH="$CONF_TEMPL_DIR/config.sh"
 
 [ -f "$CONF_SH" ] && source "$CONF_SH"
