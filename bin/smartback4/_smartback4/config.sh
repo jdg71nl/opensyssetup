@@ -19,7 +19,7 @@ RSYNC_USER="smartback4"
 # > sudo chown smartback4.smartback4 /var/backups/smartback4/
 # > sudo -u smartback4 ln -s /var/backups/smartback4/ /home/smartback4/
 # now '/home/smartback4/smartback4/' exists...
-RSYNC_DIR="smartback4/"
+RSYNC_DIR="smartback4"
 #
 CONF_DIR="/etc/smartback4"
 CLIENT_CONF="$CONF_DIR/client.sh"
@@ -27,7 +27,7 @@ SYNC_BACK="$CONF_DIR/sync_back.sh"
 FILELIST="$CONF_DIR/sources.txt"
 INCL_FILE="$CONF_DIR/rsync.includes.txt"
 #
-BIN_DIR="~/opensyssetup/bin/smartback4"
+BIN_DIR="/root/opensyssetup/bin/smartback4"
 CREATETOUCH_SH="$BIN_DIR/_smartback4-touchfile.sh"
 EXPAND_PL="$BIN_DIR/_smartback4-expand.pl"
 EXPAND_SH="$BIN_DIR/_smartback4-expand.sh"

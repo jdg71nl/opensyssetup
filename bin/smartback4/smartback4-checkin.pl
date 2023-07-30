@@ -66,8 +66,8 @@ if (exists $ARGV[0] and $ARGV[0] eq '-') {
 	}
 }
 
-#system "~/opensyssetup/bin/make-file-sorted-uniq.sh $list"
-system "~/opensyssetup/bin/smartback4/_smartback4-sortuniq.sh $list"
+#system "/root/opensyssetup/bin/make-file-sorted-uniq.sh $list"
+system "/root/opensyssetup/bin/smartback4/_smartback4-sortuniq.sh $list"
 
 #
 

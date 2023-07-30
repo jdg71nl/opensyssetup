@@ -29,7 +29,7 @@ if [ ! -f "$CLIENT_CONF" ] ; then
 
 # d230730 JDG: change of home address:
 # OLD: /usr/local/syssetup/bin/
-# NEW: ~/opensyssetup/bin/
+# NEW: /root/opensyssetup/bin/
 
 	echo "# setup defaults in '$CONF_DIR' ..."
 	echo 
@@ -43,16 +43,16 @@ if [ ! -f "$CLIENT_CONF" ] ; then
 	# RSA_PUB="$RSA_DIR/id_rsa.pub"
 	# if [ ! -f $HOME/.ssh/id_rsa ] ; then 
 	# 	echo "# No '.ssh/id_rsa exists for root user !! -- please run this command once:'"
-	# 	echo "~/opensyssetup/bin/smartback4/smartback4-add-ssh.sh  "
+	# 	echo "/root/opensyssetup/bin/smartback4/smartback4-add-ssh.sh  "
 	# fi
 
 	# ssh -p 48722 smartback4@185.84.140.52
-	# sudo ~/opensyssetup/bin/ssh-copy-id_rsa-pub.sh -p 48722 smartback4@185.84.140.52
+	# sudo /root/opensyssetup/bin/ssh-copy-id_rsa-pub.sh -p 48722 smartback4@185.84.140.52
 	#
 	[ -f "$CONF_TEMPL_SH" ] && source "$CONF_TEMPL_SH"
 	#
   echo "# run this command to copy the root:SSH-key to the remote rsync-server: "
-  echo "> sudo ~/opensyssetup/bin/ssh-copy-id_rsa-pub.sh -p $RSYNC_PORT $RSYNC_USER@$RSYNC_TARGET "
+  echo "> sudo /root/opensyssetup/bin/ssh-copy-id_rsa-pub.sh -p $RSYNC_PORT $RSYNC_USER@$RSYNC_TARGET "
 
 	exit
 fi
