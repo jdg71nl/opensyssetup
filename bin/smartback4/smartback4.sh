@@ -52,6 +52,7 @@ if [ ! -f "$CLIENT_CONF" ] ; then
 	[ -f "$CONF_TEMPL_SH" ] && source "$CONF_TEMPL_SH"
 	#
   echo "# run this command to copy the root:SSH-key to the remote rsync-server: "
+	echo "> sudo /root/opensyssetup/bin/ssh-create-client-id_rsa.sh "
   echo "> sudo /root/opensyssetup/bin/ssh-copy-id_rsa-pub.sh -p $RSYNC_PORT $RSYNC_USER@$RSYNC_TARGET "
 
 	exit
