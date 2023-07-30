@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-#= smartback3-checkin.pl
+#= smartback4-checkin.pl
 
 use strict;
 use warnings;
@@ -26,7 +26,7 @@ if ($> != 0) { # $> is $EUID
 #my $sysbackdir = "/var/syssetup/thissystem/root";
 #print getcwd() . "\n";
 
-my $list = "/etc/smartback3/sources.txt" ;
+my $list = "/etc/smartback4/sources.txt" ;
 
 #print "$basename:\n";
 
@@ -66,8 +66,8 @@ if (exists $ARGV[0] and $ARGV[0] eq '-') {
 	}
 }
 
-#system "/usr/local/syssetup/bin/make-file-sorted-uniq.sh $list"
-system "/usr/local/syssetup/bin/smartback3/_smartback3-sortuniq.sh $list"
+#system "~/opensyssetup/bin/make-file-sorted-uniq.sh $list"
+system "~/opensyssetup/bin/smartback4/_smartback4-sortuniq.sh $list"
 
 #
 

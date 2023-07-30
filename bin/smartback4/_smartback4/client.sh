@@ -1,4 +1,4 @@
 #!/bin/bash
-#= /etc/smartback3/client.sh
+#= /etc/smartback4/client.sh
 CLIENT_NAME="ffdev1"
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-#= smartback3.sh
+#= smartback4.sh
 
 # required debain packages:
 # apt install rsync apt-show-versions
@@ -13,32 +13,46 @@ if [ `id -u` != 0 ]; then
 fi
 
 # general settings:
-CONF_DIR="/etc/smartback3"
+CONF_DIR="/etc/smartback4"
 CONF_SH="$CONF_DIR/config.sh"
 CLIENT_CONF="$CONF_DIR/client.sh"
 FILELIST="$CONF_DIR/sources.txt"
+CONF_TEMPL_DIR="~/opensyssetup/bin/smartback4/_smartback4"
+CONF_TEMPL_SH="$CONF_TEMPL_DIR/config.sh"
 
 [ -f "$CONF_SH" ] && source "$CONF_SH"
 
 if [ ! -f "$CLIENT_CONF" ] ; then
 	echo
-	echo "# NOTICE: smartback3 not yet setup on this system (\$CLIENT_CONF=$CLIENT_CONF)"
+	echo "# NOTICE: smartback4 not yet setup on this system (file does not exist: \$CLIENT_CONF=$CLIENT_CONF)"
 	echo 
+
+# d230730 JDG: change of home address:
+# OLD: /usr/local/syssetup/bin/
+# NEW: ~/opensyssetup/bin/
 
 	echo "# setup defaults in '$CONF_DIR' ..."
 	echo 
 	mkdir -pv $CONF_DIR/
-	cp -av /usr/local/syssetup/bin/smartback3/_smartback3/* $CONF_DIR/
-	echo -e '#!/bin/bash\n#= /etc/smartback3/client.sh\nCLIENT_NAME="'$(hostname -s)'"' > $CLIENT_CONF
+	cp -av $CONF_TEMPL_DIR/* $CONF_DIR/
+	echo -e '#!/bin/bash\n#= /etc/smartback4/client.sh\nCLIENT_NAME="'$(hostname -s)'"' > $CLIENT_CONF
 	echo
 
-	RSA_DIR="/root/.ssh"
-	RSA_ID="$RSA_DIR/id_rsa"
-	RSA_PUB="$RSA_DIR/id_rsa.pub"
-	if [ ! -f $HOME/.ssh/id_rsa ] ; then 
-		echo "# No '.ssh/id_rsa exists for root user !! -- please run this command once:'"
-		echo "/usr/local/syssetup/bin/smartback3/smartback3-add-ssh.sh  "
-	fi
+	# RSA_DIR="/root/.ssh"
+	# RSA_ID="$RSA_DIR/id_rsa"
+	# RSA_PUB="$RSA_DIR/id_rsa.pub"
+	# if [ ! -f $HOME/.ssh/id_rsa ] ; then 
+	# 	echo "# No '.ssh/id_rsa exists for root user !! -- please run this command once:'"
+	# 	echo "~/opensyssetup/bin/smartback4/smartback4-add-ssh.sh  "
+	# fi
+
+	# ssh -p 48722 smartback4@185.84.140.52
+	# sudo ~/opensyssetup/bin/ssh-copy-id_rsa-pub.sh -p 48722 smartback4@185.84.140.52
+	#
+	[ -f "$CONF_TEMPL_SH" ] && source "$CONF_TEMPL_SH"
+	#
+  echo "# run this command to copy the root:SSH-key to the remote rsync-server: "
+  echo "> sudo ~/opensyssetup/bin/ssh-copy-id_rsa-pub.sh -p $RSYNC_PORT $RSYNC_USER@$RSYNC_TARGET "
 
 	exit
 fi
@@ -81,8 +95,8 @@ fi
 echo "#!/bin/bash " > $SYNC_BACK
 echo "# > cat $SYNC_BACK " >> $SYNC_BACK
 echo "#!/bin/bash " >> $SYNC_BACK
-echo "mkdir -pv /var/local/backup/smartback3/$CLIENT_NAME/ " >> $SYNC_BACK
-echo "rsync -v -rtlz -e \"$RSYNC_SSH\" $RSYNC_USER@$RSYNC_TARGET:$RSYNC_DIR/$CLIENT_NAME/ /var/local/backup/smartback3/$CLIENT_NAME/ " >> $SYNC_BACK
+echo "mkdir -pv /var/local/backup/smartback4/$CLIENT_NAME/ " >> $SYNC_BACK
+echo "rsync -v -rtlz -e \"$RSYNC_SSH\" $RSYNC_USER@$RSYNC_TARGET:$RSYNC_DIR/$CLIENT_NAME/ /var/local/backup/smartback4/$CLIENT_NAME/ " >> $SYNC_BACK
 echo >> $SYNC_BACK
 chmod +x $SYNC_BACK
 
@@ -117,8 +131,8 @@ echo "$0: done!" >/dev/stderr
 # move file back (after rsync to server):
 mv "/$TOUCH_FILE" $CONF_DIR/
 
-#echo "$0: sync back using:> rsync -v -rtlz -e 'ssh -p 2221' smartback3@vps5.dgt-bv.com:/var/local/backup/smartback3/samba-deb10.buster-hw.sm.e50/ /var/local/backup/smartback3/samba-deb10.buster-hw.sm.e50/ " >/dev/stderr
-#echo "$0: sync back using:> rsync -v -rtlz -e \"$RSYNC_SSH\" $RSYNC_USER@$RSYNC_TARGET:$RSYNC_DIR/$CLIENT_NAME/ /var/local/backup/smartback3/$CLIENT_NAME/ " >/dev/stderr
+#echo "$0: sync back using:> rsync -v -rtlz -e 'ssh -p 2221' smartback4@vps5.dgt-bv.com:/var/local/backup/smartback4/samba-deb10.buster-hw.sm.e50/ /var/local/backup/smartback4/samba-deb10.buster-hw.sm.e50/ " >/dev/stderr
+#echo "$0: sync back using:> rsync -v -rtlz -e \"$RSYNC_SSH\" $RSYNC_USER@$RSYNC_TARGET:$RSYNC_DIR/$CLIENT_NAME/ /var/local/backup/smartback4/$CLIENT_NAME/ " >/dev/stderr
 echo "$0: sync back using: > cat $SYNC_BACK " >/dev/stderr
 cat $SYNC_BACK >/dev/stderr
 

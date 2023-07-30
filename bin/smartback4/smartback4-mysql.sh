@@ -1,5 +1,5 @@
 #!/bin/bash
-#= smartback3-mysql.sh
+#= smartback4-mysql.sh
 
 # GRANT ALL PRIVILEGES ON *.* TO 'backupuser'@'localhost' IDENTIFIED BY 'Gac79tem41' WITH GRANT OPTION;
 # UPDATE mysql.user SET Password=PASSWORD('Gac79tem41') WHERE User='backupuser';

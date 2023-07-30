@@ -1,5 +1,5 @@
 #!/bin/bash
-#= _smartback3-sortuniq.sh 
+#= _smartback4-sortuniq.sh 
 
 FILE=$1
 [ ! -f "$FILE" ] && exit 1

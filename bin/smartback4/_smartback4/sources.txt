@@ -1,5 +1,5 @@
 #= sources.txt
-/etc/smartback3/
+/etc/smartback4/
 # /etc/apt/sources.list
 # /etc/distro.info
 # /etc/fstab

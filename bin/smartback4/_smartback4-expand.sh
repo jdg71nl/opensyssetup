@@ -1,8 +1,8 @@
 #!/bin/bash
-#= _smartback3-expand.sh
+#= _smartback4-expand.sh
 
 # general settings:
-. /etc/smartback3/config.sh
+. /etc/smartback4/config.sh
 
 # source client settings (this system)
 . $CLIENT_CONF
@@ -22,9 +22,9 @@ echo -n "$0: expanding file/source list ... " >/dev/stderr
 echo "# rsync includes file: $INCL_FILE" > $INCL_FILE
 echo "+ /$TOUCH_FILE" >> $INCL_FILE
 echo "+ /etc/" >> $INCL_FILE
-echo "+ /etc/smartback3/" >> $INCL_FILE
+echo "+ /etc/smartback4/" >> $INCL_FILE
 #echo "+ /etc/smartback2/smartbackup.*.sysinfo.txt" >> $INCL_FILE
-echo "+ /etc/smartback3/**" >> $INCL_FILE
+echo "+ /etc/smartback4/**" >> $INCL_FILE
 echo "- /dev/***" >> $INCL_FILE
 echo "- /sys/***" >> $INCL_FILE
 echo "- /proc/***" >> $INCL_FILE
@@ -37,7 +37,7 @@ echo "- */files/*.tgz" >> $INCL_FILE
 cat $FILELIST | $EXPAND_PL | sort | uniq >> $INCL_FILE
 echo "- **" >> $INCL_FILE
 
-# manual: cd /etc/smartback3/; cat $FILELIST | _smartback3-expand-filelist.pl | sort | uniq > rsync.includes.txt
+# manual: cd /etc/smartback4/; cat $FILELIST | _smartback4-expand-filelist.pl | sort | uniq > rsync.includes.txt
 
 echo "done!" >/dev/stderr
 

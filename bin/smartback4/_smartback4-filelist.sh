@@ -1,5 +1,5 @@
 #!/bin/bash
-#= _smartback3-filelist.sh
+#= _smartback4-filelist.sh
 
 LIST="/filesystem-root-list.txt.gz"
 REFFILE="/tmp/$LIST"
