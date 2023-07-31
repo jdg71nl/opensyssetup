@@ -1,0 +1,11 @@
+# /etc/dhcpcd.enter-hook
+# https://manpages.ubuntu.com/manpages/trusty/man8/dhcpcd-run-hooks.8.html
+# jdg:
+FILE="/tmp/dhcpcd.enter-hook.txt"
+DATE1=`date +d%y%m%d-%H%M%S`
+DATE2=`date +%Y-%m-%d/%H:%M:%S`
+touch $FILE
+echo "# $DATE1 -- $DATE2: " >> $FILE
+echo "ip_address = $ip_address " >> $FILE
+echo "# status appended to file: $FILE "
+#-eof
