@@ -1,14 +1,15 @@
 # /etc/dhcpcd.enter-hook
 # https://manpages.ubuntu.com/manpages/trusty/man8/dhcpcd-run-hooks.8.html
 # jdg:
-FILE="/tmp/dhcpcd.enter-hook.txt"
-DATE1=`date +d%y%m%d-%H%M%S`
-DATE2=`date +%Y-%m-%d/%H:%M:%S`
-#
-touch $FILE
-echo "# $DATE1 -- $DATE2: " >> $FILE
-#echo "ip_address = $ip_address " >> $FILE
-echo "reason = $reason , interface = $interface , ip_address = $ip_address , subnet_cidr = $subnet_cidr , subnet_mask = $subnet_mask " >> $FILE
-#
-echo "# status appended to file: $FILE "
+# reason == BOUND|RENEW|REBIND|REBOOT
+#if [ "$reason" = "BOUND" ]; then
+if [ "$reason" = "$reason" ]; then
+  FILE="/tmp/dhcpcd.enter-hook.txt"
+  DATE1=`date +d%y%m%d-%H%M%S`
+  DATE2=`date +%Y-%m-%d/%H:%M:%S`
+  touch $FILE
+  echo "# $DATE1 -- $DATE2: " >> $FILE
+  echo "reason = $reason , interface = $interface , ip_address = $ip_address , subnet_cidr = $subnet_cidr , subnet_mask = $subnet_mask " >> $FILE
+  echo "# status appended to file: $FILE "
+fi
 #-eof
