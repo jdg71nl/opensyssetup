@@ -1,15 +1,26 @@
 # /etc/dhcpcd.enter-hook
 # https://manpages.ubuntu.com/manpages/trusty/man8/dhcpcd-run-hooks.8.html
-# jdg:
-# reason == BOUND|RENEW|REBIND|REBOOT
-#if [ "$reason" = "BOUND" ]; then
-if [ "$reason" = "$reason" ]; then
+#
+# jdg-test:
+# if [ "$reason" = "$reason" ]; then
+#  . . . 
+#  echo "reason = $reason , interface = $interface , ip_address = $ip_address , subnet_cidr = $subnet_cidr , subnet_mask = $subnet_mask " >> $FILE
+# fi
+# # d230731-151532 -- 2023-07-31/15:15:32: 
+# reason = BOUND , interface = eth0 , ip_address =  , subnet_cidr =  , subnet_mask =  
+#
+if [ "$reason" = "BOUND" ]; then
+  #
+  # MY_IP=`ip -o -f inet addr show scope global dev eth0 | awk '{split($4, a, "/"); print a[1]}'`
+  ip_address=`ip -o -f inet addr show scope global dev $interface | awk '{split($4, a, "/"); print a[1]}'`
+  #
   FILE="/tmp/dhcpcd.enter-hook.txt"
   DATE1=`date +d%y%m%d-%H%M%S`
   DATE2=`date +%Y-%m-%d/%H:%M:%S`
   touch $FILE
   echo "# $DATE1 -- $DATE2: " >> $FILE
-  echo "reason = $reason , interface = $interface , ip_address = $ip_address , subnet_cidr = $subnet_cidr , subnet_mask = $subnet_mask " >> $FILE
+  echo "reason = $reason , interface = $interface , ip_address = $ip_address " >> $FILE
+  #
   echo "# status appended to file: $FILE "
 fi
 #-eof
