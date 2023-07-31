@@ -22,5 +22,9 @@ if [ "$reason" = "BOUND" ]; then
   echo "reason = $reason , interface = $interface , ip_address = $ip_address " >> $FILE
   #
   echo "# status appended to file: $FILE "
+  #
+  # send MQTT update:
+  /home/jdg/dev/dcs-rpi-mqtt-tester/call-home-daemon/mosq_pub.sh lan_ip $ip_address
+  #
 fi
 #-eof
