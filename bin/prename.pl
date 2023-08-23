@@ -89,7 +89,7 @@ For example, to rename all files matching C<*.bak> to strip the extension,
 you might say
 
 	rename 's/\.bak$//' *.bak
-	[jdg: or]
+	[jdg: or do:]
 	prename.pl -v -e 's/^d0310-d0310-(.*)$/$1/' d0310-d0310-IMG*.JPG     
 	prename.pl -v -e 's/^(.*)$/d0310-$1/' IMG*.JPG      
 
