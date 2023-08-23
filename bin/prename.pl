@@ -24,9 +24,13 @@
 #
 
 use strict;
+use Pod::Usage;
+
+# JDG: on MacOS do: https://docs.brew.sh/Gems,-Eggs-and-Perl-Modules
+# - sudo cpan local::lib
+# - sudo cpan install File::Rename
 require File::Rename;
 require File::Rename::Options;
-use Pod::Usage;
 
 main() unless caller;
 
