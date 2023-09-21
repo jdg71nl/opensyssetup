@@ -1,0 +1,89 @@
+# configuration file for ISC dhcpd for Debian
+# jdg: > apt install isc-dhcp-server
+#
+ddns-update-style none;
+#
+option domain-name "kaapje.dgt-bv.com";
+#option domain-name-servers 172.21.2.10, 172.21.2.11;
+#option domain-name-servers 10.77.66.254;
+#option domain-name-servers 10.77.10.254;
+option domain-name-servers 1.1.1.1 , 1.0.0.1 ;
+#
+default-lease-time 3600;
+max-lease-time 7200;
+authoritative;
+log-facility local7;
+#
+subnet 10.77.10.0 netmask 255.255.255.0 {
+        range 10.77.10.100 10.77.10.199;
+        option subnet-mask 255.255.255.0;
+        option broadcast-address 10.77.10.255;
+        #
+        option routers 10.77.10.254;
+        #
+        option dhcp-server-identifier 10.77.10.254;
+        #
+        #default-lease-time 600;
+        #max-lease-time 7200;
+        #option domain-name "fairflowlabs.com";
+        #option domain-name-servers ns1.fairflowlabs.com, ns2.fairflowlabs.com;
+        #option domain-name-servers 91.184.11.145, 149.210.188.138;
+        #
+        # 14:98:77:33:a3:1b
+        #
+}
+host mini21 {
+  hardware ethernet 14:98:77:33:a3:1b;
+  fixed-address 10.77.10.150;
+}
+#
+subnet 10.77.11.0 netmask 255.255.255.0 {
+        range 10.77.11.100 10.77.11.199;
+        option subnet-mask 255.255.255.0;
+        option broadcast-address 10.77.11.255;
+        #
+        option routers 10.77.11.254;
+        #
+        option dhcp-server-identifier 10.77.11.254;
+        #default-lease-time 600;
+        #max-lease-time 7200;
+        #option domain-name "fairflowlabs.com";
+        #option domain-name-servers ns1.fairflowlabs.com, ns2.fairflowlabs.com;
+        #option domain-name-servers 91.184.11.145, 149.210.188.138;
+}
+#
+
+
+# # ------+++------
+# 
+# # https://linux.die.net/man/5/dhcpd-options
+# option OPT43 code 43 = string;
+# #option OPT43 01:08:0a:03:64:65:0a:03:64:66;
+# #option OPT66 code 66 = ip-address;
+# option OPT67 code 67 = text;
+# 
+# # CSW2-Vlan2
+# subnet 10.2.2.0 netmask 255.255.255.0 {
+#         range 10.2.2.2 10.2.2.249;
+#         option broadcast-address 10.2.2.255;
+#         option routers 10.2.2.1;
+#         option dhcp-server-identifier 10.3.100.253;
+#         option subnet-mask 255.255.255.0;
+#         option domain-name "cswalcheren.nl";
+#         option domain-name-servers 172.21.2.10 , 172.21.2.11;
+#         option OPT43 02;
+#         option bootfile-name "csw000001";
+#         }
+# 
+# # CSW2-Vlan10
+# subnet 10.2.10.0 netmask 255.255.254.0 {
+#         range 10.2.10.2 10.2.11.249;
+#         option broadcast-address 10.2.11.255;
+#         option routers 10.2.10.1;
+#         option dhcp-server-identifier 10.3.100.253;
+#         option subnet-mask 255.255.254.0;
+#         option domain-name "cswalcheren.nl";
+#         option domain-name-servers 172.21.2.10, 172.21.2.11;
+# }
+
+#
