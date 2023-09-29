@@ -29,7 +29,8 @@
 #. /etc/rc.d/init.d/functions
 
 NAME="redir"
-PROG="/usr/local/syssetup/bin/redir-wrapper.sh"
+#PROG="/usr/local/syssetup/bin/redir-wrapper.sh"
+PROG="/root/opensyssetup/bin/redir-wrapper.sh"
 
 statusredir() {
 	echo "Process list of redir:"
