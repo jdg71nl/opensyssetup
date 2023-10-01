@@ -1,12 +1,17 @@
 # sudo.quicky
 
-# typical usage:
-#
-# > visudo
-Defaults editor=/usr/bin/vim
-%sudo ALL=(ALL) NOPASSWD:ALL
+## typical usage:
 
-#
+## add to /etc/sudoers : 
+> visudo
+# jdg
+Defaults editor=/usr/bin/vim
+# %sudo ALL=(ALL) NOPASSWD:ALL
+jdg ALL=(ALL) NOPASSWD:ALL
+
+## (Debian) add existing user to an existing group:
+> adduser jdg sudo
+
 
 # ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
 # on Fedora (centos, redhat?) add user jdg to group wheel:
@@ -47,7 +52,7 @@ root  ALL=(ALL) ALL
 # it further down)
 %sudo ALL=NOPASSWD: ALL
 
-# add existing user to an existing group:
+# (Debian) add existing user to an existing group:
 adduser jdg sudo
 
 # ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
