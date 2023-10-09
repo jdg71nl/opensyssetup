@@ -158,7 +158,7 @@ echo "$0: rsyncing ... " >/dev/stderr
 # $CMD
 
 #echo rsync -v -rtlz --delete --delete-excluded --include-from=$INCL_FILE -e "$RSYNC_SSH"  /  $RSYNC_TARGET/$CLIENT_NAME/
-echo rsync -v -rtlz --delete --delete-excluded --include-from=$INCL_FILE -e "$RSYNC_SSH"  /  $RSYNC_USER@$RSYNC_TARGET:$RSYNC_DIR/$CLIENT_NAME/
+echo "rsync -v -rtlz --delete --delete-excluded --include-from=$INCL_FILE -e \"$RSYNC_SSH\"  /  $RSYNC_USER@$RSYNC_TARGET:$RSYNC_DIR/$CLIENT_NAME/ "
      rsync -v -rtlz --delete --delete-excluded --include-from=$INCL_FILE -e "$RSYNC_SSH"  /  $RSYNC_USER@$RSYNC_TARGET:$RSYNC_DIR/$CLIENT_NAME/
 
 echo "$0: done!" >/dev/stderr
