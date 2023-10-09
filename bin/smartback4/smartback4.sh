@@ -36,6 +36,8 @@ echo "# - - - "
 echo "# test installed required packages:"
 f_check_install_package rsync
 f_check_install_package apt-show-versions
+f_check_install_package lshw
+f_check_install_package raspinfo
 
 # general settings:
 CONF_DIR="/etc/smartback4"
@@ -152,6 +154,7 @@ if [ -f "/etc/debian_version" ] ; then
   f_exec_cmd_log "apt-show-versions" apt_show_versions__log.txt
   f_exec_cmd_log "lshw" lshw__log.txt
   f_exec_cmd_log "dmesg" dmesg__log.txt
+  f_exec_cmd_log "raspinfo" raspinfo__log.txt
 fi
 
 # SYNC_BACK="$CONF_DIR/sync_back.sh"

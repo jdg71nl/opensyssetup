@@ -17,8 +17,11 @@
 /etc/
 /filesystem-root-list.txt.gz 
 #/var/log/debpkgs
-/var/log/apt_show_versions__log.txt 
-/var/log/dpkg_l__log.txt 
+/var/log/apt_show_versions__log.txt
+/var/log/dmesg__log.txt
+/var/log/dpkg_l__log.txt
+/var/log/lshw__log.txt
+/var/log/raspinfo.txt
 /root/.ssh/
 /home/jdg/.ssh/
 #
