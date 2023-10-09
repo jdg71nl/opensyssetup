@@ -1,0 +1,158 @@
+System Information
+------------------
+
+Raspberry Pi 4 Model B Rev 1.5
+PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
+NAME="Debian GNU/Linux"
+VERSION_ID="11"
+VERSION="11 (bullseye)"
+
+Raspberry Pi reference 2022-09-22
+Generated using pi-gen, https://github.com/RPi-Distro/pi-gen, 005a8c73b05a2cab394073150208bf4f069e861a, stage4
+
+Linux rpi4-touch-vxb86s.j71.nl 6.1.21-v8+ #1642 SMP PREEMPT Mon Apr  3 17:24:16 BST 2023 aarch64 GNU/Linux
+Revision	: b03115
+Serial		: 100000009be4e543
+Model		: Raspberry Pi 4 Model B Rev 1.5
+Throttled flag  : throttled=0x0
+Camera          : supported=0 detected=0, libcamera interfaces=0
+
+Videocore information
+---------------------
+
+Mar 17 2023 10:50:39 
+Copyright (c) 2012 Broadcom
+version 82f3750a65fadae9a38077e3c2e217ad158c8d54 (clean) (release) (start)
+
+alloc failures:     0
+compactions:        0
+legacy block fails: 0
+
+Filesystem information
+----------------------
+Filesystem     1K-blocks    Used Available Use% Mounted on
+/dev/root        7177260 6135620    692872  90% /
+devtmpfs          682568       0    682568   0% /dev
+tmpfs             946792       0    946792   0% /dev/shm
+tmpfs             378720   17668    361052   5% /run
+tmpfs               5120       4      5116   1% /run/lock
+/dev/mmcblk0p1    261108   31384    229724  13% /boot
+tmpfs             189356      16    189340   1% /run/user/1000
+
+Filename				Type		Size		Used		Priority
+/var/swap                               file		102396		0		-2
+
+Package version information
+---------------------------
+raspberrypi-ui-mods:
+  Installed: 1.20230127
+raspberrypi-sys-mods:
+  Installed: 20230510~bullseye
+openbox:
+  Installed: 3.6.1-9+rpt1+deb11u1
+lxpanel:
+  Installed: 0.10.1-2+rpt19
+pcmanfm:
+  Installed: 1.3.2-1+rpt9
+rpd-plym-splash:
+  Installed: 0.32
+
+Networking Information
+----------------------
+
+br0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet x.x.x.x  netmask x.x.x.x  broadcast x.x.x.x
+        inet6 y::y.y.y.y  prefixlen 64  scopeid 0x20<link>
+        ether m.m.m.m  txqueuelen 1000  (Ethernet)
+        RX packets 22908458  bytes 3273844648 (3.0 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 26020615  bytes 33005866669 (30.7 GiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        ether m.m.m.m  txqueuelen 1000  (Ethernet)
+        RX packets 30108913  bytes 33250219196 (30.9 GiB)
+        RX errors 0  dropped 7526  overruns 0  frame 0
+        TX packets 29780859  bytes 13744292946 (12.8 GiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet x.x.x.x  netmask x.x.x.x
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 301156  bytes 25298543 (24.1 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 301156  bytes 25298543 (24.1 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+tun21: flags=4305<UP,POINTOPOINT,RUNNING,NOARP,MULTICAST>  mtu 1500
+        inet x.x.x.x  netmask x.x.x.x  destination x.x.x.x
+        inet6 y::y.y.y.y  prefixlen 64  scopeid 0x20<link>
+        unspec 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  txqueuelen 500  (UNSPEC)
+        RX packets 3264482  bytes 2674750964 (2.4 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 3492648  bytes 670535650 (639.4 MiB)
+        TX errors 0  dropped 47785 overruns 0  carrier 0  collisions 0
+
+vlan91: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet x.x.x.x  netmask x.x.x.x  broadcast x.x.x.x
+        inet6 y::y.y.y.y  prefixlen 64  scopeid 0x20<link>
+        ether m.m.m.m  txqueuelen 1000  (Ethernet)
+        RX packets 25930792  bytes 32360078930 (30.1 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 22585666  bytes 3717830418 (3.4 GiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+vlan92: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet x.x.x.x  netmask x.x.x.x  broadcast x.x.x.x
+        inet6 y::y.y.y.y  prefixlen 64  scopeid 0x20<link>
+        ether m.m.m.m  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 249  bytes 23629 (23.0 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+vlan93: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet x.x.x.x  netmask x.x.x.x  broadcast x.x.x.x
+        inet6 y::y.y.y.y  prefixlen 64  scopeid 0x20<link>
+        ether m.m.m.m  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 249  bytes 23652 (23.0 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+vlan94: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet x.x.x.x  netmask x.x.x.x  broadcast x.x.x.x
+        inet6 y::y.y.y.y  prefixlen 64  scopeid 0x20<link>
+        ether m.m.m.m  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 248  bytes 23555 (23.0 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+wlan0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        ether m.m.m.m  txqueuelen 1000  (Ethernet)
+        RX packets 6502455  bytes 1320328068 (1.2 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 7262075  bytes 9173910289 (8.5 GiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+wlan1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 2312
+        ether m.m.m.m  txqueuelen 1000  (Ethernet)
+        RX packets 13322170  bytes 2842003775 (2.6 GiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 12734979  bytes 14924158354 (13.8 GiB)
+        TX errors 0  dropped 10746 overruns 0  carrier 0  collisions 0
+
+
+USB Information
+---------------
+
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/4p, 5000M
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/1p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+        |__ Port 1: Dev 3, If 0, Class=Vendor Specific Class, Driver=rtl88XXau, 480M
+
+Display Information
+-------------------
+

@@ -1,0 +1,20 @@
+#= /etc/cron.d/sudo_check_cycle_wlan0.cron
+
+# > sudo cp -v /home/jdg/sudo_check_cycle_wlan0.cron /etc/cron.d/
+# > sudo chown 0.0 /etc/cron.d/sudo_check_cycle_wlan0.cron 
+# > sudo chmod 644 /etc/cron.d/sudo_check_cycle_wlan0.cron 
+# > sudo service cron reload 
+
+# Example of job definition:
+# # .---------------- minute (0 - 59)
+# # |  .------------- hour (0 - 23)
+# # |  |  .---------- day of month (1 - 31)
+# # |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# # |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# # |  |  |  |  |
+# # *  *  *  *  * user-name command to be executed
+# 17   *  *  *  * root      cd / && run-parts --report /etc/cron.hourly
+
+*/5    *  *  *  * root      /home/jdg/sudo_check_cycle_wlan0.sh
+
+#-eof
