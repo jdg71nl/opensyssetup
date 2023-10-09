@@ -32,6 +32,7 @@ echo "- /tmp/***" >> $INCL_FILE
 echo "- /lost+found/***" >> $INCL_FILE
 echo "- *.exe" >> $INCL_FILE
 echo "- */files/*.tgz" >> $INCL_FILE
+echo "+ *.sh" >> $INCL_FILE
 #echo "- **/chroot/***" >> $INCL_FILE
 
 cat $FILELIST | $EXPAND_PL | sort | uniq >> $INCL_FILE

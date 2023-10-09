@@ -7,10 +7,29 @@
 if [ `id -u` != 0 ]; then 
 	# re-run as root:
 	#echo "Provide your password for 'sudo':"
-	#sudo "$0" "$*"
-	echo "ERROR: can only run this command as root .."
+	sudo "$0" "$*"
+	#echo "ERROR: can only run this command as root .."
 	exit 1
 fi
+
+#usage() {
+#  echo "Usage: $0 [ -n NAME ] [ -t TIMES ]" 1>&2 
+#}
+#exit_abnormal() {
+#  usage
+#  exit 1
+#}
+
+f_check_install_package() {
+  PKG="$1"
+  # if dpkg-query -l rsync ; then echo true ; else echo false ; fi
+  if dpkg-query -l $PKG ; then
+    echo "# [check] package '$PKG' is installed."
+  else 
+    echo "# [check] package '$PKG' is NOT installed, ==> will install now ... "
+    apt install -y $PKG
+  fi
+}
 
 # general settings:
 CONF_DIR="/etc/smartback4"
@@ -30,8 +49,12 @@ if [ ! -f "$CLIENT_CONF" ] ; then
 # d230730 JDG: change of home address:
 # OLD: /usr/local/syssetup/bin/
 # NEW: /root/opensyssetup/bin/
+  
+  # test installed required packages:
+  f_check_install_package rsync
+  f_check_install_package apt-show-versions
 
-	echo "# setup defaults in '$CONF_DIR' ..."
+  echo "# setup defaults in '$CONF_DIR' ..."
 	echo 
 	mkdir -pv $CONF_DIR/
 	cp -av $CONF_TEMPL_DIR/* $CONF_DIR/
@@ -79,16 +102,27 @@ echo_msg_log() {
 # expand:
 . $EXPAND_SH
 
-DEBPKGS="debpkgs"
-V_L_DEBPKGS="/var/log/$DEBPKGS"
-REFFILE="/tmp/$DEBPKGS"
 if [ -f "/etc/debian_version" ] ; then
 	# INSTALL: aptitude install apt-show-versions 
+  #
+  apt_show_versions__log="apt_show_versions__log.txt"
+  V_L_apt_show_versions__log="/var/log/$apt_show_versions__log"
+  REFFILE="/tmp/$apt_show_versions__log"
 	touch -d "-1 day" $REFFILE
-	if [ $V_L_DEBPKGS -ot $REFFILE  ]; then
-		echo -n "$0: updating 'apt-show-versions' ... " >/dev/stderr
-		apt-show-versions > $V_L_DEBPKGS
-		echo "done!" >/dev/stderr
+	if [ $V_L_apt_show_versions__log -ot $REFFILE  ]; then
+		echo -n "# $0: updating 'apt-show-versions' ... " >/dev/stderr
+		apt-show-versions > $V_L_apt_show_versions__log
+		echo "# $0: done!" >/dev/stderr
+	fi
+  #
+  dpkg_l__log="dpkg_l__log.txt"
+  V_L_dpkg_l__log="/var/log/$dpkg_l__log"
+  REFFILE="/tmp/$dpkg_l__log"
+	touch -d "-1 day" $REFFILE
+	if [ $V_L_dpkg_l__log -ot $REFFILE  ]; then
+		echo -n "# $0: updating 'dpk -l' ... " >/dev/stderr
+		dpkg -l > $V_L_dpkg_l__log
+		echo "# $0: done!" >/dev/stderr
 	fi
 fi
 
