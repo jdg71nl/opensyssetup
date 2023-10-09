@@ -27,11 +27,13 @@ f_check_install_package() {
     echo "# [check] package '$PKG' is installed."
   else 
     echo "# [check] package '$PKG' is NOT installed, ==> will install now ... "
+    echo "# > apt install -y $PKG "
     apt install -y $PKG
   fi
 }
 
-# test installed required packages:
+echo "# - - - "
+echo "# test installed required packages:"
 f_check_install_package rsync
 f_check_install_package apt-show-versions
 
@@ -46,7 +48,7 @@ CONF_TEMPL_SH="$CONF_TEMPL_DIR/config.sh"
 [ -f "$CONF_SH" ] && source "$CONF_SH"
 
 if [ ! -f "$CLIENT_CONF" ] ; then
-	echo
+  echo "# - - - "
 	echo "# NOTICE: smartback4 not yet setup on this system (file does not exist: \$CLIENT_CONF=$CLIENT_CONF)"
 	echo 
 
@@ -54,6 +56,7 @@ if [ ! -f "$CLIENT_CONF" ] ; then
 # OLD: /usr/local/syssetup/bin/
 # NEW: /root/opensyssetup/bin/
   
+  echo "# - - - "
   echo "# setup defaults in '$CONF_DIR' ..."
 	echo 
 	mkdir -pv $CONF_DIR/
@@ -74,6 +77,7 @@ if [ ! -f "$CLIENT_CONF" ] ; then
 	#
 	[ -f "$CONF_TEMPL_SH" ] && source "$CONF_TEMPL_SH"
 	#
+  echo "# - - - "
   echo "# run this command to copy the root:SSH-key to the remote rsync-server: "
 	echo "> sudo /root/opensyssetup/bin/ssh-create-client-id_rsa.sh "
   echo "> sudo /root/opensyssetup/bin/ssh-copy-id_rsa-pub.sh -p $RSYNC_PORT $RSYNC_USER@$RSYNC_TARGET "
@@ -94,36 +98,60 @@ echo_msg_log() {
 # ------+++------
 # create status backups
 
+echo "# - - - "
 # create file listing:
 . $LISTER_SH
 
 # do: lvmdump
 
+echo "# - - - "
 # expand:
 . $EXPAND_SH
 
+f_exec_cmd_log() {
+  cmd="$1"
+  log="$2"
+  V_L_log="/var/log/$log"
+  REFFILE="/tmp/$log"
+	touch -d "-1 day" $REFFILE
+	if [ $log -ot $REFFILE  ]; then
+    echo "# - - - "
+		echo -n "# $0: (running)>  $cmd > $V_L_log  ... "
+		$cmd > $V_L_log
+		echo "# $0: done!"
+	fi
+}
+
 if [ -f "/etc/debian_version" ] ; then
+  echo "# - - - "
+  echo "# updating logs: "
+
 	# INSTALL: aptitude install apt-show-versions 
   #
-  apt_show_versions__log="apt_show_versions__log.txt"
-  V_L_apt_show_versions__log="/var/log/$apt_show_versions__log"
-  REFFILE="/tmp/$apt_show_versions__log"
-	touch -d "-1 day" $REFFILE
-	if [ $V_L_apt_show_versions__log -ot $REFFILE  ]; then
-		echo -n "# $0: updating 'apt-show-versions' ... " >/dev/stderr
-		apt-show-versions > $V_L_apt_show_versions__log
-		echo "# $0: done!" >/dev/stderr
-	fi
+#   apt_show_versions__log="apt_show_versions__log.txt"
+#   V_L_apt_show_versions__log="/var/log/$apt_show_versions__log"
+#   REFFILE="/tmp/$apt_show_versions__log"
+# 	touch -d "-1 day" $REFFILE
+# 	if [ $V_L_apt_show_versions__log -ot $REFFILE  ]; then
+# 		echo -n "# $0: updating 'apt-show-versions' ... " >/dev/stderr
+# 		apt-show-versions > $V_L_apt_show_versions__log
+# 		echo "# $0: done!" >/dev/stderr
+# 	fi
+#   #
+#   dpkg_l__log="dpkg_l__log.txt"
+#   V_L_dpkg_l__log="/var/log/$dpkg_l__log"
+#   REFFILE="/tmp/$dpkg_l__log"
+# 	touch -d "-1 day" $REFFILE
+# 	if [ $V_L_dpkg_l__log -ot $REFFILE  ]; then
+# 		echo -n "# $0: updating 'dpk -l' ... " >/dev/stderr
+# 		dpkg -l > $V_L_dpkg_l__log
+# 		echo "# $0: done!" >/dev/stderr
+# 	fi
   #
-  dpkg_l__log="dpkg_l__log.txt"
-  V_L_dpkg_l__log="/var/log/$dpkg_l__log"
-  REFFILE="/tmp/$dpkg_l__log"
-	touch -d "-1 day" $REFFILE
-	if [ $V_L_dpkg_l__log -ot $REFFILE  ]; then
-		echo -n "# $0: updating 'dpk -l' ... " >/dev/stderr
-		dpkg -l > $V_L_dpkg_l__log
-		echo "# $0: done!" >/dev/stderr
-	fi
+  f_exec_cmd_log "dpkg -l" dpkg_l__log.txt
+  f_exec_cmd_log "apt-show-versions" apt_show_versions__log.txt
+  f_exec_cmd_log "lshw" lshw__log.txt
+  f_exec_cmd_log "dmesg" dmesg__log.txt
 fi
 
 # SYNC_BACK="$CONF_DIR/sync_back.sh"
@@ -145,6 +173,7 @@ mv touchfile "/$TOUCH_FILE"
 # ------+++------
 # setup rsync-command and log:
 
+echo "# - - - "
 echo "$0: rsyncing ... " >/dev/stderr
 
 # no need to create dir first:
@@ -166,6 +195,7 @@ echo "$0: done!" >/dev/stderr
 # move file back (after rsync to server):
 mv "/$TOUCH_FILE" $CONF_DIR/
 
+echo "# - - - "
 #echo "$0: sync back using:> rsync -v -rtlz -e 'ssh -p 2221' smartback4@vps5.dgt-bv.com:/var/local/backup/smartback4/samba-deb10.buster-hw.sm.e50/ /var/local/backup/smartback4/samba-deb10.buster-hw.sm.e50/ " >/dev/stderr
 #echo "$0: sync back using:> rsync -v -rtlz -e \"$RSYNC_SSH\" $RSYNC_USER@$RSYNC_TARGET:$RSYNC_DIR/$CLIENT_NAME/ /var/local/backup/smartback4/$CLIENT_NAME/ " >/dev/stderr
 echo "$0: sync back using: > cat $SYNC_BACK " >/dev/stderr
