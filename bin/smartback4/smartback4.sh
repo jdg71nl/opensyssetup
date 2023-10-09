@@ -31,6 +31,10 @@ f_check_install_package() {
   fi
 }
 
+# test installed required packages:
+f_check_install_package rsync
+f_check_install_package apt-show-versions
+
 # general settings:
 CONF_DIR="/etc/smartback4"
 CONF_SH="$CONF_DIR/config.sh"
@@ -50,10 +54,6 @@ if [ ! -f "$CLIENT_CONF" ] ; then
 # OLD: /usr/local/syssetup/bin/
 # NEW: /root/opensyssetup/bin/
   
-  # test installed required packages:
-  f_check_install_package rsync
-  f_check_install_package apt-show-versions
-
   echo "# setup defaults in '$CONF_DIR' ..."
 	echo 
 	mkdir -pv $CONF_DIR/
