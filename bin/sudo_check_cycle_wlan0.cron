@@ -15,6 +15,14 @@
 # # *  *  *  *  * user-name command to be executed
 # 17   *  *  *  * root      cd / && run-parts --report /etc/cron.hourly
 
+# every 5 minutes:
 */5    *  *  *  * root      /home/jdg/sudo_check_cycle_wlan0.sh
+# every 1 minute;
+#*      *  *  *  * root      /home/jdg/sudo_check_cycle_wlan0.sh
 
-#-eof
+# jdg: also need this setting:
+# > cat /etc/default/cron | egrep ^EXTRA_OPTS
+# EXTRA_OPTS='-l'  
+
+#-eof / JDG: note CRON needs an empty line at end (info: https://unix.stackexchange.com/questions/296347/crontab-never-running-while-in-etc-cron-d )
+
