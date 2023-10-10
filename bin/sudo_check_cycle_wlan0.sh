@@ -17,6 +17,7 @@ MYUID=$( id -u )
 #  exit 1
 #}
 #
+#
 if [ $MYUID != 0 ]; then
   echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
 fi
@@ -26,11 +27,18 @@ IP="1.1.1.1"
 #
 if /usr/bin/fping -q -c3 $IP ; then
   echo "# fping says host '$IP' is UP."
+  logger "($BASENAME)# fping says host '$IP' is UP."
 else
-  echo "# fping says host '$IP' is DOWN."
-  echo "# (will run) > $CYCLE_PROG ..."
+  echo "# fping says host '$IP' is DOWN ==> so will run:> $CYCLE_PROG ..."
+  logger "($BASENAME)# fping says host '$IP' is DOWN ==> so will run:> $CYCLE_PROG ..."
   $CYCLE_PROG
 fi
+#
+#
+# NOTE: install this cmd in CRONTAB:
+# > cat /etc/crontab  | egrep sudo_check_cycle_wlan0
+# */5  *  *  *  *  root  /home/jdg/sudo_check_cycle_wlan0.sh
+#
 #
 exit 0
 #
