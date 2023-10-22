@@ -22,15 +22,27 @@ if [ $MYUID != 0 ]; then
   echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
 fi
 #
+#
+# if [ -f /home/jdg/semaphore_wlan0.active ]; then echo "# true" ; else echo "# false" ; fi
+if [ ! -f /home/jdg/semaphore_wlan0.active ]; then
+  MSG="semaphore says 'wlan0' is inactive, exiting .." 
+  echo "# $MSG "
+  logger "($BASENAME)# $MSG "
+  exit 0
+fi
+#
+#
 CYCLE_PROG="/home/jdg/sudo_if_cycle_wlan0.sh"
 IP="1.1.1.1"
 #
 if /usr/bin/fping -q -c3 $IP ; then
-  echo "# fping says host '$IP' is UP."
-  logger "($BASENAME)# fping says host '$IP' is UP."
+  MSG="# fping says host '$IP' is UP."
+  echo "# $MSG "
+  logger "($BASENAME)# $MSG "
 else
-  echo "# fping says host '$IP' is DOWN ==> so will run:> $CYCLE_PROG ..."
-  logger "($BASENAME)# fping says host '$IP' is DOWN ==> so will run:> $CYCLE_PROG ..."
+  MSG="# fping says host '$IP' is DOWN ==> so will run:> $CYCLE_PROG ..."
+  echo "# $MSG "
+  logger "($BASENAME)# $MSG "
   $CYCLE_PROG
 fi
 #

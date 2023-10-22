@@ -1,5 +1,5 @@
 #!/bin/bash
-#= sudo_if_cycle_wlan0.sh | updated: d231009
+#= sudo_vi_etc_cronttab.sh | updated: d231022
 # (c)2023 John@de-Graaff.net
 #
 # display every line executed in this bash script:
@@ -17,23 +17,14 @@ MYUID=$( id -u )
 #  exit 1
 #}
 #
+#
 if [ $MYUID != 0 ]; then
   echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
 fi
 #
 #
-# if [ -f /home/jdg/semaphore_wlan0.active ]; then echo "# true" ; else echo "# false" ; fi
-if [ ! -f /home/jdg/semaphore_wlan0.active ]; then
-  echo "# semaphore says 'wlan0' is inactive, exiting .." 
-  exit 0
-fi
+vi /etc/crontab
 #
-echo "# ifdown wlan0 ..."
-ifdown wlan0
-echo "# sleep 1 ..."
-sleep 1
-echo "# ifup wlan0 ..."
-ifup wlan0
 #
 exit 0
 #
