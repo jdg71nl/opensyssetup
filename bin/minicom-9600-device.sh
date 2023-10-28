@@ -23,6 +23,9 @@ read
 # done
 #
 DEV=$1
+#
+echo "# minicom --baudrate 9600 --noinit --ansi --wrap --statline --device ${DEV} ... "
+echo "# "
 minicom --baudrate 9600 --noinit --ansi --wrap --statline --device ${DEV}
 #
 
