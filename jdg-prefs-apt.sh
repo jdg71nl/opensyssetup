@@ -30,6 +30,8 @@ apt install -y git curl htop lsof vim minicom netcat arp-scan arping fping jq nt
 # also (manual?): 
 #
 # apt install -y ifupdown net-tools vlan bridge-utils
+# apt remove dhcpcd5
+#
 # apt install -y x11-apps x11-utils 
 # apt install -y build-essential 
 # apt install -y build-essential dkms bc raspberrypi-kernel-headers
