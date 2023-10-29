@@ -25,7 +25,7 @@ fi
 #fi
 #
 #
-apt install -y git curl htop lsof vim minicom netcat arp-scan arping fping jq ntp openvpn rsync sudo wget
+apt install -y git curl htop lsof vim minicom netcat arp-scan arping fping jq ntp openvpn rsync sudo wget locate
 # 
 # also (manual?): 
 #
@@ -35,9 +35,6 @@ apt install -y git curl htop lsof vim minicom netcat arp-scan arping fping jq nt
 # apt install -y x11-apps x11-utils 
 # apt install -y build-essential 
 # apt install -y build-essential dkms bc raspberrypi-kernel-headers
-# apt install -y 
-# apt install -y 
-# apt install -y 
 #
 exit 0
 #
