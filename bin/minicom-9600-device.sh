@@ -8,10 +8,6 @@ if [ $MYID != 0 ]; then
   echo "## provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
 fi
 #
-echo "# to exit minicom (and leave serial console as it is), use: CRTL-A X "
-echo "# Press any key to continue .."
-read
-#
 # echo "Press any key to continue"
 # while [ true ] ; do
 #   read -t 3 -n 1
@@ -23,6 +19,15 @@ read
 # done
 #
 DEV=$1
+#
+echo "# "
+echo "# to exit minicom (and leave serial console as it is), use: CRTL-A X "
+echo "# Press any key to continue .."
+echo "# "
+echo "# > minicom --baudrate 9600 --noinit --ansi --wrap --statline --device ${DEV} ... "
+echo "# "
+read
+#
 minicom --baudrate 9600 --noinit --ansi --wrap --statline --device ${DEV}
 #
 
