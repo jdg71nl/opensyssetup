@@ -32,6 +32,7 @@ echo "- /tmp/***" >> $INCL_FILE
 echo "- /lost+found/***" >> $INCL_FILE
 echo "- *.exe" >> $INCL_FILE
 echo "- */files/*.tgz" >> $INCL_FILE
+echo "- */node_modules/***" >> $INCL_FILE
 #echo "+ *.sh" >> $INCL_FILE
 echo "+ **/*.sh" >> $INCL_FILE
 #echo "- **/chroot/***" >> $INCL_FILE
