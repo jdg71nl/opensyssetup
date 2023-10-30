@@ -6,7 +6,7 @@
 
 if [ `id -u` != 0 ]; then 
 	# re-run as root:
-	#echo "Provide your password for 'sudo':"
+	echo "# provide your password for 'sudo':"
 	sudo "$0" "$*"
 	#echo "ERROR: can only run this command as root .."
 	exit 1
