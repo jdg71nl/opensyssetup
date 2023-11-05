@@ -176,6 +176,7 @@ alias df='df -kh'
 alias lt='ls -altr -hp'                # sort by date-reverse (youngest at bottom)
 alias ltt='ls -altr -hp | tail -n30'   # lt with tail
 alias ltd='find . -type d -maxdepth 1 -printf "%4m %3n %8u %8g %5s %t %f/\n"'
+alias lsp='ls -d -1 $PWD/*'            # ls with full path
 
 #alias vi='$HOME/bin/syssetup/vi'
 #alias joe='$HOME/bin/syssetup/joe'
