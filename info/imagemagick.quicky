@@ -1,0 +1,11 @@
+# imagemagick.quicky
+
+- https://imagemagick.org/index.php
+- https://github.com/ImageMagick/ImageMagick
+- cookbook: http://im.snibgo.com/
+
+# on MacOS:
+brew install imagemagick
+
+#-eof
+
