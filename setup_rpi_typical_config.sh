@@ -67,7 +67,7 @@ else
   echo 'watchdog-device = /dev/watchdog' >> /etc/watchdog.conf
   echo 'watchdog-timeout = 15' >> /etc/watchdog.conf
   echo 'max-load-1 = 24' >> /etc/watchdog.conf
-  echo 'interface = wlan0' >> /etc/watchdog.conf
+  echo '#interface = wlan0' >> /etc/watchdog.conf
   echo '# ' >> /etc/watchdog.conf
   echo >> /etc/watchdog.conf
   #
@@ -82,3 +82,26 @@ echo "# "
 
 #-eof
 
+#- --[CWD=~]--[1699786400 11:53:20 Sun 12-Nov-2023 CET]--[root@rpi3b-erouter-vxb86s]--[hw:RPI3b-1.2,os:Raspbian-11/bullseye,kernel:6.1.21-v7+,isa:armv7l]------
+#- > systemctl status watchdog.service 
+#- ● watchdog.service - watchdog daemon
+#-      Loaded: loaded (/lib/systemd/system/watchdog.service; enabled; vendor preset: enabled)
+#-      Active: active (running) since Sun 2023-11-12 11:52:48 CET; 41s ago
+#-     Process: 803 ExecStartPre=/bin/sh -c [ -z "${watchdog_module}" ] || [ "${watchdog_module}" = "none" ] || /sbin/modprobe $watchdog_module (code=exited, status=0/SUCCESS)
+#-     Process: 804 ExecStart=/bin/sh -c [ $run_watchdog != 1 ] || exec /usr/sbin/watchdog $watchdog_options (code=exited, status=0/SUCCESS)
+#-    Main PID: 806 (watchdog)
+#-       Tasks: 1 (limit: 1595)
+#-         CPU: 24ms
+#-      CGroup: /system.slice/watchdog.service
+#-              └─806 /usr/sbin/watchdog
+#- 
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl watchdog[806]:  interface: no interface to check
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl watchdog[806]:  temperature: no sensors to check
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl watchdog[806]:  no test binary files
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl watchdog[806]:  no repair binary files
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl watchdog[806]:  error retry time-out = 60 seconds
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl watchdog[806]:  repair attempts = 1
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl watchdog[806]:  alive=/dev/watchdog heartbeat=[none] to=root no_act=no force=no
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl watchdog[806]: watchdog now set to 15 seconds
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl watchdog[806]: hardware watchdog identity: Broadcom BCM2835 Watchdog timer
+#- Nov 12 11:52:48 rpi3b-erouter-vxb86s.j71.nl systemd[1]: Started watchdog daemon.
