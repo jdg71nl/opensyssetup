@@ -25,9 +25,10 @@ fi
 #fi
 #
 #
-apt install -y git curl htop lsof vim minicom netcat arp-scan arping fping jq ntp openvpn rsync sudo wget locate
+apt install -y git curl htop lsof vim minicom netcat arp-scan arping fping jq ntp openvpn rsync sudo wget locate watchdog
+#
 # 
-# also (manual?): 
+## also (manual?): 
 #
 # apt install -y ifupdown net-tools vlan bridge-utils
 # apt remove dhcpcd5
@@ -35,6 +36,7 @@ apt install -y git curl htop lsof vim minicom netcat arp-scan arping fping jq nt
 # apt install -y x11-apps x11-utils 
 # apt install -y build-essential 
 # apt install -y build-essential dkms bc raspberrypi-kernel-headers
+#
 # apt install -y hostapd isc-dhcp-server dnsproxy
 # apt install -y hostapd isc-dhcp-server dnsmasq-base
 #
