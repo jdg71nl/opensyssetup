@@ -127,8 +127,10 @@ EDITOR=vi
 VISUAL=vi
 
 # https://blogs.agilefaqs.com/2014/01/12/fixing-perl-warning-setting-locale-failed-on-mac-osx/
-export LC_CTYPE=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+#export LC_CTYPE=en_US.UTF-8
+#export LC_ALL=en_US.UTF-8
+# d231117 https://forums.raspberrypi.com/viewtopic.php?t=273633
+unset LC_ALL
 
 #===============================================================
 # ALIASES AND FUNCTIONS
