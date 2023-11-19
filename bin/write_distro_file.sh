@@ -82,17 +82,20 @@ write_distro()
         "Raspberry Pi 3 Model B Plus Rev 1.3")
           HARD='RPI3b+1.3'
           ;;
-  	"Raspberry Pi 4 Model B Rev 1.2")
+        "Raspberry Pi 4 Model B Rev 1.2")
           HARD='RPI4b-1.2'
           ;;
-  	"Raspberry Pi 4 Model B Rev 1.3")
+        "Raspberry Pi 4 Model B Rev 1.3")
           HARD='RPI4b-1.3'
           ;;
-	"Raspberry Pi 4 Model B Rev 1.4")
+        "Raspberry Pi 4 Model B Rev 1.4")
           HARD='RPI4b-1.4'
           ;;
-	"Raspberry Pi 4 Model B Rev 1.5")
+        "Raspberry Pi 4 Model B Rev 1.5")
           HARD='RPI4b-1.5'
+          ;;
+        "Raspberry Pi 5 Model B Rev 1.0")
+          HARD='RPI5b-1.0'
           ;;
         "long string")
           HARD='shortstring'
