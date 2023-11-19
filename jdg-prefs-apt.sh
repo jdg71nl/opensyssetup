@@ -41,7 +41,7 @@ if [ -e /etc/debian_version ]; then
   fi
 fi
 echo "# OS='$OS' DIST='$DIST' "
-if [ $OS != "Debian" ]; then
+if [ $OS != "Debian" && $OS != "Raspbian" ]; then
   echo "# Error: detected non-Debian, so exit ..."
   exit 1
 fi

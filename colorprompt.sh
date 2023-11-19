@@ -130,7 +130,8 @@ VISUAL=vi
 #export LC_CTYPE=en_US.UTF-8
 #export LC_ALL=en_US.UTF-8
 # d231117 https://forums.raspberrypi.com/viewtopic.php?t=273633
-unset LC_ALL
+# or ... just leave it all alone (in this script, leave to OS):
+#unset LC_ALL
 
 #===============================================================
 # ALIASES AND FUNCTIONS
