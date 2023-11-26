@@ -1,7 +1,20 @@
 #!/bin/bash
 # display every line executed in this bash script:
-set -o xtrace
+
+VERBOSE="N"
+#VERBOSE="Y"
+#set -o xtrace
 #
+if [ $VERBOSE == "Y" ]; then
+  set -o xtrace
+fi
+#
+
+echo_verbose() {
+  if [ $VERBOSE == "Y" ]; then
+    echo $1
+  fi
+}
 
 BASENAME=$(basename $0)
 #FILE="/etc/distro.info"
@@ -64,7 +77,7 @@ write_distro()
     if [[ -f ${RASPFILE} ]]; then
       #
       MODELSTRING="$( cat ${RASPFILE} | tr '\0' '\n' )"
-      echo "## MODELSTRING='${MODELSTRING}'"
+      echo_verbose "## MODELSTRING='${MODELSTRING}'"
       #
       case "${MODELSTRING}" in
         "Raspberry Pi Zero W Rev 1.1")
@@ -306,16 +319,18 @@ write_distro()
 DISTRO_TYPE="$DISTRO"
 HERE
 
-  echo "## new file '$FILE' written."
-  echo "#> cat $FILE : "
-  cat $FILE
+  echo_verbose "## new file '$FILE' written."
+  echo_verbose "#> cat $FILE : "
+  if [ $VERBOSE == "Y" ]; then
+    cat $FILE
+  fi
 }
 
 # - - - - - - - - + + + - - - - - - - - 
 
 unknown_os ()
 {
-  echo "## unknown os/dist ..."
+  echo_verbose "## unknown os/dist ..."
   exit 1
 }
 
@@ -366,7 +381,7 @@ detect_os ()
   os="${os// /}"
   dist="${dist// /}"
 
-  echo "## Detected operating system as os="$os" dist="$dist" ."
+  echo_verbose "## Detected operating system as os="$os" dist="$dist" ."
 }
 
 main ()
@@ -374,7 +389,7 @@ main ()
   #echo "## running $BASENAME ..."
   # detect_os
   write_distro
-  echo "## done! "
+  echo_verbose "## done! "
 }
 
 main
