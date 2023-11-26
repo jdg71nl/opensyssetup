@@ -28,6 +28,7 @@ echo "# "
 #echo "# - - - - - - + + + - - - - - - - - - - - - + + + - - - - - - - - - - - - + + + - - - - - - "
 echo "# - - - - - - = = = - - - - - - "
 echo "# Enabling HDMI hotplug ..."
+echo "# > set_config_var hdmi_force_hotplug 1 $CONFIG "
 set_config_var hdmi_force_hotplug 1 $CONFIG
 echo "# done."
 echo "# "
@@ -54,6 +55,7 @@ else
   #
 fi
 #
+echo "# > set_config_var dtparam=watchdog on $CONFIG "
 set_config_var dtparam=watchdog on $CONFIG
 #
 if egrep '^watchdog-device' /etc/watchdog.conf ; then

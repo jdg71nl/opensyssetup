@@ -87,6 +87,7 @@ if [ "${PLAT}" == "Linux" ]; then
   sed -i 's/^.*colorprompt\.sh.*$/# &/' ${BASHRC}
   #sed -i 's/^.*syssetup.*$/# &/'    ${BASHRC}
   #sed -i "" '/^(#\s*|\s*)$/d'          ${BASHRC}
+  echo -e "\nsource \$HOME/opensyssetup/bin/write_distro_file.sh \n" >> $BASHRC
   echo -e "\nsource \$HOME/opensyssetup/colorprompt.sh \n" >> $BASHRC
   echo "# added source-command in ${BASHRC} .."
 fi
