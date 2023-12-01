@@ -70,6 +70,14 @@ echo "# "
 # The best solution that I've found so far is to modify the Kernel commandline via Grub and reboot the system. See here:
 # https://askubuntu.com/a/337736/266
 #
+# 
+# jdg: using NetworkManager
+# https://linux.fernandocejas.com/docs/troubleshooting/disable-ipv6-using-network-manager
+# > nmcli connection show
+# > nmcli connection modify Example ipv6.method "disabled"
+# > sudo systemctl restart NetworkManager
+# > nmcli connection up Example
+#
 #
 exit 0
 #
