@@ -40,26 +40,35 @@ echo "# done."
 echo "# "
 #
 #
-# disable ipv6 on rpi:
-#https://www.howtoraspberry.com/2020/04/disable-ipv6-on-raspberry-pi/
+#- # disable ipv6 on rpi:
+#- #https://www.howtoraspberry.com/2020/04/disable-ipv6-on-raspberry-pi/
+#- #
+#- #> vi /etc/sysctl.conf
+#- #net.ipv6.conf.all.disable_ipv6 = 1
+#- #net.ipv6.conf.default.disable_ipv6 = 1
+#- #net.ipv6.conf.lo.disable_ipv6 = 1
+#- #
+#- #sysctl -p
+#- #
+#- #
+#- echo "# - - - - - - = = = - - - - - - "
+#- echo "# Disabling IPv6 ..."
+#- CONFIG="/etc/sysctl.conf"
+#- set_config_var net.ipv6.conf.all.disable_ipv6 1 $CONFIG
+#- set_config_var net.ipv6.conf.default.disable_ipv6 1 $CONFIG
+#- set_config_var net.ipv6.conf.lo.disable_ipv6 1 $CONFIG
+#- sysctl -p
+#- echo "# done."
+#- echo "# "
 #
-#> vi /etc/sysctl.conf
-#net.ipv6.conf.all.disable_ipv6 = 1
-#net.ipv6.conf.default.disable_ipv6 = 1
-#net.ipv6.conf.lo.disable_ipv6 = 1
 #
-#sysctl -p
-#
-#
-echo "# - - - - - - = = = - - - - - - "
-echo "# Disabling IPv6 ..."
-CONFIG="/etc/sysctl.conf"
-set_config_var net.ipv6.conf.all.disable_ipv6 1 $CONFIG
-set_config_var net.ipv6.conf.default.disable_ipv6 1 $CONFIG
-set_config_var net.ipv6.conf.lo.disable_ipv6 1 $CONFIG
-sysctl -p
-echo "# done."
-echo "# "
+# https://askubuntu.com/questions/1289904/20-04-why-does-sysctl-conf-fail-to-disable-ipv6-on-the-main-interface
+# 1.
+# systemd-networkd will reset the disable_ipv6 sysctl to false during network device configuration if it believes ipv6 should be enabled.
+# 2.
+# Sadly, there are many myths about how to disable IPv6 on Ubuntu and the Ubuntu project itself hasn't provided a canonical solution going as far back as Ubuntu 16.04.
+# The best solution that I've found so far is to modify the Kernel commandline via Grub and reboot the system. See here:
+# https://askubuntu.com/a/337736/266
 #
 #
 exit 0
