@@ -52,12 +52,12 @@ echo "# "
 #
 #
 echo "# - - - - - - = = = - - - - - - "
-echo "# Enabling HDMI hotplug ..."
+echo "# Disabling IPv6 ..."
 CONFIG="/etc/sysctl.conf"
 set_config_var net.ipv6.conf.all.disable_ipv6 1 $CONFIG
 set_config_var net.ipv6.conf.default.disable_ipv6 1 $CONFIG
 set_config_var net.ipv6.conf.lo.disable_ipv6 1 $CONFIG
-#sysctl -p
+sysctl -p
 echo "# done."
 echo "# "
 #
