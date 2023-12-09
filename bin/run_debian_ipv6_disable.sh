@@ -25,9 +25,11 @@ fi
 echo "# - - - - - - = = = - - - - - - "
 echo "# importing lib:raspi-config ..."
 # /usr/bin/raspi-config ==> parts from: raspi-config ==> https://github.com/RPi-Distro/raspi-config
+# check:> diff -bur /usr/bin/raspi-config $HOME/opensyssetup/bin/raspi-config__deb12_bookworm.local-copy-edit.sh
 #LIB="/usr/bin/raspi-config"
 #LIB="./raspi-config.local-copy-edit.sh"
-LIB="$HOME/opensyssetup/bin/raspi-config.local-copy-edit.sh"
+#LIB="$HOME/opensyssetup/bin/raspi-config.local-copy-edit.sh"
+LIB="$HOME/opensyssetup/bin/raspi-config__deb12_bookworm.local-copy-edit.sh"
 #
 if [ ! -f $LIB ]; then
   echo "# Error: file '$LIB' not found."
