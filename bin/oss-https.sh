@@ -6,7 +6,7 @@
 # (*) you can still make changes in a temporary branch, push using https, and use a access-token (purpose-pwd), or commit to new branch and create a pull-request
 #
 #
-if [ -e /etc/debian_version ]; then
+if [ ! -e /etc/debian_version ]; then
   echo "# Error: found non-Debain OS .."
   exit 1
 fi
@@ -35,7 +35,7 @@ cd $HOME
 #
 f_check_install_packages() {
   #PKG="$1"
-  for PKG in $@ do
+  for PKG in $@ ; do
     # if dpkg-query -l rsync >/dev/null ; then echo true ; else echo false ; fi
     if dpkg-query -l $PKG >/dev/null ; then
       echo "# [check] package '$PKG' is installed."
