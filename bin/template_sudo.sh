@@ -10,8 +10,6 @@ echo "# running: $BASENAME ... "
 SCRIPT=`realpath -s $0`  # man says: "-s, --strip, --no-symlinks : don't expand symlinks"
 SCRIPT_PATH=`dirname $SCRIPT`
 #
-MYUID=$( id -u )
-#
 #usage() {
 #  #echo "# usage: $BASENAME { req.flag | [ -opt.flag string ] } " 1>&2 
 #  echo "# usage: $BASENAME " 1>&2 
@@ -24,6 +22,7 @@ MYUID=$( id -u )
 # - The $* holds list of all arguments passed to the script.
 # They aren't the same. $* is a single string, whereas $@ is an actual array.
 #
+MYUID=$( id -u )
 if [ $MYUID != 0 ]; then
   echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
 fi
