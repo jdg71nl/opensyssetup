@@ -1,5 +1,5 @@
 #!/bin/bash
-#= debian_install_default_apt.sh
+#= debian_install_postgres.sh
 # (c)2023 John@de-Graaff.net
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 # display every line executed in this bash script:
@@ -29,7 +29,15 @@ if [ $MYUID != 0 ]; then
 fi
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 #
-# my statements here ...
+f_check_install_packages() { 
+  for PKG in $@ ; do 
+    if ! dpkg-query -l $PKG >/dev/null ; then 
+      echo "# auto installing package '$PKG' ==> sudo apt install -y $PKG " 
+      sudo apt install -y $PKG 
+    fi
+  done
+}
+# f_check_install_packages curl git sudo
 #
 #
 exit 0

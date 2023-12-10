@@ -1,5 +1,5 @@
 #!/bin/bash
-#= debian_install_default_apt.sh
+#= rpi_rotate_touch_screen.sh
 # (c)2023 John@de-Graaff.net
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 # display every line executed in this bash script:
@@ -35,3 +35,11 @@ fi
 exit 0
 #
 #-eof
+
+# https://www.raspberrypi.com/documentation/accessories/display.html
+# add this section on the first line in this file:
+# vi /boot/firmware/cmdline.txt 
+# video=DSI-1:800x480@60,rotate=180
+
+#-eof
+

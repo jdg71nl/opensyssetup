@@ -1,11 +1,43 @@
 #!/bin/bash
-#= setup_rpi_typical_config.sh 
-
-# do as 'root':
+#= rpi_set_default_boot_settings.sh
+# (c)2023 John@de-Graaff.net
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+# display every line executed in this bash script:
+#set -o xtrace
+#
+BASENAME=`basename $0`
+echo "# running: $BASENAME ... "
+# SCRIPT=`realpath -s $0`  # man says: "-s, --strip, --no-symlinks : don't expand symlinks"
+# SCRIPT_PATH=`dirname $SCRIPT`
+#
+f_echo_exit1() { echo $1 ; exit 1 ; }
+if [ ! -e /etc/debian_version ]; then f_echo_exit1 "# Error: found non-Debain OS .." ; fi
+if ! which sudo >/dev/null ; then f_echo_exit1 "# please install first (as root) ==> apt install sudo ";; fi
+if ! which dpkg-query >/dev/null ; then f_echo_exit1 "# please install first: using ==> sudo apt install dpkg-query "; fi
+#
+#usage() {
+#  #echo "# usage: $BASENAME { -req_flag | [ -opt_flag string ] } " 1>&2 
+#  echo "# usage: $BASENAME " 1>&2 
+#  exit 1
+#}
+#
 MYUID=$( id -u )
 if [ $MYUID != 0 ]; then
+  # https://unix.stackexchange.com/questions/129072/whats-the-difference-between-and
+  # $* is a single string, whereas $@ is an actual array.
   echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
 fi
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+#
+f_check_install_packages() { 
+  for PKG in $@ ; do 
+    if ! dpkg-query -l $PKG >/dev/null ; then 
+      echo "# auto installing package '$PKG' ==> sudo apt install -y $PKG " 
+      sudo apt install -y $PKG 
+    fi
+  done
+}
+# f_check_install_packages curl git sudo
 
 # import LIB:
 echo "# - - - - - - = = = - - - - - - "
@@ -43,20 +75,7 @@ echo "# "
 echo "# - - - - - - = = = - - - - - - "
 echo "# Enabling Watchdog ..."
 #
-PKG="watchdog"
-echo "# [check] if package '$PKG' is installed ... "
-# if dpkg-query -l rsync ; then echo true ; else echo false ; fi
-if dpkg-query -l $PKG ; then
-  echo "# [check] package '$PKG' IS installed."
-else
-  #echo "# [check] package '$PKG' is NOT installed, ==> will install now ... "
-  #echo "# > apt install -y $PKG "
-  #apt install -y $PKG
-  #
-  echo "# [check] package '$PKG' is NOT installed, ==> please install manually (and update first) "
-  exit 1
-  #
-fi
+f_check_install_packages watchdog
 #
 echo "# > set_config_var dtparam=watchdog on $CONFIG "
 set_config_var dtparam=watchdog on $CONFIG
@@ -84,7 +103,9 @@ fi
 #
 echo "# done."
 echo "# "
-
+#
+exit 0
+#
 #-eof
 
 #- --[CWD=~]--[1699786400 11:53:20 Sun 12-Nov-2023 CET]--[root@rpi3b-erouter-vxb86s]--[hw:RPI3b-1.2,os:Raspbian-11/bullseye,kernel:6.1.21-v7+,isa:armv7l]------

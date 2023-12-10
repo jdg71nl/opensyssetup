@@ -1,5 +1,5 @@
 #!/bin/bash
-#= debian_install_default_apt.sh
+#= debian_install_pouchdb.sh
 # (c)2023 John@de-Graaff.net
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 # display every line executed in this bash script:

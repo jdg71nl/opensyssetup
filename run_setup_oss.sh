@@ -1,8 +1,8 @@
 #!/bin/bash
-#= setup.sh
+#= run_setup_oss.sh
 
 if [ ! -d "$HOME/opensyssetup/" ]; then
-  echo "# error: this setup.sh scripts can only be used if directory '$HOME/opensyssetup/' exists .. "
+  echo "# error: this run_setup_oss.sh scripts can only be used if directory '$HOME/opensyssetup/' exists .. "
   exit 1;
 fi
 

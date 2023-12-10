@@ -1,5 +1,5 @@
 #!/bin/bash
-#= debian_install_default_apt.sh
+#= rpi_disable_ipv6.sh
 # (c)2023 John@de-Graaff.net
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 # display every line executed in this bash script:
@@ -35,3 +35,11 @@ fi
 exit 0
 #
 #-eof
+
+# https://askubuntu.com/questions/309461/how-to-disable-ipv6-permanently/337736#337736
+# add this section on the first line in this file:
+# vi /boot/firmware/cmdline.txt 
+# ipv6.disable=1
+
+#-eof
+
