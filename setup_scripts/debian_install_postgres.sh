@@ -40,6 +40,47 @@ f_check_install_packages() {
 # f_check_install_packages curl git sudo
 #
 #
+
+# > sudo apt install postgresql adminer
+
+# > sudo passwd postgres
+# New password: 
+# Retype new password: 
+# passwd: password updated successfully
+
+# # do as user 'postgres':
+# > su - postgres
+
+# > psql -c "ALTER USER postgres WITH PASSWORD 'your-password';"
+# ALTER ROLE
+
+# # optional: create new user and database
+# # connection_string: "postgresql://jser_user:jser_pwd@127.0.0.1:5432/db_jser"
+# > psql -c "CREATE USER jser_user WITH PASSWORD 'jser_pwd';"
+# > psql -c "CREATE DATABASE db_jser;"
+# > psql -c "GRANT ALL ON DATABASE db_jser TO jser_user;"
+# > psql -c "ALTER DATABASE db_jser OWNER TO jser_user;"
+
+# # ^d (exit shell as user postgres)
+
+# > sudo vi /etc/postgresql/13/main/postgresql.conf
+# > sudo vi /etc/postgresql/15/main/postgresql.conf
+# # jdg
+# listen_addresses = '*'
+
+# > sudo vi /etc/postgresql/13/main/pg_hba.conf
+# > sudo vi /etc/postgresql/15/main/pg_hba.conf
+# # jdg
+# host    all             all             0.0.0.1/0             md5
+# host    all             all             ::0/0                 md5
+
+# > sudo service postgresql restart
+
+# > sudo a2enconf adminer
+
+# > sudo systemctl reload apache2
+
+#
 exit 0
 #
 #-eof
