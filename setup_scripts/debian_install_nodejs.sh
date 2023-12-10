@@ -39,34 +39,24 @@ f_check_install_packages() {
 }
 # f_check_install_packages curl git sudo
 #
+#
+f_check_install_packages ca-certificates curl gnupg
 
-# - d23 ==> NEW: https://github.com/nodesource/distributions 
-
-# # 1. Download and import the Nodesource GPG key
-# sudo apt-get update 
-# sudo apt-get install -y ca-certificates curl gnupg
-# sudo mkdir -p /etc/apt/keyrings
-# curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-
-# # 2. Create deb repository
-# #NODE_MAJOR=16
-# NODE_MAJOR=18
-# #NODE_MAJOR=20
-# echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-
-# # 3. Run Update and Install
-# sudo apt-get update
-# sudo apt-get install nodejs -y
-
-# # 
-# sudo npm i -g npm
-# sudo npm i nodemon -g
-# sudo npm i pm2 -g
-# # setup pm2 (one-time, deamonized)
-# pm2
-# pm2 startup
-# sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u jdg --hp /home/jdg
-
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+#NODE_MAJOR=16
+NODE_MAJOR=18
+#NODE_MAJOR=20
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+apt update
+apt install -y nodejs
+#
+npm i -g npm
+npm i nodemon -g
+npm i pm2 -g
+sudo -u jdg pm2
+sudo -u jdg pm2 startup
+sudo -u jdg env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u jdg --hp /home/jdg
 #
 exit 0
 #
