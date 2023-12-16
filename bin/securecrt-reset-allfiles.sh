@@ -33,7 +33,10 @@ done
 #
 #echo "# command correct, exectuing .."
 #
-find ~/Library/Application\ Support/VanDyke/SecureCRT/Config/Sessions -type f -iname '__*' -prune -o -iname '*.ini' -print -exec /usr/local/syssetup/bin/securecrt-reset-year-logfile.sh -y $YY "{}" \;
+#BIN="/usr/local/syssetup/bin/securecrt-reset-year-logfile.sh"
+BIN="./securecrt-reset-year-logfile.sh"
+#
+find ~/Library/Application\ Support/VanDyke/SecureCRT/Config/Sessions -type f -iname '__*' -prune -o -iname '*.ini' -print -exec $BIN -y $YY "{}" \;
 #
 exit 0
 #
