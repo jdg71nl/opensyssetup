@@ -12,8 +12,8 @@ echo "# running: $BASENAME ... "
 #
 f_echo_exit1() { echo $1 ; exit 1 ; }
 if [ ! -e /etc/debian_version ]; then f_echo_exit1 "# Error: found non-Debain OS .." ; fi
-if ! which sudo >/dev/null ; then f_echo_exit1 "# please install first (as root) ==> apt install sudo ";; fi
-if ! which dpkg-query >/dev/null ; then f_echo_exit1 "# please install first: using ==> sudo apt install dpkg-query "; fi
+if ! which sudo >/dev/null ; then f_echo_exit1 "# please install first (as root) ==> apt install sudo " ; fi
+if ! which dpkg-query >/dev/null ; then f_echo_exit1 "# please install first: using ==> sudo apt install dpkg-query " ; fi
 #
 #usage() {
 #  #echo "# usage: $BASENAME { -req_flag | [ -opt_flag string ] } " 1>&2 
@@ -56,7 +56,7 @@ if [ -e /etc/debian_version ]; then
   fi
 fi
 echo "# OS='$OS' DIST='$DIST' "
-if [ $OS != "Debian" && $OS != "Raspbian" ]; then
+if [ $OS != "Debian" && $OS != "Raspbian" ] ; then
   echo "# Error: detected non-Debian, so exit ..."
   exit 1
 fi
