@@ -29,13 +29,17 @@ if ! which dpkg-query >/dev/null ; then f_echo_exit1 "# please install first: us
 # fi
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 #
-#
 # check node:
+if ! which node >/dev/null ; then f_echo_exit1 "# please install first: node" ; fi
+#
+# check pm2:
+if ! which pm2 >/dev/null ; then f_echo_exit1 "# please install first: pm2 " ; fi
 # > which pm2
 # /usr/bin/pm2 -> ../lib/node_modules/pm2/bin/pm2
 # /usr/lib/node_modules/pm2/bin/pm2
 #
 # check pouchdb:
+if which pouchdb-server >/dev/null ; then f_echo_exit1 "# 'pouchdb-server' is already installed " ; fi
 # > which pouchdb-server 
 # /usr/bin/pouchdb-server -> ../lib/node_modules/pouchdb-server/bin/pouchdb-server
 # /usr/lib/node_modules/pouchdb-server/bin/pouchdb-server
@@ -43,16 +47,24 @@ if ! which dpkg-query >/dev/null ; then f_echo_exit1 "# please install first: us
 # check PouchDB/CouchDB port 5984:
 # if lsof -Pi :5984 -sTCP:LISTEN -t >/dev/null ; then echo "# true" ; else echo "# false" ; fi
 #
-
-# sudo npm install -g pouchdb-server
+DBPATH="/home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var"
+if [ ! -d $DBPATH] ; then f_echo_exit1 "# pouchdb DBPATH="$DBPATH"' does not exist " ; fi
+#
+sudo npm install -g pouchdb-server
 # # launch example
 # # pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
 # NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
 
+#
+cd $DBPATH
+cd ..
+#
 FILE="run_debug.sh"
 cat <<EOF > $FILE
 #!/bin/bash
-NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
+DBPATH="/home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var"
+#NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
+NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir $DBPATH
 #
 EOF
 chmod +x $FILE
@@ -64,7 +76,9 @@ BASENAME=`basename $0`
 SCRIPT=`realpath $0`
 SCRIPT_PATH=`dirname $SCRIPT`
 cd $SCRIPT_PATH
-NODE_ENV=production pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
+DBPATH="/home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var"
+#NODE_ENV=production pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
+NODE_ENV=production pouchdb-server --port 5984 --host 0.0.0.0 --dir $DBPATH
 #
 EOF
 chmod +x $FILE
@@ -113,6 +127,9 @@ pm2 list
 EOF
 chmod +x $FILE
 
+#
+echo "# done!"
+echo "# check operation on: http://127.0.0.1:5984/_utils or http://172.16.222.132:5984/_utils/ "
 #
 exit 0
 #

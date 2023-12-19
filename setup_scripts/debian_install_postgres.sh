@@ -41,7 +41,7 @@ f_check_install_packages() {
 #
 #
 
-# > sudo apt install postgresql adminer
+# > sudo apt -y install postgresql adminer
 
 # > sudo passwd postgres
 # New password: 
@@ -55,8 +55,8 @@ f_check_install_packages() {
 # ALTER ROLE
 
 # # optional: create new user and database
-# # connection_string: "postgresql://jser_user:jser_pwd@127.0.0.1:5432/db_jser"
-# > psql -c "CREATE USER jser_user WITH PASSWORD 'jser_pwd';"
+# # connection_string: "postgresql://jser_user:mypwd@127.0.0.1:5432/db_jser"
+# > psql -c "CREATE USER jser_user WITH PASSWORD 'mypwd';"
 # > psql -c "CREATE DATABASE db_jser;"
 # > psql -c "GRANT ALL ON DATABASE db_jser TO jser_user;"
 # > psql -c "ALTER DATABASE db_jser OWNER TO jser_user;"
@@ -80,6 +80,8 @@ f_check_install_packages() {
 
 # > sudo systemctl reload apache2
 
+echo "# done!"
+echo "# check operation on: http://172.16.222.132/adminer/?pgsql=172.16.222.132&username=jser_user&db=db_jser&ns=public "
 #
 exit 0
 #
