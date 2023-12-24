@@ -2,6 +2,7 @@
 #= oss-reboot-him.sh
 #
 HOST="$1"
-ssh jdg@$HOST './opensyssetup/bin/oss-reboot-me.sh'
+#
+sudo ssh jdg@$HOST './opensyssetup/bin/oss-reboot-me.sh'
 #
 #-eof

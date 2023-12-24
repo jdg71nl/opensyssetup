@@ -2,6 +2,6 @@
 #= oss-poweroff-me.sh 
 # (c)2023 John@de-Graaff.net
 #
-/usr/sbin/poweroff
+sudo /usr/sbin/poweroff
 #
 #-eof

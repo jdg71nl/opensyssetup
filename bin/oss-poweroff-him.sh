@@ -2,6 +2,7 @@
 #= oss-poweroff-him.sh
 #
 HOST="$1"
-ssh jdg@$HOST './opensyssetup/bin/oss-poweroff-me.sh'
+#
+sudo ssh jdg@$HOST './opensyssetup/bin/oss-poweroff-me.sh'
 #
 #-eof
