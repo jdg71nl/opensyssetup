@@ -1,5 +1,13 @@
 # debian-replace-networkmanager.quicky
 
+# - - - 
+# summary:
+sudo>
+systemctl stop NetworkManager.service
+systemctl disable NetworkManager.service
+apt purge network-manager 
+
+# - - - 
 # https://www.xmodulo.com/disable-network-manager-linux.html
 #
 # To check if Network Manager is managing any network interface, you can use nmcli, which is a command line utility that comes with Network Manager.
@@ -29,7 +37,9 @@ eth1           ethernet  unavailable             --
 > sudo chkconfig NetworkManager off
 
 
+# - - - 
 
 
 #-eof
+# - - - 
 
