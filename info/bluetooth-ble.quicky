@@ -1,0 +1,34 @@
+# bluetooth-ble.quicky
+
+# https://pimylifeup.com/raspberry-pi-bluetooth/
+>
+sudo apt install bluetooth pi-bluetooth bluez blueman
+
+> 
+hciconfig -a
+hci0:   Type: Primary  Bus: UART
+        BD Address: E4:5F:01:82:C4:7F  ACL MTU: 1021:8  SCO MTU: 64:1
+        DOWN 
+        RX bytes:711 acl:0 sco:0 events:38 errors:0
+        TX bytes:442 acl:0 sco:0 commands:38 errors:0
+        Features: 0xbf 0xfe 0xcf 0xfe 0xdb 0xff 0x7b 0x87
+        Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3 
+        Link policy: RSWITCH SNIFF 
+        Link mode: SLAVE ACCEPT 
+
+
+> rfkill 
+ID TYPE      DEVICE      SOFT      HARD
+ 0 wlan      phy0   unblocked unblocked
+ 1 wlan      phy1   unblocked unblocked
+ 2 bluetooth hci0     blocked unblocked
+
+>
+rfkill unblock all
+
+>
+bluetoothctl power on
+
+
+#-eof
+
