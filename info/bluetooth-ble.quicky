@@ -16,6 +16,25 @@ hci0:   Type: Primary  Bus: UART
         Link policy: RSWITCH SNIFF 
         Link mode: SLAVE ACCEPT 
 
+> hciconfig  -a
+        BD Address: E4:5F:01:82:C4:7F  ACL MTU: 1021:8  SCO MTU: 64:1
+        UP RUNNING 
+        RX bytes:12361 acl:0 sco:0 events:483 errors:0
+        TX bytes:1809 acl:0 sco:0 commands:148 errors:0
+        Features: 0xbf 0xfe 0xcf 0xfe 0xdb 0xff 0x7b 0x87
+        Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3 
+        Link policy: RSWITCH SNIFF 
+        Link mode: SLAVE ACCEPT 
+        Name: 'rpi4b-virb-mainrouter.j71.nl'
+        Class: 0x2c0000
+        Service Classes: Rendering, Capturing, Audio
+        Device Class: Miscellaneous, 
+        HCI Version: 5.0 (0x9)  Revision: 0x17e
+        LMP Version: 5.0 (0x9)  Subversion: 0x6119
+        Manufacturer: Cypress Semiconductor (305)
+
+
+
 
 > rfkill 
 ID TYPE      DEVICE      SOFT      HARD
@@ -29,6 +48,162 @@ rfkill unblock all
 >
 bluetoothctl power on
 
+> hciconfig  -a
+        BD Address: E4:5F:01:82:C4:7F  ACL MTU: 1021:8  SCO MTU: 64:1
+        UP RUNNING 
+        RX bytes:12361 acl:0 sco:0 events:483 errors:0
+        TX bytes:1809 acl:0 sco:0 commands:148 errors:0
+        Features: 0xbf 0xfe 0xcf 0xfe 0xdb 0xff 0x7b 0x87
+        Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3 
+        Link policy: RSWITCH SNIFF 
+        Link mode: SLAVE ACCEPT 
+        Name: 'rpi4b-virb-mainrouter.j71.nl'
+        Class: 0x2c0000
+        Service Classes: Rendering, Capturing, Audio
+        Device Class: Miscellaneous, 
+        HCI Version: 5.0 (0x9)  Revision: 0x17e
+        LMP Version: 5.0 (0x9)  Subversion: 0x6119
+        Manufacturer: Cypress Semiconductor (305)
+
+> hcitool lescan
+LE Scan ...
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 (unknown)
+70:3E:97:D1:BC:EC 0223400023
+7D:9A:95:D8:90:87 (unknown)
+E5:6A:92:79:69:D8 (unknown)
+DF:C6:5C:45:60:A9 (unknown)
+47:95:85:F9:30:B5 (unknown)
+F6:F9:20:E6:35:F5 (unknown)
+CE:C2:50:87:7A:B8 (unknown)
+
+# https://github.com/IanHarvey/bluepy 
+>
+sudo apt install python3-pip libglib2.0-dev
+sudo pip3 install bluepy
+sudo ln -s /usr/local/lib/python3.9/dist-packages/bluepy/bluepy-helper /usr/bin/
+
+
+> bluetoothctl
+Agent registered
+[CHG] Controller E4:5F:01:82:C4:7F Pairable: yes
+[bluetooth]# set-scan-filter-clear
+Invalid command in menu main: set-scan-filter-clear
+
+Use "help" for a list of available commands in a menu.
+Use "menu <submenu>" if you want to enter any submenu.
+Use "back" if you want to return to menu main.
+[bluetooth]# scan on
+Discovery started
+[CHG] Controller E4:5F:01:82:C4:7F Discovering: yes
+[NEW] Device 6B:DA:7F:DE:B8:D7 6B-DA-7F-DE-B8-D7
+[NEW] Device 70:3E:97:D1:BC:EC 0223400023
+[NEW] Device A4:C1:38:0D:D2:9B 0621200711
+[NEW] Device 7A:D8:EA:37:16:5A 7A-D8-EA-37-16-5A
+[NEW] Device 7B:EA:20:AA:79:62 7B-EA-20-AA-79-62
+[DEL] Device 7B:EA:20:AA:79:62 7B-EA-20-AA-79-62
+quitetooth]# 
+
+#
+>
+> sudo hcitool lescan --duplicates
+LE Scan ...
+70:3E:97:D1:BC:EC 0223400023
+A4:C1:38:0D:D2:9B 0621200711
+70:3E:97:D1:BC:EC 0223400023
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+6B:DA:7F:DE:B8:D7 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+70:3E:97:D1:BC:EC 0223400023
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 JBL Flip 6
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+6B:DA:7F:DE:B8:D7 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 (unknown)
+70:3E:97:D1:BC:EC 0223400023
+A4:C1:38:0D:D2:9B 0621200711
+70:3E:97:D1:BC:EC 0223400023
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+70:3E:97:D1:BC:EC 0223400023
+70:3E:97:D1:BC:EC 0223400023
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+6B:DA:7F:DE:B8:D7 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+70:3E:97:D1:BC:EC 0223400023
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+70:3E:97:D1:BC:EC 0223400023
+A4:C1:38:0D:D2:9B 0621200711
+70:3E:97:D1:BC:EC 0223400023
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+6B:DA:7F:DE:B8:D7 (unknown)
+70:3E:97:D1:BC:EC 0223400023
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+6B:DA:7F:DE:B8:D7 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 JBL Flip 6
+A4:C1:38:0D:D2:9B 0621200711
+6B:DA:7F:DE:B8:D7 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 JBL Flip 6
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 JBL Flip 6
+6B:DA:7F:DE:B8:D7 (unknown)
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+70:3E:97:D1:BC:EC 0223400023
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 JBL Flip 6
+6B:DA:7F:DE:B8:D7 (unknown)
+A4:C1:38:0D:D2:9B 0621200711
+A4:C1:38:0D:D2:9B 0621200711
+55:5C:7E:1C:C1:09 (unknown)
+
+# https://github.com/noble/noble
+>
+# sudo npm install -g node-gyp
+sudo apt install bluetooth bluez libbluetooth-dev libudev-dev
+npm install noble
+
 
 #-eof
-
