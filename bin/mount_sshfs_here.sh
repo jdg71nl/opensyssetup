@@ -63,5 +63,7 @@ echo "# > sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@
 #
 sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@${HOST}:${RDIR} ${LDIR}
 #
+echo "# done! (unmount like this: > umount $LDIR ) "
+#
 exit 0
 #
