@@ -1,0 +1,134 @@
+#= /etc/network/interfaces
+# interfaces(5) file used by ifup(8) and ifdown(8)
+#
+source-directory /etc/network/interfaces.d
+#
+auto lo
+iface lo inet loopback
+#
+# JDG: 'auto' is slow ?!?
+#auto eth0
+allow-hotplug eth0
+#iface eth0 inet dhcp
+iface eth0 inet manual
+#iface eth0 inet static
+#  # d230921 jdg netplan busje-sprinter VXB86S: 10.86.vlan.x
+#  address 10.86.10.254
+#  netmask 255.255.255.0
+#  #gateway 10.86.10.254
+#
+# ALWAYS add static-IP for fallback login:
+#auto eth0:1
+##allow-hotplug eth0:1
+#iface eth0:1 inet static
+#  address 100.99.99.100
+#  netmask 255.255.255.0
+#
+#
+# jdg: https://wiki.debian.org/BridgeNetworkConnections
+auto br0
+iface br0 inet static
+  #bridge_ports eth0 
+  bridge_ports eth0 wlan0 wlan1 eth1
+  bridge_stp off
+  # d230921 jdg netplan busje-sprinter VXB86S: 10.86.vlan.x
+  address 10.86.10.254
+  netmask 255.255.255.0
+  #gateway 10.86.10.254
+  #post-up   /sbin/ip route add 0/0 via 10.86.91.1 metric 20
+  #post-down /sbin/ip route del 0/0 via 10.86.91.1
+#
+# jdg - dual tunnel:
+# remote vps3.j71.nl     9321 -- ip route add 185.84.140.52/32 via 10.86.91.254 (=Wifi/Enet-rtr) -- tun21:   inet 10.231.21.23
+# remote cloud11.j71.nl 23121 -- ip route add 193.38.153.11/32 via 10.86.92.254 (=4G-router)     -- tun9321: inet 10.93.21.23/24
+#
+auto vlan91
+iface vlan91 inet static
+  vlan_raw_device eth0
+  address 10.86.91.1
+  netmask 255.255.255.0
+  #broadcast 10.86.91.255
+  #
+  #gateway 10.86.91.254
+  #post-up   /sbin/ip route add 0/0 via 10.86.91.254
+  #post-down /sbin/ip route del 0/0 via 10.86.91.254
+  #
+  # openvpn-client: remote vps3.j71.nl 9321, remote 185.84.140.52 9321
+  #post-up   /sbin/ip route add 185.84.140.52/32 via 10.86.91.254
+  #post-down /sbin/ip route del 185.84.140.52/32 via 10.86.91.254
+#
+#
+auto vlan92
+iface vlan92 inet static
+  vlan_raw_device eth0
+  address 10.86.92.1
+  netmask 255.255.255.0
+  #
+  gateway 10.86.92.254 
+  #post-up   /sbin/ip route add 0/0 via 10.86.92.254
+  #post-down /sbin/ip route del 0/0 via 10.86.92.254
+  #
+  # openvpn-client: remote cloud11.j71.nl 23121, remote 193.38.153.11 23121
+  #post-up   /sbin/ip route add 193.38.153.11/32 via 10.86.92.254
+  #post-down /sbin/ip route del 193.38.153.11/32 via 10.86.92.254
+#
+#
+auto vlan93
+iface vlan93 inet static
+  vlan_raw_device eth0
+  address 10.86.93.1
+  netmask 255.255.255.0
+  #gateway 10.86.93.254
+#
+#
+auto vlan94
+iface vlan94 inet static
+  vlan_raw_device eth0
+  address 10.86.94.1
+  netmask 255.255.255.0
+  #gateway 10.86.94.254
+#
+#
+#auto eth1
+allow-hotplug eth1
+#iface eth1 inet dhcp
+iface eth1 inet manual
+#
+#
+allow-hotplug wlan0
+iface wlan0 inet manual
+  # from: /usr/share/doc/hostapd/README.Debian
+  #hostapd /etc/hostapd/hostapd.conf
+  #hostapd /etc/hostapd/wlan0.conf
+#
+allow-hotplug wlan1
+iface wlan1 inet manual
+  # from: /usr/share/doc/hostapd/README.Debian
+  #hostapd /etc/hostapd/hostapd.conf
+  #hostapd /etc/hostapd/wlan1.conf
+#
+#
+# iface wlan0 inet static
+# # sudo apt install vlan net-tools
+# # vlan18 in ubntu is called .18
+# auto eno2.18
+# iface eno2.18 inet static
+#   vlan_raw_device eno2
+#   #vlan_raw_device enp3s0
+#   address 10.21.18.18
+#   netmask 255.255.255.0
+#   broadcast 10.21.18.255
+# #
+# allow-hotplug wlan0
+# #iface wlan0 inet dhcp
+# iface wlan0 inet static
+#   wpa-ssid "LB21 Password"
+#   wpa-psk "some"
+#   address 10.21.82.141
+#   netmask 255.255.255.0
+#   gateway 10.21.82.254
+#   dns-servers 193.70.42.208 5.157.83.103
+#
+#
+#-eof
+
