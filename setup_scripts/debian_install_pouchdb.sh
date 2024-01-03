@@ -39,7 +39,7 @@ if ! which pm2 >/dev/null ; then f_echo_exit1 "# please install first: pm2 " ; f
 # /usr/lib/node_modules/pm2/bin/pm2
 #
 # check pouchdb:
-# if which pouchdb-server >/dev/null ; then f_echo_exit1 "# 'pouchdb-server' is already installed " ; fi
+if which pouchdb-server >/dev/null ; then f_echo_exit1 "# 'pouchdb-server' is already installed " ; fi
 # > which pouchdb-server 
 # /usr/bin/pouchdb-server -> ../lib/node_modules/pouchdb-server/bin/pouchdb-server
 # /usr/lib/node_modules/pouchdb-server/bin/pouchdb-server
@@ -54,7 +54,8 @@ DBPATH="/home/jdg/run/pouchdb/var"
 if [ ! -d $DBPATH ] ; then mkdir -pv $DBPATH ; fi
 #
 #
-# sudo npm install -g pouchdb-server
+sudo npm install -g pouchdb-server
+#
 # # launch example
 # # pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
 # NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
