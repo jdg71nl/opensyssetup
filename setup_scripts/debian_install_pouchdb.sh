@@ -5,10 +5,10 @@
 # display every line executed in this bash script:
 #set -o xtrace
 #
-BASENAME=`basename $0`
+BASENAME=\`basename \$0\`
 echo "# running: $BASENAME ... "
 # SCRIPT=`realpath -s $0`  # man says: "-s, --strip, --no-symlinks : don't expand symlinks"
-# SCRIPT_PATH=`dirname $SCRIPT`
+# SCRIPT_PATH=\`dirname \$SCRIPT\`
 #
 f_echo_exit1() { echo $1 ; exit 1 ; }
 if [ ! -e /etc/debian_version ]; then f_echo_exit1 "# Error: found non-Debain OS .." ; fi
@@ -39,7 +39,7 @@ if ! which pm2 >/dev/null ; then f_echo_exit1 "# please install first: pm2 " ; f
 # /usr/lib/node_modules/pm2/bin/pm2
 #
 # check pouchdb:
-if which pouchdb-server >/dev/null ; then f_echo_exit1 "# 'pouchdb-server' is already installed " ; fi
+# if which pouchdb-server >/dev/null ; then f_echo_exit1 "# 'pouchdb-server' is already installed " ; fi
 # > which pouchdb-server 
 # /usr/bin/pouchdb-server -> ../lib/node_modules/pouchdb-server/bin/pouchdb-server
 # /usr/lib/node_modules/pouchdb-server/bin/pouchdb-server
@@ -47,11 +47,14 @@ if which pouchdb-server >/dev/null ; then f_echo_exit1 "# 'pouchdb-server' is al
 # check PouchDB/CouchDB port 5984:
 # if lsof -Pi :5984 -sTCP:LISTEN -t >/dev/null ; then echo "# true" ; else echo "# false" ; fi
 #
+# <<<<<===== define DBPATH ======>>>>>>> <<<<<===== define DBPATH ======>>>>>>> <<<<<===== define DBPATH ======>>>>>>> 
 DBPATH="/home/jdg/run/pouchdb/var"
-# if [ ! -d $DBPATH ] ; then f_echo_exit1 "# pouchdb DBPATH="$DBPATH"' does not exist. Create it using: > mkdir -pv $DBPATH " ; fi
+#
+# if [ ! -d $DBPATH ] ; then f_echo_exit1 "# pouchdb DBPATH='$DBPATH' does not exist. Create it using: > mkdir -pv $DBPATH " ; fi
 if [ ! -d $DBPATH ] ; then mkdir -pv $DBPATH ; fi
 #
-sudo npm install -g pouchdb-server
+#
+# sudo npm install -g pouchdb-server
 # # launch example
 # # pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
 # NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
@@ -64,8 +67,8 @@ cd ..
 FILE="run_debug.sh"
 cat <<EOF > $FILE
 #!/bin/bash
-DBPATH="/home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var"
-NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir $DBPATH
+DBPATH="$DBPATH"
+NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir \$DBPATH
 #
 EOF
 chmod +x $FILE
@@ -74,12 +77,12 @@ chmod +x $FILE
 FILE="pm2_start.sh"
 cat <<EOF > $FILE
 #!/bin/bash
-BASENAME=`basename $0`
-SCRIPT=`realpath $0`
-SCRIPT_PATH=`dirname $SCRIPT`
-cd $SCRIPT_PATH
-DBPATH="/home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var"
-NODE_ENV=production pouchdb-server --port 5984 --host 0.0.0.0 --dir $DBPATH
+BASENAME=\`basename \$0\`
+SCRIPT=\`realpath \$0\`
+SCRIPT_PATH=\`dirname \$SCRIPT\`
+cd \$SCRIPT_PATH
+DBPATH="$DBPATH"
+NODE_ENV=production pouchdb-server --port 5984 --host 0.0.0.0 --dir \$DBPATH
 #
 EOF
 chmod +x $FILE
@@ -88,10 +91,10 @@ chmod +x $FILE
 FILE="start.sh"
 cat <<EOF > $FILE
 #!/bin/bash
-BASENAME=`basename $0`
-SCRIPT=`realpath $0`
-SCRIPT_PATH=`dirname $SCRIPT`
-cd $SCRIPT_PATH
+BASENAME=\`basename \$0\`
+SCRIPT=\`realpath \$0\`
+SCRIPT_PATH=\`dirname \$SCRIPT\`
+cd \$SCRIPT_PATH
 pm2 start -n pouchdb pm2_start.sh
 #
 EOF
@@ -101,10 +104,10 @@ chmod +x $FILE
 FILE="stop.sh"
 cat <<EOF > $FILE
 #!/bin/bash
-BASENAME=`basename $0`
-SCRIPT=`realpath $0`
-SCRIPT_PATH=`dirname $SCRIPT`
-cd $SCRIPT_PATH
+BASENAME=\`basename \$0\`
+SCRIPT=\`realpath \$0\`
+SCRIPT_PATH=\`dirname \$SCRIPT\`
+cd \$SCRIPT_PATH
 pm2 stop pouchdb
 #
 EOF
@@ -114,10 +117,10 @@ chmod +x $FILE
 FILE="restart.sh"
 cat <<EOF > $FILE
 #!/bin/bash
-BASENAME=`basename $0`
-SCRIPT=`realpath $0`
-SCRIPT_PATH=`dirname $SCRIPT`
-cd $SCRIPT_PATH
+BASENAME=\`basename \$0\`
+SCRIPT=\`realpath \$0\`
+SCRIPT_PATH=\`dirname \$SCRIPT\`
+cd \$SCRIPT_PATH
 pm2 restart pouchdb
 #
 EOF
