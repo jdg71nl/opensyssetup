@@ -1,0 +1,127 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source /etc/network/interfaces.d/*
+
+auto lo
+iface lo inet loopback
+
+# - - - 
+# JDG: auto is slow!
+auto eth0
+allow-hotplug eth0
+#iface eth0 inet dhcp
+iface eth0 inet static
+  address 10.86.91.254
+  netmask 255.255.255.0
+  #gateway 10.86.91.1
+  #post-up   /sbin/ip route add 0/0 via 10.86.91.1 metric 20
+  #post-down /sbin/ip route del 0/0 via 10.86.91.1
+  #
+  post-up   /sbin/ip route add 10.86.0.0/16 via 10.86.91.1
+  post-down /sbin/ip route del 10.86.0.0/16 via 10.86.91.1
+  post-up   /sbin/ip route add 10.86.10.0/24 via 10.86.91.1
+  post-down /sbin/ip route del 10.86.10.0/24 via 10.86.91.1
+
+# - - - 
+auto eth1
+allow-hotplug eth1
+iface eth1 inet dhcp
+
+# - - - 
+auto eth2
+allow-hotplug eth2
+iface eth2 inet dhcp
+
+# - - - 
+# JDG-Note: DON'T auto start, because it will 'hang' or wait at boot-time -- this iface needs to be handled at runtime ....
+#auto wlan0
+#allow-hotplug wlan0
+#
+iface wlan0 inet dhcp
+  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+#  
+#   #wireless-mode Managed
+#
+#   #wpa-ssid "kaapje-wifi-2G"
+#   #wpa-psk "Haar77Lem3"
+#   #
+#   wpa-ssid "kz44-direct-2G"
+#   wpa-psk "Haar77Lem3"
+#   #
+#   # d231102 Cochem-DE
+#   wpa-ssid "FreeWifi"
+#   wpa-psk "Enderttal2020"
+#   #
+#   # d230910,d231108 Venlo camping Kompas
+#   wpa-ssid "Kompas"
+#   wpa-psk "camper2016"
+#   #
+#   # d231109 WiFi LDA: SSID = FRITZ!Box 7590 DP , PSK = 31139983261311103772
+#   wpa-ssid "FRITZ!Box 7590 DP"
+#   wpa-psk "31139983261311103772"
+#   #
+#
+#iface wlan0 inet manual
+#  #wpa-ssid "LB21 Password"
+#  #wpa-psk "kat83brok14"
+#  up ifconfig wlan0 0.0.0.0 up
+#  down ifconfig wlan0 down
+#  #
+#  # use 'iw dev wlan0 connect' if WiFi=Open
+#  post-up iw dev wlan0 connect "Les Trois Rois"
+#  #post-up dhclient wlan0
+#  post-up /sbin/dhclient -4 -v -i -pf /run/dhclient.wlan0.pid -lf /var/lib/dhcp/dhclient.wlan0.leases -I -df /var/lib/dhcp/dhclient6.wlan0.leases wlan0
+#  # d231004 3-day pass, SSID="Les Trois Rois", Login="AUATSK", Password="987846"
+#  post-down kill -HUP `cat /run/dhclient.wlan0.pid` >/dev/null 2>&1
+#  #
+#  # use 'iw dev wlan0 connect' if WiFi=Open
+#  post-up iw dev wlan0 connect "Restaurant De Wellsche Hut"
+#  post-up /sbin/dhclient -4 -v -i -pf /run/dhclient.wlan0.pid -lf /var/lib/dhcp/dhclient.wlan0.leases -I -df /var/lib/dhcp/dhclient6.wlan0.leases wlan0
+#  post-down kill -HUP `cat /run/dhclient.wlan0.pid` >/dev/null 2>&1
+#  #
+#
+#  # dYYMMDD new
+#  post-up iw dev wlan0 connect "new_wifi"
+#  post-up /sbin/dhclient -4 -v -i -pf /run/dhclient.wlan0.pid -lf /var/lib/dhcp/dhclient.wlan0.leases -I -df /var/lib/dhcp/dhclient6.wlan0.leases wlan0
+#  post-down kill -HUP `cat /run/dhclient.wlan0.pid` >/dev/null 2>&1
+#  #
+#  # d231104 Colmar login john@de-graaff.net pwd Naz52-53xeT WiFi-code: Camping68 
+#  post-up iw dev wlan0 connect "Huttopia Camping de L Ill"
+#  post-up /sbin/dhclient -4 -v -i -pf /run/dhclient.wlan0.pid -lf /var/lib/dhcp/dhclient.wlan0.leases -I -df /var/lib/dhcp/dhclient6.wlan0.leases wlan0
+#  post-down kill -HUP `cat /run/dhclient.wlan0.pid` >/dev/null 2>&1
+#  #
+#
+#iface wlan0 inet manual
+#iface wlan0 inet static
+#        wpa-ssid "LB21 Password"
+#        wpa-psk "kat83brok14"
+#        #wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+#        address 10.21.82.83
+#        netmask 255.255.255.0
+#        #gateway 10.21.82.254
+#        #dns-servers 1.1.1.1 1.0.0.1
+#
+
+# - - - 
+#auto wlan1
+#allow-hotplug wlan1
+#
+#iface wlan1 inet dhcp
+#  wpa-ssid "kaapje-wifi-2G"
+#  wpa-psk "Haar77Lem3"
+#
+#iface wlan1 inet manual
+#  # use 'iw dev wlan1 connect' if WiFi=Open
+#  post-up iw dev wlan1 connect "Les Trois Rois"
+#  #post-up dhclient wlan1
+#  post-up /sbin/dhclient -4 -v -i -pf /run/dhclient.wlan1.pid -lf /var/lib/dhcp/dhclient.wlan1.leases -I -df /var/lib/dhcp/dhclient6.wlan1.leases wlan1
+#  # d231004 3-day pass, SSID="Les Trois Rois", Login="AUATSK", Password="987846"
+#  post-down kill -HUP `cat /run/dhclient.wlan1.pid` >/dev/null 2>&1
+#
+
+# - - - 
+
+
+# - - - 
+#-eof
+
