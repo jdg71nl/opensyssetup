@@ -42,6 +42,10 @@ f_check_install_packages() {
 #
 f_check_install_packages ca-certificates curl gnupg
 
+# d23 ==> NEW: https://github.com/nodesource/distributions 
+
+# start actual install:
+#
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 #NODE_MAJOR=16
