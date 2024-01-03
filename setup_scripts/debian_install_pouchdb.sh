@@ -47,8 +47,9 @@ if which pouchdb-server >/dev/null ; then f_echo_exit1 "# 'pouchdb-server' is al
 # check PouchDB/CouchDB port 5984:
 # if lsof -Pi :5984 -sTCP:LISTEN -t >/dev/null ; then echo "# true" ; else echo "# false" ; fi
 #
-DBPATH="/home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var"
-if [ ! -d $DBPATH] ; then f_echo_exit1 "# pouchdb DBPATH="$DBPATH"' does not exist " ; fi
+DBPATH="/home/jdg/run/pouchdb/var"
+# if [ ! -d $DBPATH ] ; then f_echo_exit1 "# pouchdb DBPATH="$DBPATH"' does not exist. Create it using: > mkdir -pv $DBPATH " ; fi
+if [ ! -d $DBPATH ] ; then mkdir -pv $DBPATH ; fi
 #
 sudo npm install -g pouchdb-server
 # # launch example
@@ -58,17 +59,18 @@ sudo npm install -g pouchdb-server
 #
 cd $DBPATH
 cd ..
-#
+
+# - - - - - - = = = - - - - - - 
 FILE="run_debug.sh"
 cat <<EOF > $FILE
 #!/bin/bash
 DBPATH="/home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var"
-#NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
 NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir $DBPATH
 #
 EOF
 chmod +x $FILE
 
+# - - - - - - = = = - - - - - - 
 FILE="pm2_start.sh"
 cat <<EOF > $FILE
 #!/bin/bash
@@ -77,12 +79,12 @@ SCRIPT=`realpath $0`
 SCRIPT_PATH=`dirname $SCRIPT`
 cd $SCRIPT_PATH
 DBPATH="/home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var"
-#NODE_ENV=production pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
 NODE_ENV=production pouchdb-server --port 5984 --host 0.0.0.0 --dir $DBPATH
 #
 EOF
 chmod +x $FILE
 
+# - - - - - - = = = - - - - - - 
 FILE="start.sh"
 cat <<EOF > $FILE
 #!/bin/bash
@@ -95,6 +97,7 @@ pm2 start -n pouchdb pm2_start.sh
 EOF
 chmod +x $FILE
 
+# - - - - - - = = = - - - - - - 
 FILE="stop.sh"
 cat <<EOF > $FILE
 #!/bin/bash
@@ -107,6 +110,7 @@ pm2 stop pouchdb
 EOF
 chmod +x $FILE
 
+# - - - - - - = = = - - - - - - 
 FILE="restart.sh"
 cat <<EOF > $FILE
 #!/bin/bash
@@ -119,6 +123,7 @@ pm2 restart pouchdb
 EOF
 chmod +x $FILE
 
+# - - - - - - = = = - - - - - - 
 FILE="list.sh"
 cat <<EOF > $FILE
 #!/bin/bash
@@ -127,6 +132,7 @@ pm2 list
 EOF
 chmod +x $FILE
 
+# - - - - - - = = = - - - - - - 
 #
 echo "# done!"
 echo "# check operation on: http://127.0.0.1:5984/_utils or http://172.16.222.132:5984/_utils/ "
