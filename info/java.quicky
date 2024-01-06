@@ -1,5 +1,31 @@
 # java.quicky
 
+# d240105 OpenJava on Debian
+# https://wiki.debian.org/Java
+#
+> apt install default-jdk-headless maven 
+#
+# log:
+--[CWD=~]--[1704485735 21:15:35 Fri 05-Jan-2024 CET]--[root@rpi4b-virb-mainrouter]--[hw:RPI4b-1.5,os:Debian-11/bullseye,kernel:5.15.61-v8+,isa:aarch64]------
+> apt-get install default-jdk-headless 
+Reading package lists... Done
+The following additional packages will be installed:
+  ca-certificates-java default-jre-headless java-common openjdk-11-jdk-headless openjdk-11-jre-headless
+Suggested packages:
+  default-jre openjdk-11-demo openjdk-11-source fonts-dejavu-extra fonts-ipafont-gothic fonts-ipafont-mincho fonts-wqy-microhei | fonts-wqy-zenhei fonts-indic
+The following NEW packages will be installed:
+  ca-certificates-java default-jdk-headless default-jre-headless java-common openjdk-11-jdk-headless openjdk-11-jre-headless
+#.
+--[CWD=~]--[1704486065 21:21:05 Fri 05-Jan-2024 CET]--[root@rpi4b-virb-mainrouter]--[hw:RPI4b-1.5,os:Debian-11/bullseye,kernel:5.15.61-v8+,isa:aarch64]------
+> javac -version
+javac 11.0.21
+--[CWD=~]--[1704486081 21:21:21 Fri 05-Jan-2024 CET]--[root@rpi4b-virb-mainrouter]--[hw:RPI4b-1.5,os:Debian-11/bullseye,kernel:5.15.61-v8+,isa:aarch64]------
+> java -version
+openjdk version "11.0.21" 2023-10-17
+OpenJDK Runtime Environment (build 11.0.21+9-post-Debian-1deb11u1)
+OpenJDK 64-Bit Server VM (build 11.0.21+9-post-Debian-1deb11u1, mixed mode)
+#.
+
 # ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
 # java on debian
 
