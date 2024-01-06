@@ -23,6 +23,24 @@ systemctl stop NetworkManager.service
 systemctl disable NetworkManager.service
 apt purge network-manager 
 
+# ALSO DO: check rfkill
+
+>
+rfkill unblock wlan 
+rfkill unblock bluetooth 
+>
+rfkill 
+ID TYPE      DEVICE      SOFT      HARD
+ 0 bluetooth hci0   unblocked unblocked
+ 1 wlan      phy0   unblocked unblocked
+
+# ALSO DO: solve delay
+
+# https://askubuntu.com/questions/972215/a-start-job-is-running-for-wait-for-network-to-be-configured-ubuntu-server-17-1
+# - disable systemd.networkd-wait-online.service
+
+
+
 # - - - 
 # https://www.xmodulo.com/disable-network-manager-linux.html
 #
