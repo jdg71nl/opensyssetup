@@ -155,15 +155,19 @@ alias fm='/usr/bin/find . \( -path "*.svn*" -prune \) -o \( -path "*/proc/*" -pr
 #alias ifc='/sbin/ifconfig | egrep -i "encap|addr|mtu|inet|ether"'
 alias ifc='echo "# ip addr show | egrep -i \"mtu|ether|inet\" .." && ip addr show | egrep -i "mtu|ether|inet"'
 alias cdp='echo "change dir to: `pwd -P` ..";cd "`pwd -P`"'
+#
 #alias dusort='du -sbx * .??* | convertsize.pl | sort'
 #alias fusort='find . -maxdepth 2 -type f -size +2048k -printf "%s\t%p\n" | convertsize.pl | sort'
-alias dusort=' find . -maxdepth 1 -type d -exec du -sbx "{}" \;  | convertsize.pl | append_slash.pl | sort'
+alias dusort='find . -maxdepth 1 -type d -exec du -sbx "{}" \;  | convertsize.pl | append_slash.pl | sort'
+# idea 'du -hxd' from: https://www.nikouusitalo.com/blog/fixing-raspberry-pi-vnc-cannot-currently-show-the-desktop-but-its-not-resolution-or-hdmi_force_hotplug/
+alias dusort2='f_dusort2(){ sudo du -hxd 1 $1 | sort -h ; unset -f f_dusort2; }; f_dusort2'
 alias duasort='find . -type d -exec du -sbx "{}" \;  | convertsize.pl | append_slash.pl | sort'
 # mac
 alias dusortm="du -skx * | $HOME/opensyssetup/mac/bin/convertsize.mac.pl | sort"
 #alias duasortm='find . -type d -exec du -sx "{}" \;  | convertsize.pl | append_slash.pl | sort'
 alias duasortm='find . -type d -exec du -sx "{}" \;  | $HOME/opensyssetup/mac/bin/convertsize.mac.pl  | append_slash.pl | sort'
 # needs gfind from MacPorts: sudo port install findutils
+#
 alias fmm='gfind . \( -path "*.svn*" -prune \) -o \( -path "*/proc/*" -prune \) -o \( -type f -printf "%010T@ [%Tc] (%10s Bytes) %p\n" \) 
 | sort -n | tail'
 #
