@@ -79,11 +79,13 @@ fi
 ## also (manual?): 
 #
 # apt install -y ifupdown net-tools vlan bridge-utils
-# apt remove dhcpcd5
+# DON'T?: apt remove dhcpcd5
 #
 # apt install -y x11-apps x11-utils 
 # apt install -y build-essential 
 # apt install -y build-essential dkms bc raspberrypi-kernel-headers
+#
+# apt install -y lshw hwinfo inxi
 #
 # apt install -y hostapd isc-dhcp-server dnsproxy
 # apt install -y hostapd isc-dhcp-server dnsmasq-base
