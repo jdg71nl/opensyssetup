@@ -37,9 +37,15 @@ exit 0
 #-eof
 
 # https://www.raspberrypi.com/documentation/accessories/display.html
-# add this section on the first line in this file:
-# vi /boot/firmware/cmdline.txt 
+#
+#: add this 'word' to: /boot/firmware/cmdline.txt 
 # video=DSI-1:800x480@60,rotate=180
+# 
+# "Rotation of the touchscreen area is independent of the orientation of the display itself."
+#: add this line in: /boot/firmware/config.txt
+# dtoverlay=vc4-kms-dsi-7inch,invx,invy
+#: and COMMENT-OUT this line:
+# #display_auto_detect=1
 
 #-eof
 
