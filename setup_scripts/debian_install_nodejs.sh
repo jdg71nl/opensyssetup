@@ -42,6 +42,15 @@ f_check_install_packages() {
 #
 f_check_install_packages ca-certificates curl gnupg
 
+
+
+
+# d240109-1600 JDG --- CHECK THIS ==> Debian Bookworm ALSO seems to have nodejs v18 ..
+# https://packages.debian.org/bookworm/nodejs
+
+
+
+
 # d23 ==> NEW: https://github.com/nodesource/distributions 
 
 # start actual install:
