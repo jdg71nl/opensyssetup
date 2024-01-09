@@ -1,4 +1,5 @@
 #!/bin/bash
+#= mac-route-show.sh
 #
 MYID=$( id -u )
 if [ $MYID != 0 ]; then
