@@ -62,8 +62,6 @@ if [ $OS != "Debian" && $OS != "Raspbian" ] ; then
 fi
 #
 #
-apt install apt-transport-https curl
-
 if [ $DIST == "12" ]; then
   echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
             apt install -y git curl apt-transport-https htop lsof iptables vim minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
