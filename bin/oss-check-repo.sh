@@ -13,6 +13,7 @@ echo "# running: $BASENAME ... "
 #:   # there are changes
 #: fi
 
+echo "# > cd ~/opensyssetup "
 cd ~/opensyssetup
 
 if [ -z "$(git status --porcelain)" ]; then
