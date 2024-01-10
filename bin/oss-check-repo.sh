@@ -29,7 +29,7 @@ if [ -z "$(git status --porcelain)" ]; then
     exit 1
   fi
 else
-    echo "# 'git status --porcelain' says: there are (uncommited) changes ... please check and commit." 
+    echo "# 'git status --porcelain' says: there are (unstaged/uncommited) changes ... please check and commit." 
     echo "# > git status -s"
     git status -s
     echo "# "

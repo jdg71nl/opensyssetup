@@ -56,14 +56,20 @@ if [[ -z $HOST || -z $USER || -z $PORT || -z $RDIR || -z $LDIR ]]; then
   usage
 fi
 #
-echo "# > mkdir -pv ${LDIR} "
-mkdir -pv ${LDIR}
+PWD="$(pwd)"
+FULLDIR="$PWD/$LDIR"
+#echo "# PWD = $PWD "
+#echo "# FULLDIR = $FULLDIR "
+#exit 1
 #
-echo "# > sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@${HOST}:${RDIR} ${LDIR} "
+echo "# > mkdir -pv ${FULLDIR} "
+mkdir -pv ${FULLDIR}
 #
-sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@${HOST}:${RDIR} ${LDIR}
+echo "# > sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@${HOST}:${RDIR} ${FULLDIR} "
 #
-echo "# done! (unmount like this: > umount $LDIR ) "
+sshfs -p ${PORT} -o ServerAliveInterval=30 -o follow_symlinks ${USER}@${HOST}:${RDIR} ${FULLDIR}
+#
+echo "# done! (unmount like this: > umount $FULLDIR ) "
 #
 exit 0
 #
