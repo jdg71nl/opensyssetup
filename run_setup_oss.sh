@@ -96,9 +96,6 @@ if [ "${PLAT}" == "Linux" ]; then
   echo "# added source-command in ${BASHRC} .."
 fi
 
-#PROFILE="$HOME/.profile"
-BASH_PROFILE="$HOME/.bash_profile"
-#
 # https://stackoverflow.com/questions/19670061/bash-if-false-returns-true-instead-of-false-why
 #f true ; then     # ----- NOT: if  [ -f "${BASHRC}" ]; then
 #
@@ -119,6 +116,9 @@ if [ "${PLAT}" == "MacOS" ]; then
  #ln -sf /usr/local/opensyssetup/mac/bin/colorprompt.sh /etc/colorprompt.sh
  #echo "\n#\n. /etc/colorprompt.sh\n" >> /etc/profile
  #
+#PROFILE="$HOME/.profile"
+BASH_PROFILE="$HOME/.bash_profile"
+#
  touch ${BASH_PROFILE}
  sed -i "" 's/^.*bashrc.*$/# &/'    ${BASH_PROFILE}
  echo -e "# .bash_profile \nif [ -r ~/.bashrc ]; then source ~/.bashrc ; fi \n# \n" >> ${BASH_PROFILE}
