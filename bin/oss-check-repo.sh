@@ -2,6 +2,7 @@
 #= oss-check-repo.sh
 
 BASENAME=`basename $0`
+echo "# "
 echo "# running: $BASENAME ... "
 
 # https://stackoverflow.com/questions/28772174/how-can-i-programmatically-in-a-shell-script-determine-whether-or-not-there-ar
@@ -20,15 +21,18 @@ if [ -z "$(git status --porcelain)" ]; then
     echo "# 'ping -qc1 github.com' says: remote repo (github.com) is reachable, now updating (git pull) ..."
     echo "# > git pull "
     git pull 
+    echo "# "
     exit 0
   else
     echo "# 'ping -qc1 github.com' says: repo unreachable ... giving-up." 
+    echo "# "
     exit 1
   fi
 else
     echo "# 'git status --porcelain' says: there are (uncommited) changes ... please check and commit." 
     echo "# > git status -s"
     git status -s
+    echo "# "
     exit 0
 fi
 
