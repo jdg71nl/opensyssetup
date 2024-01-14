@@ -311,7 +311,8 @@ write_distro()
   if [ ! -z "${HARD}" ]; then
     HARD="hw:${HARD},"
   fi
-  DISTRO="${HARD}${OSSTRING}${KERNSTRING},isa:${ISA}"
+  #DISTRO="${HARD}${OSSTRING}${KERNSTRING},isa:${ISA}"
+  DISTRO="${HARD}${OSSTRING},isa:${ISA}"
 
   cat <<HERE >$FILE
 # /etc/distro.info
