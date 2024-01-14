@@ -33,55 +33,6 @@ export PATH=$HOME/opensyssetup/bin:$HOME/opensyssetup/mac/bin:$PATH
 alias sti='sudo -u tokenme -i' 
 
 #===============================================================
-# DISTRO info
-#===============================================================
-
-#DISTROFILE="/etc/distro.info"
-DISTROFILE="$HOME/distro.info"
-[[ -f $DISTROFILE ]] && source $DISTROFILE
-[[ -z $DISTRO_TYPE ]] && DISTRO_TYPE="Unknown-Distro"
-export DISTRO_TYPE=$DISTRO_TYPE
-
-#===============================================================
-# Shell prompt
-#===============================================================
-
-# idea from: https://david.newgas.net/return_code/
-#export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "returned \033[01;31m$ret\033[00;00m"; fi'
-export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "#( bash[PROMPT_COMMAND]: prev.cmd returned non-zero code: \033[01;31m$ret\033[00;00m )"; fi'
-
-# version 1:
-#
-# --[22:26:19 jdegraaff@multi-delft-01]-------------------------------------------
-# /etc/profile.d>
-#
-#PS1="${cyan}--[\t \u@\h]-------------------------------------------${NOCOLOR}\n\w> "
-
-# version 2:
-#
-# --[CWD=/etc/profile.d]--[22:25:37]--[root@multi-delft-01]------
-# >
-#
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t]--[${red}\u${cyan}@\h]------${NOCOLOR}\n> "
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h]------${NOCOLOR}\n> "
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h:$DISTRO_TYPE]------${NOCOLOR}\n> "
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h]--[${yellow}$DISTRO_TYPE${cyan}]------${NOCOLOR}\n> "
-
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \D{%a %d-%b-%Y %Z}]--[${red}\u${cyan}@\h]--[${yellow}$DISTRO_TYPE${cyan}]------${NOCOLOR}\n> "
-
-# git completion and prompt:
-#[ -r /usr/local/syssetup/git-completion.bash ] && source /usr/local/syssetup/git-completion.bash
-#[ -f /usr/local/syssetup/git-prompt.sh ] && source /usr/local/syssetup/git-prompt.sh
-[ -r $HOME/opensyssetup/git-completion.bash ] && source $HOME/opensyssetup/git-completion.bash
-[ -f $HOME/opensyssetup/git-prompt.sh ] && source $HOME/opensyssetup/git-prompt.sh
-#
-RED='\e[1;31m' ; GREEN='\e[1;32m' ; YELLOW='\e[1;33m' ; BLUE='\e[1;34m' ; CYAN='\e[1;36m' ; NOCOLOR='\e[0m'
-#
-[ -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
-#
-[ ! -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
-#
-
 # IDEA (from Daniel Demirdag @TWS):
 #declare -x SSH_CONNECTION="172.16.53.1 53289 172.16.53.146 22"
 
@@ -237,6 +188,60 @@ alias htop='TERM=xterm-color htop'
 if [ -r ~/opensyssetup/bin/oss-check-repo.sh ]; then
   ~/opensyssetup/bin/oss-check-repo.sh
 fi
+
+if [ -r ~/opensyssetup/bin/write_distro_file.sh ]; then
+  ~/opensyssetup/bin/write_distro_file.sh
+fi
+
+#===============================================================
+# DISTRO info
+#===============================================================
+
+#DISTROFILE="/etc/distro.info"
+DISTROFILE="$HOME/distro.info"
+[[ -f $DISTROFILE ]] && source $DISTROFILE
+[[ -z $DISTRO_TYPE ]] && DISTRO_TYPE="Unknown-Distro"
+export DISTRO_TYPE=$DISTRO_TYPE
+
+#===============================================================
+# Shell prompt
+#===============================================================
+
+# idea from: https://david.newgas.net/return_code/
+#export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "returned \033[01;31m$ret\033[00;00m"; fi'
+export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "#( bash[PROMPT_COMMAND]: prev.cmd returned non-zero code: \033[01;31m$ret\033[00;00m )"; fi'
+
+# version 1:
+#
+# --[22:26:19 jdegraaff@multi-delft-01]-------------------------------------------
+# /etc/profile.d>
+#
+#PS1="${cyan}--[\t \u@\h]-------------------------------------------${NOCOLOR}\n\w> "
+
+# version 2:
+#
+# --[CWD=/etc/profile.d]--[22:25:37]--[root@multi-delft-01]------
+# >
+#
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t]--[${red}\u${cyan}@\h]------${NOCOLOR}\n> "
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h]------${NOCOLOR}\n> "
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h:$DISTRO_TYPE]------${NOCOLOR}\n> "
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h]--[${yellow}$DISTRO_TYPE${cyan}]------${NOCOLOR}\n> "
+
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \D{%a %d-%b-%Y %Z}]--[${red}\u${cyan}@\h]--[${yellow}$DISTRO_TYPE${cyan}]------${NOCOLOR}\n> "
+
+# git completion and prompt:
+#[ -r /usr/local/syssetup/git-completion.bash ] && source /usr/local/syssetup/git-completion.bash
+#[ -f /usr/local/syssetup/git-prompt.sh ] && source /usr/local/syssetup/git-prompt.sh
+[ -r $HOME/opensyssetup/git-completion.bash ] && source $HOME/opensyssetup/git-completion.bash
+[ -f $HOME/opensyssetup/git-prompt.sh ] && source $HOME/opensyssetup/git-prompt.sh
+#
+RED='\e[1;31m' ; GREEN='\e[1;32m' ; YELLOW='\e[1;33m' ; BLUE='\e[1;34m' ; CYAN='\e[1;36m' ; NOCOLOR='\e[0m'
+#
+[ -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+#
+[ ! -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+#
 
 #===============================================================
 
