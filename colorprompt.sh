@@ -99,8 +99,11 @@ alias hig='history | grep'
 # https://stackoverflow.com/questions/7181620/how-do-i-create-an-alias-where-the-arguments-go-in-the-middle
 alias ng='f(){ lsof -i -n -P +c0 | egrep "PID|$1" ; unset -f f; }; f'
 #ng () { lsof -i -n -P +c0 | egrep "PID|$1" }
+alias ng_sudo='f(){ sudo lsof -i -n -P +c0 | egrep "PID|$1" ; unset -f f; }; f'
 #
 alias psg='ps aux | grep'
+alias psg_sudo='sudo ps aux | grep'
+#
 alias fm='/usr/bin/find . \( -path "*.svn*" -prune \) -o \( -path "*/proc/*" -prune \) -o \( -type f -printf "%010T@ [%Tc] (%10s Bytes) %p\n" \) | sort -n | tail'
 #alias ifc="/sbin/ifconfig | egrep 'encap|addr|MTU'"
 #alias ifc='/sbin/ifconfig | egrep -i "encap|addr|mtu|inet|ether"'
