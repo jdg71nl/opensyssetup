@@ -186,6 +186,7 @@ LESS='-i -S'
 alias htop='TERM=xterm-color htop'
 
 #===============================================================
+# Exec scripts at start Shell:
 #===============================================================
 
 if [ -r ~/opensyssetup/bin/oss-check-repo.sh ]; then
@@ -246,6 +247,14 @@ RED='\e[1;31m' ; GREEN='\e[1;32m' ; YELLOW='\e[1;33m' ; BLUE='\e[1;34m' ; CYAN='
 [ ! -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
 #
 
+#===============================================================
+# Mac exports
+
+# https://support.apple.com/en-us/102360
+# "To silence this warning, you can add this command to ~/.bash_profile or ~/.profile: "
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+#===============================================================
 #===============================================================
 
 
