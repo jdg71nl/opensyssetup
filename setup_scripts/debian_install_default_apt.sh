@@ -63,12 +63,13 @@ fi
 #
 #
 if [ $DIST == "12" ]; then
-  echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
-            apt install -y git curl apt-transport-https htop lsof iptables vim minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
+  echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
+            apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
 else
-  echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim minicom netcat         arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
-            apt install -y git curl apt-transport-https htop lsof iptables vim minicom netcat         arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
+  echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat         arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
+            apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat         arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
 fi
+#
 #
 # d231119 changes:
 # Package netcat is a virtual package provided by:
