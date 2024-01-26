@@ -57,6 +57,7 @@ f_check_install_packages() {
 # # optional: create new user and database
 # # connection_string: "postgresql://jser_user:mypwd@127.0.0.1:5432/db_jser"
 # > psql -c "CREATE USER jser_user WITH PASSWORD 'mypwd';"
+## > psql -c "ALTER USER jser_user WITH PASSWORD 'mypwd2';"
 # > psql -c "CREATE DATABASE db_jser;"
 # > psql -c "GRANT ALL ON DATABASE db_jser TO jser_user;"
 # > psql -c "ALTER DATABASE db_jser OWNER TO jser_user;"

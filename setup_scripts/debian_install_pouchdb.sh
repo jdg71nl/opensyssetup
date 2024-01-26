@@ -5,7 +5,7 @@
 # display every line executed in this bash script:
 #set -o xtrace
 #
-BASENAME=\`basename \$0\`
+BASENAME=`basename $0`
 echo "# running: $BASENAME ... "
 # SCRIPT=`realpath -s $0`  # man says: "-s, --strip, --no-symlinks : don't expand symlinks"
 # SCRIPT_PATH=\`dirname \$SCRIPT\`
