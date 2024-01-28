@@ -12,7 +12,6 @@ locate
 lsof
 minicom
 mtr
-netcat-openbsd
 ntp
 openvpn
 rsync

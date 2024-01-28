@@ -40,30 +40,37 @@ f_check_install_packages() {
 # f_check_install_packages curl git sudo
 #
 
-OS=""
-DEBDIST=""
-if [ -e /etc/debian_version ]; then
-  #
-  #OS=$(cat /etc/issue | head -1 | awk '{ print tolower($1) }')
-  OS=$(cat /etc/issue | head -1 | awk '{ print $1 }')
-  #
-  # OS="Debian"
-  # OS="Ubuntu"
-  #
-  # some Debians have jessie/sid in their /etc/debian_version
-  # while others have '6.0.7'
-  if grep -q '/' /etc/debian_version; then
-    DEBDIST=$(cut --delimiter='/' -f1 /etc/debian_version)
-  else
-    DEBDIST=$(cut --delimiter='.' -f1 /etc/debian_version)
-  fi
-fi
-echo "# OS='$OS' DEBDIST='$DEBDIST' "
-if [ $OS != "Debian" && $OS != "Raspbian" ] ; then
+#: OS=""
+#: DEBDIST=""
+#: if [ -e /etc/debian_version ]; then
+#:   #
+#:   #OS=$(cat /etc/issue | head -1 | awk '{ print tolower($1) }')
+#:   OS=$(cat /etc/issue | head -1 | awk '{ print $1 }')
+#:   #
+#:   # OS="Debian"
+#:   # OS="Ubuntu"
+#:   #
+#:   # some Debians have jessie/sid in their /etc/debian_version
+#:   # while others have '6.0.7'
+#:   if grep -q '/' /etc/debian_version; then
+#:     DEBDIST=$(cut --delimiter='/' -f1 /etc/debian_version)
+#:   else
+#:     DEBDIST=$(cut --delimiter='.' -f1 /etc/debian_version)
+#:   fi
+#: fi
+#: echo "# OS='$OS' DEBDIST='$DEBDIST' "
+#: if [ $OS != "Debian" && $OS != "Raspbian" ] ; then
+#:   echo "# Error: detected non-Debian, so exit ..."
+#:   exit 1
+#: fi
+
+if test ! -f /etc/debian_version ; then
   echo "# Error: detected non-Debian, so exit ..."
   exit 1
+else
+  echo "# found Debian-like OS, so proceeding ..."
 fi
-#
+
 #
 #: if [ $DEBDIST == "12" ]; then
 #:   echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
@@ -73,10 +80,37 @@ fi
 #:             apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat         arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
 #: fi
 #
+# example: ADD_PKG_LINES="pkg1 \n pkg2 "
+ADD_PKG_LINES=""
+#
+# jdg: preferred way of testing in Bash ??:
+# https://stackoverflow.com/questions/13408493/an-and-operator-for-an-if-statement-in-bash
+# if test $JINFO_OS = "Ubuntu" && test $JINFO_VERSION = "23.10"; then echo "yes" ; else echo "no" ; fi
+#
+# jdg: more modern way:
+# https://ioflood.com/blog/bash-if-and/
+# if [[ $var -gt 10 && $var -lt 20 ]]; then echo "yes"; fi
+#
+# jdg:
+# https://ryanstutorials.net/bash-scripting-tutorial/bash-if-statements.php
+#
+# d240128 jdg: fuck, above ALL fails and errors, I don't know why but [[ works:
+#
+if [[ $JINFO_OS = "Ubuntu" || $JINFO_OS = "Debian" && $JINFO_VERSION = "12" ]] ; then
+  ADD_PKG_LINES="netcat-openbsd"
+else
+  ADD_PKG_LINES="netcat"
+fi
 #
 FILE="debian_default_apt_list.txt"
 #
+PKG_STRING="$(echo -e $ADD_PKG_LINES | cat $FILE - | sort | tr '\n' ' ')"
+#echo "# PKG_STRING=\"$PKG_STRING\""
 #
+echo "# apt install -y $PKG_STRING "
+apt install -y $PKG_STRING 
+#
+
 # d231119 changes:
 # Package netcat is a virtual package provided by:
 #  netcat-openbsd 1.219-1
