@@ -2,9 +2,12 @@
 #= mount_sshfs_here.sh
 # (c)2023 John@de-Graaff.net
 #
-# Note: on Mac install these apps from: https://osxfuse.github.io/
+# (OLD) Note: on Mac install these apps from: https://osxfuse.github.io/
 # - macFUSE 4.4.2 macOS 10.9 or later 
 # - SSHFS   2.5.0 macOS 10.5 or later
+#
+# Note: on Debian Linux do:
+# > apt install sshfs
 #
 BASENAME=`basename $0`
 usage() {
@@ -18,11 +21,11 @@ usage() {
 #   echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
 # fi
 #
-# defaults
+# static defaults:
 HOST=""
 USER="jdg"
 PORT="22"
-RDIR=""
+RDIR="."
 LDIR=""
 #
 while getopts ":h:u:p:r:l:" options; do
@@ -51,6 +54,11 @@ while getopts ":h:u:p:r:l:" options; do
       ;;
   esac
 done
+#
+# dynamic defaults:
+if [ -z $LDIR ]; then
+  LDIR=$HOST
+fi
 #
 if [[ -z $HOST || -z $USER || -z $PORT || -z $RDIR || -z $LDIR ]]; then
   usage

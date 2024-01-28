@@ -213,7 +213,17 @@ fi
 DISTROFILE="$HOME/distro.info"
 [[ -f $DISTROFILE ]] && source $DISTROFILE
 [[ -z $DISTRO_TYPE ]] && DISTRO_TYPE="Unknown-Distro"
+#
 export DISTRO_TYPE=$DISTRO_TYPE
+#
+export JINFO_PLATFORM="$JINFO_PLATFORM"
+export JINFO_HARDWARE="$JINFO_HARDWARE"
+export JINFO_ISA="$JINFO_ISA"
+export JINFO_OS="$JINFO_OS"
+export JINFO_VERSION="$JINFO_VERSION"
+export JINFO_CODENAME="$JINFO_CODENAME"
+export JINFO_KERNEL="$JINFO_KERNEL"
+#
 
 #===============================================================
 # Shell prompt

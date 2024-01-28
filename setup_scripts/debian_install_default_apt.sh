@@ -41,34 +41,40 @@ f_check_install_packages() {
 #
 
 OS=""
-DIST=""
+DEBDIST=""
 if [ -e /etc/debian_version ]; then
   #
   #OS=$(cat /etc/issue | head -1 | awk '{ print tolower($1) }')
   OS=$(cat /etc/issue | head -1 | awk '{ print $1 }')
   #
+  # OS="Debian"
+  # OS="Ubuntu"
+  #
   # some Debians have jessie/sid in their /etc/debian_version
   # while others have '6.0.7'
   if grep -q '/' /etc/debian_version; then
-    DIST=$(cut --delimiter='/' -f1 /etc/debian_version)
+    DEBDIST=$(cut --delimiter='/' -f1 /etc/debian_version)
   else
-    DIST=$(cut --delimiter='.' -f1 /etc/debian_version)
+    DEBDIST=$(cut --delimiter='.' -f1 /etc/debian_version)
   fi
 fi
-echo "# OS='$OS' DIST='$DIST' "
+echo "# OS='$OS' DEBDIST='$DEBDIST' "
 if [ $OS != "Debian" && $OS != "Raspbian" ] ; then
   echo "# Error: detected non-Debian, so exit ..."
   exit 1
 fi
 #
 #
-if [ $DIST == "12" ]; then
-  echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
-            apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
-else
-  echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat         arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
-            apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat         arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
-fi
+#: if [ $DEBDIST == "12" ]; then
+#:   echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
+#:             apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat-openbsd arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
+#: else
+#:   echo "# > apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat         arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog ... "
+#:             apt install -y git curl apt-transport-https htop lsof iptables vim traceroute mtr minicom netcat         arp-scan arping fping jq ntp openvpn rsync sudo wget locate inetutils-telnet telnet watchdog
+#: fi
+#
+#
+FILE="debian_default_apt_list.txt"
 #
 #
 # d231119 changes:
