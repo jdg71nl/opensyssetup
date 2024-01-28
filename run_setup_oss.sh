@@ -150,11 +150,14 @@ fi
 # - - - 
 if [ "${LOGNAME}" == "jdg" ]; then
   #
-  git config --global user.name "John de Graaff"
-  git config --global user.email john@de-graaff.net
-  git config --global alias.ss "status -s"        # short status
-  git config --global alias.logg "log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'"
-  git config --global alias.logn "log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat"
+  #git config --global user.name "John de Graaff"
+  #git config --global user.email john@de-graaff.net
+  #git config --global alias.ss "status -s"        # short status
+  #git config --global alias.logg "log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'"
+  #git config --global alias.logn "log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat"
+  # or:
+  ./bin/git-config-jdg.sh
+  #
   # will set in this file: ~/.gitconfig  
   # [user]
   #         name = John de Graaff
@@ -163,7 +166,9 @@ if [ "${LOGNAME}" == "jdg" ]; then
   #         ss = status -s
   #         logg = log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'
   #         logn = log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat
+  #
   echo "# set git config for user jdg "
+  #
 fi
 
 # - - - 
