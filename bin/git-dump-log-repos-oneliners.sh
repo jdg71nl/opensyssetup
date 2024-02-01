@@ -43,7 +43,8 @@ SINCE=${ARG_ARRAY[0]}
 BEFORE=${ARG_ARRAY[1]}
 echo "# calc => SINCE=$SINCE BEFORE=$BEFORE"
 
-GITLOGDIR="git_log"
+# GITLOGDIR="git_log"
+GITLOGDIR="git_log_jdg_repo/git_log"
 mkdir -pv $GITLOGDIR/$MONTH
 
 ALLFILE="git-log-oneline-numstat--repo--ALL--month-$MONTH.csv"
