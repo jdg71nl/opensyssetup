@@ -47,10 +47,10 @@ echo "# calc => SINCE=$SINCE BEFORE=$BEFORE"
 GITLOGDIR="git_log_jdg_repo/git_log"
 mkdir -pv $GITLOGDIR/$MONTH
 
-ALLFILE="git-log-oneline-numstat--repo--ALL--month-$MONTH.csv"
-echo "# ALLFILE=$ALLFILE "
-rm -f ./$GITLOGDIR/$MONTH/$ALLFILE
-touch ./$GITLOGDIR/$MONTH/$ALLFILE
+#ALLFILE="git-log-oneline-numstat--repo--ALL--month-$MONTH.csv"
+#echo "# ALLFILE=$ALLFILE "
+#rm -f ./$GITLOGDIR/$MONTH/$ALLFILE
+#touch ./$GITLOGDIR/$MONTH/$ALLFILE
 
 # for REPO in TokenMe-* SUM4 ; do 
 #for REPO in TokenMe-Dashboard-Server TokenMe-API-Server TokenMe-Architecture ; do 
@@ -87,8 +87,8 @@ for REPO in $REPOS_LIST ; do
     # | perl -e 'my $LAST="", $ADD="", $REM="", $FILE=""; while (my $LINE=<STDIN>) { chomp($LINE); next if ($LINE eq ""); if ($LINE =~ /^"/) {$LAST=$LINE; ($ADD,$REM,$FILE) = ("","",""); } else {($ADD,$REM,$FILE) = split /\s/, $LINE; print "$LAST,\"added:$ADD\",\"removed:$REM\",\"file:$FILE\"\n"; } }' \
     #
     # append ALL file ...
-    echo "# > cat ./$GITLOGDIR/$MONTH/$SMASH >> ./$GITLOGDIR/$MONTH/$ALLFILE ..."
-    cat ./$GITLOGDIR/$MONTH/$SMASH >> ./$GITLOGDIR/$MONTH/$ALLFILE
+    #echo "# > cat ./$GITLOGDIR/$MONTH/$SMASH >> ./$GITLOGDIR/$MONTH/$ALLFILE ..."
+    #cat ./$GITLOGDIR/$MONTH/$SMASH >> ./$GITLOGDIR/$MONTH/$ALLFILE
     #
   fi
   #
