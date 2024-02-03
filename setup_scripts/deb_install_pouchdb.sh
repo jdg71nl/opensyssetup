@@ -25,7 +25,7 @@ if ! which dpkg-query >/dev/null ; then f_echo_exit1 "# please install first: us
 # if [ $MYUID != 0 ]; then
 #   # https://unix.stackexchange.com/questions/129072/whats-the-difference-between-and
 #   # $* is a single string, whereas $@ is an actual array.
-#   echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+#   echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 # fi
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 #
@@ -142,9 +142,9 @@ echo "# done!"
 #echo "# check operation on: http://127.0.0.1:5984/_utils or http://172.16.222.132:5984/_utils/ "
 #
 #
+. ~/opensyssetup/bin/set_env_ip_addresses.sh
+#
 echo "# check ops ==> http://127.0.0.1:5984/_utils "
-
-
 if [ -n "$JINFO_IP_eth0" ]; then echo "# check ops ==> http://$JINFO_IP_eth0:5984/_utils " ; fi
 if [ -n "$JINFO_IP_eth1" ]; then echo "# check ops ==> http://$JINFO_IP_eth1:5984/_utils " ; fi
 if [ -n "$JINFO_IP_tun21" ]; then echo "# check ops ==> http://$JINFO_IP_tun21:5984/_utils " ; fi

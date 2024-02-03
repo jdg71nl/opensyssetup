@@ -25,7 +25,7 @@ MYUID=$( id -u )
 if [ $MYUID != 0 ]; then
   # https://unix.stackexchange.com/questions/129072/whats-the-difference-between-and
   # $* is a single string, whereas $@ is an actual array.
-  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 fi
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 #

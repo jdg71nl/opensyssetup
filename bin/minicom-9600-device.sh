@@ -2,10 +2,10 @@
 #
 MYID=$( id -u )
 if [ $MYID != 0 ]; then
-  #echo "# provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 1 ;  # DONT USE $* !!
-  #echo "## provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+  #echo "# provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 0 ;  # DONT USE $* !!
+  #echo "## provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
   #echo "# please run this as root" ; exit 1
-  echo "## provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+  echo "## provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 fi
 #
 # echo "Press any key to continue"

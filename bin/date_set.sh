@@ -33,8 +33,8 @@ usage() {
 }
 #
 if [ $MYUID != 0 ]; then
-  #echo "# provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 1 ;
-  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+  #echo "# provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 0 ;
+  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 fi
 #
 # https://www.digitpage.com/disable-automatic-time-synchronization-ubuntu-18-04-lts/

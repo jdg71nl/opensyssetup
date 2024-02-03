@@ -24,8 +24,8 @@ FILE="$HOME/distro.info"
 ## sudo
 #MYID=$( id -u )
 #if [ $MYID != 0 ]; then
-#  #echo "# provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 1 ;  # DONT USE $* !!
-#  echo "## provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+#  #echo "# provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 0 ;  # DONT USE $* !!
+#  echo "## provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 #fi
 
 # - - - - - - - - + + + - - - - - - - - 
@@ -343,11 +343,11 @@ write_distro()
   echo "# JINFO_KERNEL=\"$JINFO_KERNEL\""
 
   #
-  export JINFO_IP_eth0=$( ip -o -4 addr show eth0 | awk '{print $4}' | sed 's/\/.*$//' )
-  export JINFO_IP_eth1=$( ip -o -4 addr show eth1 | awk '{print $4}' | sed 's/\/.*$//' )
-  export JINFO_IP_wlan0=$( ip -o -4 addr show wlan0 | awk '{print $4}' | sed 's/\/.*$//' )
-  export JINFO_IP_wlan1=$( ip -o -4 addr show wlan1 | awk '{print $4}' | sed 's/\/.*$//' )
-  export JINFO_IP_tun21=$( ip -o -4 addr show tun21 | awk '{print $4}' | sed 's/\/.*$//' )
+#  export JINFO_IP_eth0=$( ip -o -4 addr show eth0 | awk '{print $4}' | sed 's/\/.*$//' )
+#  export JINFO_IP_eth1=$( ip -o -4 addr show eth1 | awk '{print $4}' | sed 's/\/.*$//' )
+#  export JINFO_IP_wlan0=$( ip -o -4 addr show wlan0 | awk '{print $4}' | sed 's/\/.*$//' )
+#  export JINFO_IP_wlan1=$( ip -o -4 addr show wlan1 | awk '{print $4}' | sed 's/\/.*$//' )
+#  export JINFO_IP_tun21=$( ip -o -4 addr show tun21 | awk '{print $4}' | sed 's/\/.*$//' )
 
 
   # /etc/distro.info
@@ -364,11 +364,6 @@ JINFO_OS="$JINFO_OS"
 JINFO_VERSION="$JINFO_VERSION"
 JINFO_CODENAME="$JINFO_CODENAME"
 JINFO_KERNEL="$JINFO_KERNEL"
-JINFO_IP_eth0="$JINFO_IP_eth0"
-JINFO_IP_eth1="$JINFO_IP_eth1"
-JINFO_IP_wlan0="$JINFO_IP_wlan0"
-JINFO_IP_wlan1="$JINFO_IP_wlan1"
-JINFO_IP_tun21="$JINFO_IP_tun21"
 #
 HERE
 

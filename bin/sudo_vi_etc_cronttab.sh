@@ -19,7 +19,7 @@ MYUID=$( id -u )
 #
 #
 if [ $MYUID != 0 ]; then
-  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 fi
 #
 #
