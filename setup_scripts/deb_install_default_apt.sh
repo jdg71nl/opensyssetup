@@ -129,7 +129,7 @@ else
   ADD_PKG_LINES="netcat"
 fi
 #
-FILE="debian_default_apt_list.txt"
+FILE="apt_default_list.txt"
 #
 PKG_STRING="$(echo -e $ADD_PKG_LINES | cat $FILE - | sort | tr '\n' ' ')"
 #echo "# PKG_STRING=\"$PKG_STRING\""

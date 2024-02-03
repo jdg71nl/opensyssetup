@@ -29,17 +29,23 @@ if [ $MYUID != 0 ]; then
 fi
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 #
-# my statements here ...
 #
-#
-exit 0
-#
-#-eof
 
 # https://askubuntu.com/questions/309461/how-to-disable-ipv6-permanently/337736#337736
 # add this section on the first line in this file:
 # vi /boot/firmware/cmdline.txt 
 # ipv6.disable=1
 
+cat <<HERE
+
+# add this on the first line of this file:
+> vi /boot/firmware/cmdline.txt 
+ipv6.disable=1
+
+HERE
+#
+#
+exit 0
+#
 #-eof
 

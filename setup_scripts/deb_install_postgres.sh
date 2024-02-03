@@ -41,48 +41,67 @@ f_check_install_packages() {
 #
 #
 
-# > sudo apt -y install postgresql adminer
+cat <<HERE
 
-# > sudo passwd postgres
-# New password: 
-# Retype new password: 
-# passwd: password updated successfully
+>
+sudo apt -y install postgresql adminer
 
-# # do as user 'postgres':
-# > su - postgres
+>
+sudo passwd postgres
+New password: 
+Retype new password: 
+passwd: password updated successfully
 
-# > psql -c "ALTER USER postgres WITH PASSWORD 'your-password';"
-# ALTER ROLE
+# do as user 'postgres':
+> 
+su - postgres
 
-# # optional: create new user and database
-# # connection_string: "postgresql://jser_user:mypwd@127.0.0.1:5432/db_jser"
-# > psql -c "CREATE USER jser_user WITH PASSWORD 'mypwd';"
-## > psql -c "ALTER USER jser_user WITH PASSWORD 'mypwd2';"
-# > psql -c "CREATE DATABASE db_jser;"
-# > psql -c "GRANT ALL ON DATABASE db_jser TO jser_user;"
-# > psql -c "ALTER DATABASE db_jser OWNER TO jser_user;"
+> 
+psql -c "ALTER USER postgres WITH PASSWORD 'your-password';"
+ALTER ROLE
 
-# # ^d (exit shell as user postgres)
+# optional: create new user and database
+# connection_string: "postgresql://jser_user:mypwd@127.0.0.1:5432/db_jser"
+> 
+psql -c "CREATE USER jser_user WITH PASSWORD 'mypwd';"
+# psql -c "ALTER USER jser_user WITH PASSWORD 'mypwd2';"
+psql -c "CREATE DATABASE db_jser;"
+psql -c "GRANT ALL ON DATABASE db_jser TO jser_user;"
+psql -c "ALTER DATABASE db_jser OWNER TO jser_user;"
 
-# > sudo vi /etc/postgresql/13/main/postgresql.conf
-# > sudo vi /etc/postgresql/15/main/postgresql.conf
-# # jdg
-# listen_addresses = '*'
+# ^d (exit shell as user postgres)
 
-# > sudo vi /etc/postgresql/13/main/pg_hba.conf
-# > sudo vi /etc/postgresql/15/main/pg_hba.conf
-# # jdg
-# host    all             all             0.0.0.1/0             md5
-# host    all             all             ::0/0                 md5
+# add_to_bottom:
+> 
+# sudo vi /etc/postgresql/13/main/postgresql.conf
+sudo vi /etc/postgresql/15/main/postgresql.conf
 
-# > sudo service postgresql restart
+# jdg
+listen_addresses = '*'
 
-# > sudo a2enconf adminer
+# add_to_bottom:
+> 
+# sudo vi /etc/postgresql/13/main/pg_hba.conf
+sudo vi /etc/postgresql/15/main/pg_hba.conf
 
-# > sudo systemctl reload apache2
+# jdg
+host    all             all             0.0.0.1/0             md5
+host    all             all             ::0/0                 md5
 
-echo "# done!"
-echo "# check operation on: http://172.16.222.132/adminer/?pgsql=172.16.222.132&username=jser_user&db=db_jser&ns=public "
+> 
+sudo service postgresql restart
+
+> 
+sudo a2enconf adminer
+
+> 
+sudo systemctl reload apache2
+
+# done!
+# check operation on: http://172.16.222.132/adminer/?pgsql=172.16.222.132&username=jser_user&db=db_jser&ns=public 
+
+HERE
+
 #
 exit 0
 #
