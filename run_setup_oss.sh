@@ -156,7 +156,7 @@ if [ "${LOGNAME}" == "jdg" ]; then
   #git config --global alias.logg "log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'"
   #git config --global alias.logn "log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat"
   # or:
-  ./bin/git-config-jdg.sh
+  ~/opensyssetup/bin/git-config-jdg.sh
   #
   # will set in this file: ~/.gitconfig  
   # [user]
