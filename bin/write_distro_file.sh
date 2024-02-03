@@ -344,6 +344,11 @@ write_distro()
 
   #
   export JINFO_IP_eth0=$( ip -o -4 addr show eth0 | awk '{print $4}' | sed 's/\/.*$//' )
+  export JINFO_IP_eth1=$( ip -o -4 addr show eth1 | awk '{print $4}' | sed 's/\/.*$//' )
+  export JINFO_IP_wlan0=$( ip -o -4 addr show wlan0 | awk '{print $4}' | sed 's/\/.*$//' )
+  export JINFO_IP_wlan1=$( ip -o -4 addr show wlan1 | awk '{print $4}' | sed 's/\/.*$//' )
+  export JINFO_IP_tun21=$( ip -o -4 addr show tun21 | awk '{print $4}' | sed 's/\/.*$//' )
+
 
   # /etc/distro.info
   # used by: $ HOME/syssetup/colorprompt.sh
@@ -360,6 +365,10 @@ JINFO_VERSION="$JINFO_VERSION"
 JINFO_CODENAME="$JINFO_CODENAME"
 JINFO_KERNEL="$JINFO_KERNEL"
 JINFO_IP_eth0="$JINFO_IP_eth0"
+JINFO_IP_eth1="$JINFO_IP_eth1"
+JINFO_IP_wlan0="$JINFO_IP_wlan0"
+JINFO_IP_wlan1="$JINFO_IP_wlan1"
+JINFO_IP_tun21="$JINFO_IP_tun21"
 #
 HERE
 

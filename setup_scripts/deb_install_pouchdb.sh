@@ -139,7 +139,20 @@ chmod +x $FILE
 # - - - - - - = = = - - - - - - 
 #
 echo "# done!"
-echo "# check operation on: http://127.0.0.1:5984/_utils or http://172.16.222.132:5984/_utils/ "
+#echo "# check operation on: http://127.0.0.1:5984/_utils or http://172.16.222.132:5984/_utils/ "
+#
+#
+echo "# check ops ==> http://127.0.0.1:5984/_utils "
+
+
+if [ -n "$JINFO_IP_eth0" ]; then echo "# check ops ==> http://$JINFO_IP_eth0:5984/_utils " ; fi
+if [ -n "$JINFO_IP_eth1" ]; then echo "# check ops ==> http://$JINFO_IP_eth1:5984/_utils " ; fi
+if [ -n "$JINFO_IP_tun21" ]; then echo "# check ops ==> http://$JINFO_IP_tun21:5984/_utils " ; fi
+if [ -n "$JINFO_IP_wlan0" ]; then echo "# check ops ==> http://$JINFO_IP_wlan0:5984/_utils " ; fi
+if [ -n "$JINFO_IP_wlan1" ]; then echo "# check ops ==> http://$JINFO_IP_wlan1:5984/_utils " ; fi
+
+
+#
 #
 exit 0
 #
