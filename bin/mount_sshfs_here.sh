@@ -21,6 +21,10 @@ usage() {
 #   echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
 # fi
 #
+f_echo_exit1() { echo $1 ; exit 1 ; }
+if [ ! -e /etc/debian_version ]; then f_echo_exit1 "# Error: found non-Debain OS .." ; fi
+if ! which sshfs >/dev/null ; then f_echo_exit1 "# please install first (as root) ==> sudo apt install sshfs " ; fi
+#
 # static defaults:
 HOST=""
 USER="jdg"
