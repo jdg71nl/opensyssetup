@@ -342,6 +342,9 @@ write_distro()
   echo "# JINFO_CODENAME=\"$JINFO_CODENAME\""
   echo "# JINFO_KERNEL=\"$JINFO_KERNEL\""
 
+  #
+  export JINFO_IP_eth0=$( ip -o -4 addr show eth0 | awk '{print $4}' | sed 's/\/.*$//' )
+
   # /etc/distro.info
   # used by: $ HOME/syssetup/colorprompt.sh
   cat <<HERE >$FILE
@@ -356,6 +359,7 @@ JINFO_OS="$JINFO_OS"
 JINFO_VERSION="$JINFO_VERSION"
 JINFO_CODENAME="$JINFO_CODENAME"
 JINFO_KERNEL="$JINFO_KERNEL"
+JINFO_IP_eth0="$JINFO_IP_eth0"
 #
 HERE
 
