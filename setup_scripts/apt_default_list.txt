@@ -21,3 +21,4 @@ traceroute
 vim
 watchdog
 wget
+whois
