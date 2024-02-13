@@ -49,6 +49,7 @@ if which pouchdb-server >/dev/null ; then f_echo_exit1 "# 'pouchdb-server' is al
 #
 # <<<<<===== define DBPATH ======>>>>>>> <<<<<===== define DBPATH ======>>>>>>> <<<<<===== define DBPATH ======>>>>>>> 
 DBPATH="/home/jdg/run/pouchdb/var"
+sudo chown jdg:jdg $DBPATH
 #
 # if [ ! -d $DBPATH ] ; then f_echo_exit1 "# pouchdb DBPATH='$DBPATH' does not exist. Create it using: > mkdir -pv $DBPATH " ; fi
 if [ ! -d $DBPATH ] ; then mkdir -pv $DBPATH ; fi
