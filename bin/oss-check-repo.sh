@@ -18,14 +18,14 @@ cd ~/opensyssetup
 
 if [ -z "$(git status --porcelain)" ]; then
   echo "# 'git status --porcelain' says: no (stagged/unstagged) changes in repo, checking remote ..."
-  if ping -4qc1 github.com 2>&1 1>/dev/null ; then
-    echo "# 'ping -4qc1 github.com' says: remote repo (github.com) is reachable, now updating (git pull) ..."
+  if ping -4qc1W1 github.com 2>&1 1>/dev/null ; then
+    echo "# 'ping -4qc1W1 github.com' says: remote repo (github.com) is reachable, now updating (git pull) ..."
     echo "# > git pull "
     git pull 
     echo "# "
     exit 0
   else
-    echo "# 'ping -4qc1 github.com' says: repo unreachable ... giving-up." 
+    echo "# 'ping -4qc1W1 github.com' says: repo unreachable ... giving-up." 
     echo "# "
     exit 1
   fi
