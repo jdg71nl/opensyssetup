@@ -21,9 +21,10 @@ if [ $MYUID != 0 ]; then
 fi
 #
 #
-/sbin/ip route add 0.0.0.0/1   via 10.86.91.1
-/sbin/ip route add 128.0.0.0/1 via 10.86.91.1
+#/sbin/ip route add 0.0.0.0/1   via 10.86.91.1
+#/sbin/ip route add 128.0.0.0/1 via 10.86.91.1
 #
+/sbin/ip route add 0/0 via 10.86.91.1 metric 20
 #
 echo "# > /sbin/ip route "
 /sbin/ip route
