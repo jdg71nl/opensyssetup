@@ -2,6 +2,7 @@ apt-transport-https
 arping
 arp-scan
 curl
+ethtool
 fping
 git
 htop
