@@ -32,7 +32,19 @@ bssid / frequency / signal level / flags / ssid
 e4:5f:01:82:c4:7e       2437    -57     [WPA2-PSK-CCMP][ESS]    happy-camper-2g
 60:a4:b7:6a:02:fe       2442    -77     [WPA2-PSK-CCMP][WPS][ESS]       hilbrunts
 
-
+# problems with wlan0 ?
+# --[CWD=~]--[1704621031 10:50:31 Sun 07-Jan-2024 CET]--[root@rpi4b-virb-werouter]--[hw:RPI4b-1.5,os:Debian-12/bookworm,kernel:6.1.0-rpi7-rpi-v8,isa:aarch64]------
+# > wpa_cli scan
+# Failed to connect to non-global ctrl_ifname: (nil)  error: Success
+# 
+# solution:
+# https://raspberrypi.stackexchange.com/questions/67311/failed-to-connect-to-non-global-ctrl-ifname-when-running-wpa-cli-reconfigure
+# First, check how the wpa_supplicant service is launched by sudo systemctl status, if it indicates
+# /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
+# , then you got the problem.
+> grep ExecStart /usr/lib/systemd/system/wpa_supplicant@.service 
+#ExecStart=/sbin/wpa_supplicant -c/etc/wpa_supplicant/wpa_supplicant-%I.conf -i%I
+ExecStart=/sbin/wpa_supplicant -c/etc/wpa_supplicant/wpa_supplicant-%I.conf -i%I -Dnl80211,wext 
 
 
 # - - -

@@ -1,16 +1,36 @@
 #!/bin/bash
 #= git-dump-log-repos-oneliners.sh 
-# 2022(c) John@de-Graaff.net
-
+# 2024(c) John@de-Graaff.net
+#
+# find bash bug using:
+# set -x
+#
 MONTH=$1
-if [ $MONTH == "" ]; then
+# WRONG, USE PARENTHESIS AROUND VARIABLE , THIS GIVES ERROR ==> if [ $MONTH = "" ]; then
+# CORRECT ==> if [ "$MONTH" = "" ]; then
+# BETTER:
+if [ -z "$MONTH" ]; then
   echo "# provde month in YYYY-MM format .."
   exit 1
 fi
 echo "# month = $MONTH"
 
-# MY_ARGS=$( ./month-to-since-before.pl $1 )
-MY_ARGS=$( month-to-since-before.pl $1 )
+# pop/remove first argument in $@ :
+shift
+REPOS_LIST="$@"
+if [ -z "$REPOS_LIST" ]; then
+  echo "# provde a list of 1 or more space-separated repo_names .."
+  exit 1
+fi
+echo "# REPOS_LIST = $REPOS_LIST"
+# exit 0
+
+# NOTE: need DatTime package in Perl
+# git-dump-month-to-since-before.pl
+# sudo apt install -y libdatetime-perl
+
+# MY_ARGS=$( ./git-dump-month-to-since-before.pl $1 )
+MY_ARGS=$( git-dump-month-to-since-before.pl $MONTH )
 # echo "${MY_ARGS}" ; exit
 
 # idea from: https://stackoverflow.com/questions/1469849/how-to-split-one-string-into-multiple-strings-separated-by-at-least-one-space-in
@@ -23,16 +43,18 @@ SINCE=${ARG_ARRAY[0]}
 BEFORE=${ARG_ARRAY[1]}
 echo "# calc => SINCE=$SINCE BEFORE=$BEFORE"
 
-GITLOGDIR="git_log"
+# GITLOGDIR="git_log"
+GITLOGDIR="git_log_jdg_repo/git_log"
 mkdir -pv $GITLOGDIR/$MONTH
 
-ALLFILE="git-log-oneline-numstat--repo--ALL--month-$MONTH.csv"
-echo "# ALLFILE=$ALLFILE "
-rm -f ./$GITLOGDIR/$MONTH/$ALLFILE
-touch ./$GITLOGDIR/$MONTH/$ALLFILE
+#ALLFILE="git-log-oneline-numstat--repo--ALL--month-$MONTH.csv"
+#echo "# ALLFILE=$ALLFILE "
+#rm -f ./$GITLOGDIR/$MONTH/$ALLFILE
+#touch ./$GITLOGDIR/$MONTH/$ALLFILE
 
 # for REPO in TokenMe-* SUM4 ; do 
-for REPO in TokenMe-Dashboard-Server TokenMe-API-Server TokenMe-Architecture ; do 
+#for REPO in TokenMe-Dashboard-Server TokenMe-API-Server TokenMe-Architecture ; do 
+for REPO in $REPOS_LIST ; do 
 
   echo "# - - - - - - = = = - - - - - - " 
   echo "START for-loop iteration: REPO='$REPO'" 
@@ -54,15 +76,20 @@ for REPO in TokenMe-Dashboard-Server TokenMe-API-Server TokenMe-Architecture ; d
   # -s == size, so if >0 then not empty:
   if [ -s ./$GITLOGDIR/$MONTH/$TXT ]; then
     #
-    SMASH="${FILE}-smash.csv"
+    # SMASH="${FILE}-smash.csv"
+    SMASH="${FILE}.csv"
     # echo "SMASH='$SMASH'" 
     #
     echo "# smashing ..."
-    cat ./$GITLOGDIR/$MONTH/$TXT | sed "s/REPONAME/$REPO/" | perl -e 'my $LAST="", $ADD="", $REM="", $FILE=""; while (my $LINE=<STDIN>) { chomp($LINE); next if ($LINE eq ""); if ($LINE =~ /^"/) {$LAST=$LINE; ($ADD,$REM,$FILE) = ("","",""); } else {($ADD,$REM,$FILE) = split /\s/, $LINE; print "$LAST,\"added:$ADD\",\"removed:$REM\",\"file:$FILE\"\n"; } }' > ./$GITLOGDIR/$MONTH/$SMASH
+    cat ./$GITLOGDIR/$MONTH/$TXT | sed "s/REPONAME/$REPO/" \
+    | git-dump-smash.pl \
+    > ./$GITLOGDIR/$MONTH/$SMASH
+    #
+    # | perl -e 'my $LAST="", $ADD="", $REM="", $FILE=""; while (my $LINE=<STDIN>) { chomp($LINE); next if ($LINE eq ""); if ($LINE =~ /^"/) {$LAST=$LINE; ($ADD,$REM,$FILE) = ("","",""); } else {($ADD,$REM,$FILE) = split /\s/, $LINE; print "$LAST,\"added:$ADD\",\"removed:$REM\",\"file:$FILE\"\n"; } }' \
     #
     # append ALL file ...
-    echo "# > cat ./$GITLOGDIR/$MONTH/$SMASH >> ./$GITLOGDIR/$MONTH/$ALLFILE ..."
-    cat ./$GITLOGDIR/$MONTH/$SMASH >> ./$GITLOGDIR/$MONTH/$ALLFILE
+    # echo "# > cat ./$GITLOGDIR/$MONTH/$SMASH >> ./$GITLOGDIR/$MONTH/$ALLFILE ..."
+    # cat ./$GITLOGDIR/$MONTH/$SMASH >> ./$GITLOGDIR/$MONTH/$ALLFILE
     #
   fi
   #

@@ -1,6 +1,6 @@
 #!/bin/bash
-#= debian_install_nodejs.sh
-# (c)2023 John@de-Graaff.net
+#= 
+# (c)2024 John@de-Graaff.net
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 # display every line executed in this bash script:
 #set -o xtrace
@@ -12,8 +12,8 @@ echo "# running: $BASENAME ... "
 #
 f_echo_exit1() { echo $1 ; exit 1 ; }
 if [ ! -e /etc/debian_version ]; then f_echo_exit1 "# Error: found non-Debain OS .." ; fi
-if ! which sudo >/dev/null ; then f_echo_exit1 "# please install first (as root) ==> apt install sudo ";; fi
-if ! which dpkg-query >/dev/null ; then f_echo_exit1 "# please install first: using ==> sudo apt install dpkg-query "; fi
+if ! which sudo >/dev/null ; then f_echo_exit1 "# please install first (as root) ==> apt install sudo " ; fi
+if ! which dpkg-query >/dev/null ; then f_echo_exit1 "# please install first: using ==> sudo apt install dpkg-query " ; fi
 #
 #usage() {
 #  #echo "# usage: $BASENAME { -req_flag | [ -opt_flag string ] } " 1>&2 
@@ -25,7 +25,7 @@ MYUID=$( id -u )
 if [ $MYUID != 0 ]; then
   # https://unix.stackexchange.com/questions/129072/whats-the-difference-between-and
   # $* is a single string, whereas $@ is an actual array.
-  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 fi
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 #
@@ -40,24 +40,22 @@ f_check_install_packages() {
 # f_check_install_packages curl git sudo
 #
 #
-f_check_install_packages ca-certificates curl gnupg
-
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-#NODE_MAJOR=16
-NODE_MAJOR=18
-#NODE_MAJOR=20
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-apt update
-apt install -y nodejs
+f_check_install_packages ca-certificates curl gnupg wget apt-transport-https
+# ? : gpg
 #
-npm i -g npm
-npm i nodemon -g
-npm i pm2 -g
-sudo -u jdg pm2
-sudo -u jdg pm2 startup
-sudo -u jdg env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u jdg --hp /home/jdg
+#
+# https://code.visualstudio.com/docs/setup/linux
+#
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+rm -f packages.microsoft.gpg
+#
+sudo apt update
+sudo apt install code 
+#
 #
 exit 0
 #
 #-eof
+

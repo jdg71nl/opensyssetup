@@ -1,0 +1,62 @@
+#= ip_info.quicky.txt
+
+#
+--[CWD=~/dev/dcs-bmw-rfid-io-board(git:main)]--[1707511332 21:42:12 Fri 09-Feb-2024 CET]--[jdg@rpi5-nvme-ubuntu]--[hw:RPI5b-1.0,os:Ubuntu-23.10/mantic,isa:aarch64]------
+> what-is-my-ip.sh 
+<!-- usage: curl https://dgt-bv.com/whatismyip.php -->
+<pre>
+Your IP address is                : 89.205.131.149
+The DNS PTR-record for your IP is : (no PTR-record)
+Local time on server is           : Fri, 09 Feb 2024 21:42:31 +0100
+Local time in Unix-Epoch seconds  : 1707511351
+</pre>
+
+--[CWD=~/dev/dcs-bmw-rfid-io-board(git:main)]--[1707511351 21:42:31 Fri 09-Feb-2024 CET]--[jdg@rpi5-nvme-ubuntu]--[hw:RPI5b-1.0,os:Ubuntu-23.10/mantic,isa:aarch64]------
+> what-is-my-ip.sh 
+<!-- usage: curl https://dgt-bv.com/whatismyip.php -->
+<pre>
+Your IP address is                : 77.174.28.185
+The DNS PTR-record for your IP is : 77-174-28-185.fixed.kpn.net
+Local time on server is           : Fri, 09 Feb 2024 21:44:48 +0100
+Local time in Unix-Epoch seconds  : 1707511488
+</pre>
+
+--[CWD=~/dev/dcs-bmw-rfid-io-board(git:main)]--[1707511488 21:44:48 Fri 09-Feb-2024 CET]--[jdg@rpi5-nvme-ubuntu]--[hw:RPI5b-1.0,os:Ubuntu-23.10/mantic,isa:aarch64]------
+#.
+
+#
+https://askubuntu.com/questions/958360/how-can-i-find-my-internet-service-provider-isp-using-a-bash-script
+
+header='--header=User-Agent: Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.97 Safari/537.11'
+wget "$header" -q -O - whoismyisp.org/ip/xxx.xxx.xxx.xxx | grep -oP -m1 '(?<=block text-4xl\">).*(?=</span)'
+#.
+
+#
+--[CWD=~/www/dgt-bv.com/webroot(git:master)]--[1707511622 21:47:02 Fri 09-Feb-2024 CET]--[jdg@jwww]--[os:Debian-10/buster,kernel:4.19.0-22-amd64,isa:x86_64]------
+> wget "$header" -q -O - whoismyisp.org/ip/89.205.131.149 | grep -oP -m1 '(?<=block text-4xl\">).*(?=</span)'
+
+Odido Netherlands B.V.
+#.
+
+#
+--[CWD=~/www/dgt-bv.com/webroot(git:master)]--[1707511645 21:47:25 Fri 09-Feb-2024 CET]--[jdg@jwww]--[os:Debian-10/buster,kernel:4.19.0-22-amd64,isa:x86_64]------
+> curl -s ipinfo.io/org
+AS210649 QAM Wireless B.V.
+
+# man curl 
+       -s, --silent
+              Silent  or  quiet  mode.  Don't  show  progress meter or error messages.
+              Makes Curl mute. It will still output the data you ask for,  potentially
+              even to the terminal/stdout unless you redirect it.
+#.
+
+
+#
+https://ipinfo.io/
+https://ipinfo.io/developers
+https://ipinfo.io/developers/libraries
+https://github.com/ipinfo/node
+
+
+
+#-eof

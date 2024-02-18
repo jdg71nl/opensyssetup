@@ -17,13 +17,14 @@ MYUID=$( id -u )
 #  exit 1
 #}
 if [ $MYUID != 0 ]; then
-  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 fi
 #
 #
-/sbin/ip route add 0.0.0.0/1   via 10.86.91.1
-/sbin/ip route add 128.0.0.0/1 via 10.86.91.1
+#/sbin/ip route add 0.0.0.0/1   via 10.86.91.1
+#/sbin/ip route add 128.0.0.0/1 via 10.86.91.1
 #
+/sbin/ip route add 0/0 via 10.86.91.1 metric 20
 #
 echo "# > /sbin/ip route "
 /sbin/ip route

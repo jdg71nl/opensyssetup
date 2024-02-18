@@ -1,0 +1,61 @@
+#= debian-www-browser.quicky
+
+
+> sudo apt install dillo
+
+# https://packages.debian.org/bookworm/www-browser
+
+Packages providing www-browser
+
+chromium
+    web browser
+dillo
+    Small and fast web browser
+edbrowse
+    /bin/ed-alike webbrowser written in C
+elinks
+    advanced text-mode WWW browser
+epiphany-browser
+    Intuitive GNOME web browser
+falkon
+    lightweight web browser based on Qt WebEngine
+firefox-esr
+    Mozilla Firefox web browser - Extended Support Release (ESR)
+hv3
+    Lightweight web browser
+konqueror
+    advanced file manager, web browser and document viewer
+links
+    Web browser running in text mode
+links2
+    Web browser running in both graphics and text mode
+luakit
+    fast and small web browser extensible by Lua
+lynx
+    classic non-graphical (text-mode) web browser
+morph-browser
+    Web Browser for Lomiri
+netrik
+    text mode WWW browser with vi like keybindings
+netsurf-fb
+    small web browser with CSS support for framebuffers
+netsurf-gtk
+    small web browser with CSS support for GTK
+qutebrowser
+    Keyboard-driven, vim-like browser based on PyQt5
+sugar-browse-activity
+    Sugar Learning Platform - web browsing activity
+surf
+    Simple web browser by suckless community
+w3m
+    WWW browsable pager with excellent tables/frames support
+xemacs21-mule
+    highly customizable text editor -- Mule binary
+xemacs21-mule-canna-wnn
+    highly customizable text editor -- Mule binary compiled with Canna and Wnn
+xemacs21-nomule
+    highly customizable text editor -- Non-mule binary 
+
+
+#-eof
+

@@ -1,0 +1,13 @@
+#= avahi.quicky
+
+# https://wiki.debian.org/Avahi
+Avahi technology is dependent on the mDNS and DNS-SD protocols and allows machines to
+- publish services and hosts running on a local network, and
+- discover services and hosts running on a local network. 
+Both functions are implemented without having to configure a DNS sever. 
+Instead, computers on a network create their own local DNS records and store them in a cache located in memory. 
+The registration of local IP addresses and static services is done by avahi-daemon using mDNS/DNS-SD. 
+
+
+#-eof
+

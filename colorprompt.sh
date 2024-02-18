@@ -29,59 +29,18 @@ NOCOLOR='\e[0m'              # No Color
 
 export PATH=$HOME/opensyssetup/bin:$HOME/opensyssetup/mac/bin:$PATH
 
+# https://code.visualstudio.com/docs/setup/mac
+#
+# --[CWD=~/opensyssetup(git:main)]--[1705867071 20:57:51 Sun 21-Jan-2024 CET]--[jdg@MB18-jdg71nl]--[os:MacOS--13.6.3,isa:x86_64]------
+# > lt /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code
+# -rwxr-xr-x  1 jdg  staff   1.0K Jan 18 15:28 /Applications/Visual Studio Code.app/Contents/Resources/app/bin/code
+#
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+
 # jdg-tokenme:
 alias sti='sudo -u tokenme -i' 
 
 #===============================================================
-# DISTRO info
-#===============================================================
-
-#DISTROFILE="/etc/distro.info"
-DISTROFILE="$HOME/distro.info"
-[[ -f $DISTROFILE ]] && source $DISTROFILE
-[[ -z $DISTRO_TYPE ]] && DISTRO_TYPE="Unknown-Distro"
-export DISTRO_TYPE=$DISTRO_TYPE
-
-#===============================================================
-# Shell prompt
-#===============================================================
-
-# idea from: https://david.newgas.net/return_code/
-#export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "returned \033[01;31m$ret\033[00;00m"; fi'
-export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "#( bash[PROMPT_COMMAND]: prev.cmd returned non-zero code: \033[01;31m$ret\033[00;00m )"; fi'
-
-# version 1:
-#
-# --[22:26:19 jdegraaff@multi-delft-01]-------------------------------------------
-# /etc/profile.d>
-#
-#PS1="${cyan}--[\t \u@\h]-------------------------------------------${NOCOLOR}\n\w> "
-
-# version 2:
-#
-# --[CWD=/etc/profile.d]--[22:25:37]--[root@multi-delft-01]------
-# >
-#
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t]--[${red}\u${cyan}@\h]------${NOCOLOR}\n> "
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h]------${NOCOLOR}\n> "
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h:$DISTRO_TYPE]------${NOCOLOR}\n> "
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h]--[${yellow}$DISTRO_TYPE${cyan}]------${NOCOLOR}\n> "
-
-#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \D{%a %d-%b-%Y %Z}]--[${red}\u${cyan}@\h]--[${yellow}$DISTRO_TYPE${cyan}]------${NOCOLOR}\n> "
-
-# git completion and prompt:
-#[ -r /usr/local/syssetup/git-completion.bash ] && source /usr/local/syssetup/git-completion.bash
-#[ -f /usr/local/syssetup/git-prompt.sh ] && source /usr/local/syssetup/git-prompt.sh
-[ -r $HOME/opensyssetup/git-completion.bash ] && source $HOME/opensyssetup/git-completion.bash
-[ -f $HOME/opensyssetup/git-prompt.sh ] && source $HOME/opensyssetup/git-prompt.sh
-#
-RED='\e[1;31m' ; GREEN='\e[1;32m' ; YELLOW='\e[1;33m' ; BLUE='\e[1;34m' ; CYAN='\e[1;36m' ; NOCOLOR='\e[0m'
-#
-[ -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
-#
-[ ! -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
-#
-
 # IDEA (from Daniel Demirdag @TWS):
 #declare -x SSH_CONNECTION="172.16.53.1 53289 172.16.53.146 22"
 
@@ -148,22 +107,29 @@ alias hig='history | grep'
 # https://stackoverflow.com/questions/7181620/how-do-i-create-an-alias-where-the-arguments-go-in-the-middle
 alias ng='f(){ lsof -i -n -P +c0 | egrep "PID|$1" ; unset -f f; }; f'
 #ng () { lsof -i -n -P +c0 | egrep "PID|$1" }
+alias ng_sudo='f(){ sudo lsof -i -n -P +c0 | egrep "PID|$1" ; unset -f f; }; f'
 #
 alias psg='ps aux | grep'
+alias psg_sudo='sudo ps aux | grep'
+#
 alias fm='/usr/bin/find . \( -path "*.svn*" -prune \) -o \( -path "*/proc/*" -prune \) -o \( -type f -printf "%010T@ [%Tc] (%10s Bytes) %p\n" \) | sort -n | tail'
 #alias ifc="/sbin/ifconfig | egrep 'encap|addr|MTU'"
 #alias ifc='/sbin/ifconfig | egrep -i "encap|addr|mtu|inet|ether"'
 alias ifc='echo "# ip addr show | egrep -i \"mtu|ether|inet\" .." && ip addr show | egrep -i "mtu|ether|inet"'
 alias cdp='echo "change dir to: `pwd -P` ..";cd "`pwd -P`"'
+#
 #alias dusort='du -sbx * .??* | convertsize.pl | sort'
 #alias fusort='find . -maxdepth 2 -type f -size +2048k -printf "%s\t%p\n" | convertsize.pl | sort'
-alias dusort=' find . -maxdepth 1 -type d -exec du -sbx "{}" \;  | convertsize.pl | append_slash.pl | sort'
+alias dusort='find . -maxdepth 1 -type d -exec du -sbx "{}" \;  | convertsize.pl | append_slash.pl | sort'
+# idea 'du -hxd' from: https://www.nikouusitalo.com/blog/fixing-raspberry-pi-vnc-cannot-currently-show-the-desktop-but-its-not-resolution-or-hdmi_force_hotplug/
+alias dusort2='f_dusort2(){ sudo du -hxd 1 $1 | sort -h ; unset -f f_dusort2; }; f_dusort2'
 alias duasort='find . -type d -exec du -sbx "{}" \;  | convertsize.pl | append_slash.pl | sort'
 # mac
 alias dusortm="du -skx * | $HOME/opensyssetup/mac/bin/convertsize.mac.pl | sort"
 #alias duasortm='find . -type d -exec du -sx "{}" \;  | convertsize.pl | append_slash.pl | sort'
 alias duasortm='find . -type d -exec du -sx "{}" \;  | $HOME/opensyssetup/mac/bin/convertsize.mac.pl  | append_slash.pl | sort'
 # needs gfind from MacPorts: sudo port install findutils
+#
 alias fmm='gfind . \( -path "*.svn*" -prune \) -o \( -path "*/proc/*" -prune \) -o \( -type f -printf "%010T@ [%Tc] (%10s Bytes) %p\n" \) 
 | sort -n | tail'
 #
@@ -228,7 +194,87 @@ LESS='-i -S'
 alias htop='TERM=xterm-color htop'
 
 #===============================================================
+# Exec scripts at start Shell:
 #===============================================================
 
+if [ -r ~/opensyssetup/bin/oss-check-repo.sh ]; then
+  ~/opensyssetup/bin/oss-check-repo.sh
+fi
+
+if [ -r ~/opensyssetup/bin/write_distro_file.sh ]; then
+  ~/opensyssetup/bin/write_distro_file.sh
+fi
+
+#===============================================================
+# DISTRO info
+#===============================================================
+
+#DISTROFILE="/etc/distro.info"
+DISTROFILE="$HOME/distro.info"
+[[ -f $DISTROFILE ]] && source $DISTROFILE
+[[ -z $DISTRO_TYPE ]] && DISTRO_TYPE="Unknown-Distro"
+#
+export DISTRO_TYPE=$DISTRO_TYPE
+#
+if [ ! -z "$JINFO_PLATFORM" ]; then
+  export JINFO_PLATFORM="$JINFO_PLATFORM"
+  export JINFO_HARDWARE="$JINFO_HARDWARE"
+  export JINFO_ISA="$JINFO_ISA"
+  export JINFO_OS="$JINFO_OS"
+  export JINFO_VERSION="$JINFO_VERSION"
+  export JINFO_CODENAME="$JINFO_CODENAME"
+  export JINFO_KERNEL="$JINFO_KERNEL"
+fi
+#
+
+#===============================================================
+# Shell prompt
+#===============================================================
+
+# idea from: https://david.newgas.net/return_code/
+#export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "returned \033[01;31m$ret\033[00;00m"; fi'
+export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "\n#( bash[PROMPT_COMMAND]: prev.cmd returned non-zero code: \033[01;31m$ret\033[00;00m )"; else echo; fi'
+
+# version 1:
+#
+# --[22:26:19 jdegraaff@multi-delft-01]-------------------------------------------
+# /etc/profile.d>
+#
+#PS1="${cyan}--[\t \u@\h]-------------------------------------------${NOCOLOR}\n\w> "
+
+# version 2:
+#
+# --[CWD=/etc/profile.d]--[22:25:37]--[root@multi-delft-01]------
+# >
+#
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t]--[${red}\u${cyan}@\h]------${NOCOLOR}\n> "
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h]------${NOCOLOR}\n> "
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h:$DISTRO_TYPE]------${NOCOLOR}\n> "
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \d]--[${red}\u${cyan}@\h]--[${yellow}$DISTRO_TYPE${cyan}]------${NOCOLOR}\n> "
+
+#PS1="${cyan}--[CWD=${red}\w${cyan}]--[\t \D{%a %d-%b-%Y %Z}]--[${red}\u${cyan}@\h]--[${yellow}$DISTRO_TYPE${cyan}]------${NOCOLOR}\n> "
+
+# git completion and prompt:
+#[ -r /usr/local/syssetup/git-completion.bash ] && source /usr/local/syssetup/git-completion.bash
+#[ -f /usr/local/syssetup/git-prompt.sh ] && source /usr/local/syssetup/git-prompt.sh
+[ -r $HOME/opensyssetup/git-completion.bash ] && source $HOME/opensyssetup/git-completion.bash
+[ -f $HOME/opensyssetup/git-prompt.sh ] && source $HOME/opensyssetup/git-prompt.sh
+#
+RED='\e[1;31m' ; GREEN='\e[1;32m' ; YELLOW='\e[1;33m' ; BLUE='\e[1;34m' ; CYAN='\e[1;36m' ; NOCOLOR='\e[0m'
+#
+[ -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+#
+[ ! -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+#
+
+#===============================================================
+# Mac exports
+
+# https://support.apple.com/en-us/102360
+# "To silence this warning, you can add this command to ~/.bash_profile or ~/.profile: "
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+#===============================================================
+#===============================================================
 
 

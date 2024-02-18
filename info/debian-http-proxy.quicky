@@ -1,0 +1,11 @@
+#= debian-http-proxy.quicky 
+
+# https://manpages.debian.org/bookworm/tinyproxy-bin/tinyproxy.8.en.html
+# ==> tinyproxy
+> sudo apt install tinyproxy
+
+# https://tinyproxy.github.io/
+
+
+#-eof
+

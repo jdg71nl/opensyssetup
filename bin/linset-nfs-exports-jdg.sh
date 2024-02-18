@@ -9,7 +9,7 @@ usage() {
 }
 #
 MYID=$( id -u )
-if [ $MYID != 0 ]; then echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ; fi
+if [ $MYID != 0 ]; then echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ; fi
 #
 echo "# > apt install -y nfs-kernel-server ... "
 apt install -y nfs-kernel-server

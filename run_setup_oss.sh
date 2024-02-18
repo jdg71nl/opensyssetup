@@ -96,9 +96,6 @@ if [ "${PLAT}" == "Linux" ]; then
   echo "# added source-command in ${BASHRC} .."
 fi
 
-#PROFILE="$HOME/.profile"
-BASH_PROFILE="$HOME/.bash_profile"
-#
 # https://stackoverflow.com/questions/19670061/bash-if-false-returns-true-instead-of-false-why
 #f true ; then     # ----- NOT: if  [ -f "${BASHRC}" ]; then
 #
@@ -119,6 +116,9 @@ if [ "${PLAT}" == "MacOS" ]; then
  #ln -sf /usr/local/opensyssetup/mac/bin/colorprompt.sh /etc/colorprompt.sh
  #echo "\n#\n. /etc/colorprompt.sh\n" >> /etc/profile
  #
+#PROFILE="$HOME/.profile"
+BASH_PROFILE="$HOME/.bash_profile"
+#
  touch ${BASH_PROFILE}
  sed -i "" 's/^.*bashrc.*$/# &/'    ${BASH_PROFILE}
  echo -e "# .bash_profile \nif [ -r ~/.bashrc ]; then source ~/.bashrc ; fi \n# \n" >> ${BASH_PROFILE}
@@ -150,11 +150,14 @@ fi
 # - - - 
 if [ "${LOGNAME}" == "jdg" ]; then
   #
-  git config --global user.name "John de Graaff"
-  git config --global user.email john@de-graaff.net
-  git config --global alias.ss "status -s"        # short status
-  git config --global alias.logg "log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'"
-  git config --global alias.logn "log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat"
+  #git config --global user.name "John de Graaff"
+  #git config --global user.email john@de-graaff.net
+  #git config --global alias.ss "status -s"        # short status
+  #git config --global alias.logg "log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'"
+  #git config --global alias.logn "log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat"
+  # or:
+  ~/opensyssetup/bin/git-config-jdg.sh
+  #
   # will set in this file: ~/.gitconfig  
   # [user]
   #         name = John de Graaff
@@ -163,7 +166,9 @@ if [ "${LOGNAME}" == "jdg" ]; then
   #         ss = status -s
   #         logg = log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'
   #         logn = log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat
+  #
   echo "# set git config for user jdg "
+  #
 fi
 
 # - - - 

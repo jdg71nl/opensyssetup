@@ -17,7 +17,7 @@ MYUID=$( id -u )
 #  exit 1
 #}
 if [ $MYUID != 0 ]; then
-  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 fi
 #
 #perl -pi -e 's/^option domain-name-servers .*$/option domain-name-servers 1.1.1.1 , 1.0.0.1 ;/' /etc/dhcp/dhcpd.conf

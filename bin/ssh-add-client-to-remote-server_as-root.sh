@@ -14,7 +14,7 @@ usage() {
 #error_usage()  { echo "# $BASENAME: ERROR - $1"; usage       ; }
 #error()        { echo "# $BASENAME: ERROR - $1"; exit 1      ; }
 #echo_msg_log() { echo "# $BASENAME: ERROR - $1"; logger "$1" ; }
-#if [ `id -u` != 0 ]; then echo "Provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 1 ; fi
+#if [ `id -u` != 0 ]; then echo "Provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 0 ; fi
 #
 if [[ -z "$3" ]]; then usage ; fi
 #

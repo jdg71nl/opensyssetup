@@ -37,7 +37,7 @@ echo "# test installed required packages:"
 f_check_install_package rsync
 f_check_install_package apt-show-versions
 f_check_install_package lshw
-f_check_install_package raspinfo
+#f_check_install_package raspinfo
 
 # general settings:
 CONF_DIR="/etc/smartback4"

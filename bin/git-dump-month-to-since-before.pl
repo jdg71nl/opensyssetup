@@ -19,23 +19,25 @@ if ($arg1 eq "") { $arg1 = "1970-01"; }
 #my( $year, $month ) = qw( 2012 2 );
 my( $year, $month ) = split /\-/, $arg1;
 
-my $date_before = DateTime->new(
+my $date_1st_of_month = DateTime->new(
   year  =>  $year,
   month => $month,
   day   => 1,
 );
 
-# $date_before->add( months => 1 )->subtract( days => 1 );
-$date_before->add( months => 1 );
+my $date_before = $date_1st_of_month->clone;
+my $date_since = $date_1st_of_month->clone;
 
-my $date_since = $date_before->clone;
+$date_before->add( months => 1 )->subtract( days => 1 );
+# $date_before->add( months => 1 );
 
 # $date_since->add( months => 1 )->subtract( days => 1 );
 # $date_since->subtract( months => 1 )->subtract( days => 1 );
-$date_since->subtract( months => 1 );
+$date_since->subtract( days => 1 );
+# $date_since->subtract( months => 1 );
 
 # print "date_since=" .  $date_since->ymd('-')  . "\n";
-# print "date_before=" . $date_before->ymd('-') . "\n";
+# print "date_1st_of_month=" . $date_1st_of_month->ymd('-') . "\n";
 
 print $date_since->ymd('-') . " " . $date_before->ymd('-') . "\n";
 

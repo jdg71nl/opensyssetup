@@ -24,8 +24,8 @@ FILE="$HOME/distro.info"
 ## sudo
 #MYID=$( id -u )
 #if [ $MYID != 0 ]; then
-#  #echo "# provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 1 ;  # DONT USE $* !!
-#  echo "## provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 1 ;
+#  #echo "# provide your password for 'sudo':" ; sudo "$0" "$*" ; exit 0 ;  # DONT USE $* !!
+#  echo "## provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 #fi
 
 # - - - - - - - - + + + - - - - - - - - 
@@ -123,12 +123,16 @@ write_distro()
 
     OS=$(lsb_release -is)
     # Debian
+
     VER=$(lsb_release -rs)
     # 8.7
     # 10
+
+    # COD = Codename
     COD=$(lsb_release -cs)
     # jessie
     # buster
+
     KER=$(uname -r)
     # 4.19.0-14-amd64
     ISA=$(uname -m)
@@ -308,15 +312,59 @@ write_distro()
   #DISTRO="plat:$PLAT,dist:$OS-$VER/$COD,kernel:$KER,arch:$ARCH"
   #DISTRO="hw:${HARD},plat:${PLAT},dist:${OS}-${VER}/${COD},kernel:${KER},arch:${ARCH}"
   #DISTRO="hw:${HARD},${OSSTRING}${KERNSTRING},isa:${ISA}"
-  if [ ! -z "${HARD}" ]; then
-    HARD="hw:${HARD},"
+  HARDSTRING="$HARD"
+  if [ ! -z "${HARDSTRING}" ]; then
+    HARDSTRING="hw:${HARDSTRING},"
   fi
-  DISTRO="${HARD}${OSSTRING}${KERNSTRING},isa:${ISA}"
+  #DISTRO="${HARD}${OSSTRING}${KERNSTRING},isa:${ISA}"
+  #
+  # --------->>>>> Now we can build the DISTRO-string !! <<<<<----------- :
+  DISTRO="${HARDSTRING}${OSSTRING},isa:${ISA}"
 
+  # Examples $DISTRO:
+  # hw:RPI4b-1.5,os:Debian-11/bullseye,isa:aarch64
+  # os:Debian-12/bookworm,isa:x86_64
+  # hw:RPI5b-1.0,os:Ubuntu-23.10/mantic,isa:aarch64
+
+  export JINFO_PLATFORM="$PLAT"
+  export JINFO_HARDWARE="$HARD"
+  export JINFO_ISA="$ISA"
+  export JINFO_OS="$OS"
+  export JINFO_VERSION="$VER"
+  export JINFO_CODENAME="$COD"
+  export JINFO_KERNEL="$KER"
+
+  echo "# JINFO_PLATFORM=\"$JINFO_PLATFORM\""
+  echo "# JINFO_HARDWARE=\"$JINFO_HARDWARE\""
+  echo "# JINFO_ISA=\"$JINFO_ISA\""
+  echo "# JINFO_OS=\"$JINFO_OS\""
+  echo "# JINFO_VERSION=\"$JINFO_VERSION\""
+  echo "# JINFO_CODENAME=\"$JINFO_CODENAME\""
+  echo "# JINFO_KERNEL=\"$JINFO_KERNEL\""
+
+  #
+#  export JINFO_IP_eth0=$( ip -o -4 addr show eth0 | awk '{print $4}' | sed 's/\/.*$//' )
+#  export JINFO_IP_eth1=$( ip -o -4 addr show eth1 | awk '{print $4}' | sed 's/\/.*$//' )
+#  export JINFO_IP_wlan0=$( ip -o -4 addr show wlan0 | awk '{print $4}' | sed 's/\/.*$//' )
+#  export JINFO_IP_wlan1=$( ip -o -4 addr show wlan1 | awk '{print $4}' | sed 's/\/.*$//' )
+#  export JINFO_IP_tun21=$( ip -o -4 addr show tun21 | awk '{print $4}' | sed 's/\/.*$//' )
+
+
+  # /etc/distro.info
+  # used by: $ HOME/syssetup/colorprompt.sh
   cat <<HERE >$FILE
-# /etc/distro.info
-# used by: $ HOME/syssetup/colorprompt.sh
+#= $HOME/distro.info
+# used by: $HOME/opensyssetup/colorprompt.sh
 DISTRO_TYPE="$DISTRO"
+#
+JINFO_PLATFORM="$JINFO_PLATFORM"
+JINFO_HARDWARE="$JINFO_HARDWARE"
+JINFO_ISA="$JINFO_ISA"
+JINFO_OS="$JINFO_OS"
+JINFO_VERSION="$JINFO_VERSION"
+JINFO_CODENAME="$JINFO_CODENAME"
+JINFO_KERNEL="$JINFO_KERNEL"
+#
 HERE
 
   echo_verbose "## new file '$FILE' written."
@@ -389,6 +437,7 @@ main ()
   #echo "## running $BASENAME ..."
   # detect_os
   write_distro
+
   echo_verbose "## done! "
 }
 
