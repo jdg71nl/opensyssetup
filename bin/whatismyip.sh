@@ -29,5 +29,10 @@
 # > type curl-cat 
 #curl-cat is aliased to `curl -fsL'
 #
-curl -fsL https://dgt-bv.com/whatismyip.php
+#
+#curl -fsL https://dgt-bv.com/whatismyip.php
+curl -fsL https://j71.nl/whatismyip.php
+#
+#
+#-eof
 
