@@ -13,20 +13,27 @@ echo "# running: $BASENAME ... "
 #:   # there are changes
 #: fi
 
+# JDG: another reason the ping hangs is: no DNS resolve, better ping IP instead hostname
+# > host $TARGET
+# $TARGET has address 140.82.121.3
+#TARGET="github.com"
+TARGET="140.82.121.3"
+TNAME="github.com($TARGET)"
+
 echo "# > cd ~/opensyssetup "
 cd ~/opensyssetup
 
 if [ -z "$(git status --porcelain)" ]; then
   echo "# 'git status --porcelain' says: no (stagged/unstagged) changes in repo."
-  echo "# checking 'ping -4q -c1 -W1 github.com' ... "
-  if ping -4q -c1 -W1 github.com 2>&1 1>/dev/null ; then
-    echo "# 'ping -4q -c1 -W1 github.com' says: remote repo (github.com) is reachable, now updating (git pull) ..."
+  echo "# checking 'ping -4q -c1 -W1 $TNAME' ... "
+  if ping -4q -c1 -W1 $TARGET 2>&1 1>/dev/null ; then
+    echo "# 'ping -4q -c1 -W1 $TNAME' says: remote repo is reachable, now updating (git pull) ..."
     echo "# > git pull "
     git pull 
     echo "# "
     exit 0
   else
-    echo "# 'ping -4q -c1 -W1 github.com' says: repo unreachable ... giving-up." 
+    echo "# 'ping -4q -c1 -W1 $TNAME' says: repo unreachable ... giving-up." 
     echo "# "
     exit 1
   fi
