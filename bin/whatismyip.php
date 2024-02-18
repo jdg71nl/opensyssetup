@@ -1,4 +1,5 @@
 <!-- usage: curl https://dgt-bv.com/whatismyip.php -->
+<!-- usage: curl https://j71.nl/whatismyip.php -->
 <pre>
 <?php 
 
@@ -11,6 +12,7 @@ if ($dns == $ip) { $dns = "(no PTR-record)"; }
 $get_org = "/home/jdg/opensyssetup/bin/ipinfo_io_json.sh";
 $org = exec($get_org);
 
+print "\n";
 print "Your IP address is                : $ip\n"; 
 print "The DNS PTR-record for your IP is : $dns\n";
 print "The ISP/Provider (org) name is    : $org\n";
