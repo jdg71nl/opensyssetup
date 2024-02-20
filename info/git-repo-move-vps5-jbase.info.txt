@@ -1,0 +1,12 @@
+#
+
+git remote add jbase ssh://git@jbase.j71.nl:2221/opt/git/web--de-graaff.net--web.git
+
+git remote remove vps5
+
+# old:
+# > git remote -v
+# vps5	ssh://git@vps5.dgt-bv.com:2221/opt/git/web--de-graaff.net--web.git
+
+#-eof
+
