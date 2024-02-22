@@ -9,7 +9,7 @@ $dns = gethostbyaddr($ip);
 if ($dns == $ip) { $dns = "(no PTR-record)"; }
 
 #$get_org = "~/opensyssetup/bin/ipinfo_io_json.sh";
-$get_org = "/home/jdg/opensyssetup/bin/ipinfo_io_json.sh";
+$get_org = "/home/jdg/opensyssetup/bin/ipinfo_io_json.sh $ip";
 $org = exec($get_org);
 
 print "\n";

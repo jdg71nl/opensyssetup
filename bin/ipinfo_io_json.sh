@@ -16,7 +16,12 @@
 # }
 
 #curl -s ipinfo.io/json
+#curl -s ipinfo.io/json | jq .org | tr -d '"'
+#curl -H "Accept: application/json" ipinfo.io/8.8.8.8
 
-curl -s ipinfo.io/json | jq .org | tr -d '"'
+IP="$1"
+
+echo "curl -H 'Accept: application/json' -s ipinfo.io/$IP/json | jq .org | tr -d '\"' "
+curl -H "Accept: application/json" -s ipinfo.io/$IP/json | jq .org | tr -d '"'
 
 #-eof
