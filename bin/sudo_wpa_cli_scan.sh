@@ -21,8 +21,10 @@ if [ $MYUID != 0 ]; then
 fi
 #
 #
+echo "# > sudo wpa_cli scan ..."
 sudo wpa_cli scan
-sleep 1
+echo "# > sleep 3 ..."
+sleep 3
 #
 #sudo wpa_cli scan_results
 #
