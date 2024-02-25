@@ -5,6 +5,7 @@ curl
 ethtool
 fping
 git
+host
 htop
 inetutils-telnet
 iptables
