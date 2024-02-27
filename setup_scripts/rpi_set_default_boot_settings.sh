@@ -100,7 +100,28 @@ else
   #systemctl status watchdog
   #
 fi
+echo "# - - - - - - = = = - - - - - - "
+echo "# done."
+echo "# "
+
+
+echo "# - - - - - - = = = - - - - - - "
+echo "# Setting no-wait:networking during boot ..."
 #
+FILE_NET="/etc/systemd/system/network-online.target.wants/networking.service"
+set_config_var TimeoutStartSec 1 $FILE_NET
+#
+#FILE_TO="/etc/systemd/system/networking.service.d/reduce-timeout.conf"
+PATH_TO="/etc/systemd/system/networking.service.d"
+FILE_TO="$PATH_TO/reduce-timeout.conf"
+mkdir -pv $PATH_TO
+cat > $FILE_TO <<HERE
+# $FILE_TO
+[Service]
+TimeoutStartSec=1
+HERE
+#
+echo "# - - - - - - = = = - - - - - - "
 echo "# done."
 echo "# "
 #
