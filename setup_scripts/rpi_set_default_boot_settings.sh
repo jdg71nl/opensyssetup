@@ -108,6 +108,8 @@ echo "# "
 echo "# - - - - - - = = = - - - - - - "
 echo "# Setting no-wait:networking during boot ..."
 #
+# jdg:idea_from: https://raspberrypi.stackexchange.com/questions/45399/slow-boot-ethernet-wait
+#
 FILE_NET="/etc/systemd/system/network-online.target.wants/networking.service"
 set_config_var TimeoutStartSec 1 $FILE_NET
 #
