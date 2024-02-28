@@ -31,6 +31,8 @@
 #
 #
 #curl -fsL https://dgt-bv.com/whatismyip.php
+#
+echo "# > curl -fsL https://j71.nl/whatismyip.php "
 curl -fsL https://j71.nl/whatismyip.php
 #
 #
