@@ -4,7 +4,13 @@
 # debian-replace-networkmanager.quicky
 # debian-remove-networkmanager.quicky
 
-# https://www.makeuseof.com/connect-to-wifi-with-nmcli/
+# d240301 -- https://superuser.com/questions/983378/raspberry-pi-has-both-static-and-dhcp-ip-address
+# if using ifupdown, then remove:
+> sudo apt purge dhcpcd5
+
+# - - - 
+
+# d23 https://www.makeuseof.com/connect-to-wifi-with-nmcli/
 >
 nmcli dev status
 nmcli radio wifi
@@ -24,7 +30,8 @@ sudo>
 systemctl stop NetworkManager.service
 systemctl disable NetworkManager.service
 apt purge network-manager 
-apt install -y dhcpcd5
+# NO ?!? :
+#apt install -y dhcpcd5
 sudo cp /usr/share/dhcpcd/hooks/10-wpa_supplicant /lib/dhcpcd/dhcpcd-hooks/10-wpa_supplicant
 
 # - - - - - - = = = - - - - - - 
