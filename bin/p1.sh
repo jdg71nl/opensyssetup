@@ -1,4 +1,12 @@
 #!/bin/bash
-echo "# > cat /proc/sys/net/ipv4/ip_forward "
-cat /proc/sys/net/ipv4/ip_forward 
+#= p1.sh | updated: d231108
+# (c)2023 John@de-Graaff.net
+#
+#ping -i3 1.1.1.1
+#
+echo "# > ping -4 1.1.1.1 ... "
+ping -4 1.1.1.1
+#
+exit 0
+#
 #-eof
