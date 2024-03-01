@@ -1,0 +1,42 @@
+# debian-unconfuse-wlan0-wlan1.quicky
+
+# d240301
+# https://raspberrypi.stackexchange.com/questions/63749/how-do-you-unconfuse-raspbian-when-it-has-wlan0-and-wlan1-reversed
+# Have a look at this. https://forums.raspberrypi.com/viewtopic.php?f=29&t=55527
+# To summarise and prevent link rot:
+# You need to make a custom udev rule which will do what you want. Raspbian by default doesn't create persistent udev rules for wifi devices.
+# The author of the linked post suggests using a different name series which doesn't conflict with the defaults, and uses wap0.
+# Create a new file /etc/udev/rules.d/70-my_network_interfaces.rules:
+# > cat /etc/udev/rules.d/70-my_network_interfaces.rules
+# # Built-in wifi interface used in hostapd - identify device by MAC address
+# SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="b8:27:eb:01:02:03", NAME="wap0"
+
+--[CWD=~/opensyssetup/info(git:main)]--[1709328604 22:30:04 Fri 01-Mar-2024 CET]--[jdg@rpi4b-virb-werouter]--[hw:RPI4b-1.5,os:Debian-12/bookworm,isa:aarch64]------
+> ifc
+# ip addr show | egrep -i "mtu|ether|inet" ..
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    inet 127.0.0.1/8 scope host lo
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+    link/ether d8:3a:dd:3f:8b:8c brd ff:ff:ff:ff:ff:ff
+    inet 10.86.91.254/24 brd 10.86.91.255 scope global eth0
+    inet 169.254.214.118/16 brd 169.254.255.255 scope global noprefixroute eth0
+3: wlan0: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DOWN group default qlen 1000
+    link/ether d8:3a:dd:3f:8b:8d brd ff:ff:ff:ff:ff:ff
+4: wlan1: <BROADCAST,MULTICAST> mtu 2312 qdisc mq state DOWN group default qlen 1000
+    link/ether 3c:52:a1:2a:c6:e4 brd ff:ff:ff:ff:ff:ff
+5: tun21: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN group default qlen 500
+    inet 10.231.21.89 peer 10.231.21.189/32 scope global tun21
+
+# OUI lookup -- https://www.wireshark.org/tools/oui-lookup.html
+d8:3a:dd:3f:8b:8d  =  D8:3A:DD Raspberry Pi Trading Ltd
+3c:52:a1:2a:c6:e4  =  3C:52:A1 TP-Link Corporation Limited
+
+> cat /etc/udev/rules.d/70-my_network_interfaces.rules
+# /etc/udev/rules.d/70-my_network_interfaces.rules
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="d8:3a:dd:3f:8b:8d", NAME="wifi0"
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="3c:52:a1:2a:c6:e4", NAME="wifi1"
+#-eof
+
+
+#-eof
+
