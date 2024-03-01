@@ -5,8 +5,12 @@
 # debian-remove-networkmanager.quicky
 
 # d240301 -- https://superuser.com/questions/983378/raspberry-pi-has-both-static-and-dhcp-ip-address
-# if using ifupdown, then remove:
-> sudo apt purge dhcpcd5
+# NOPE: if using ifupdown, then remove:
+# > sudo apt purge dhcpcd5
+
+# but DO this: add line:
+> vi /etc/dhcpcd.conf
+denyinterfaces eth0
 
 # - - - 
 
