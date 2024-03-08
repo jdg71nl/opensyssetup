@@ -1,5 +1,49 @@
 # tplink-wifi.quicky.txt
 
+# - - - - - - = = = - - - - - - .
+# d240308
+
+# Linux driver Realtek WLAN TP-Link
+# TP-Link-AC1300-Archer-T3U-RTL8812BU
+# TP-Link AC600 Archer T2U Nano
+
+# - - -
+- DKMS = https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support
+- https://wiki.archlinux.org/title/Dynamic_Kernel_Module_Support
+- https://github.com/dell/dkms
+
+# - - -
+- from: https://github.com/anupam-singh-unique/TP-LINK-TL-WN722N-V2-3-Realtek-8188eus-Wifi-Adapter/blob/main/TP-LINK%20TL-WN722N
+#
+```
+# TP-LINK TL-WN722N.txt
+# https://github.com/anupam-singh-unique/TP-LINK-TL-WN722N-V2-3-Realtek-8188eus-Wifi-Adapter/blob/main/TP-LINK%20TL-WN722N
+
+Step : 1
+
+sudo apt update
+sudo apt upgrade -y
+sudo apt dist-upgrade -y
+sudo apt autoremove
+reboot
+
+Step : 2
+
+sudo apt install -y build-essential dkms bc raspberrypi-kernel-headers
+sudo -i
+echo "blacklist r8188eu" > "/etc/modprobe.d/realtek.conf"
+exit
+git clone https://github.com/aircrack-ng/rtl8188eus
+cd rtl8188eus
+sudo ./dkms-install.sh
+sudo apt autoremove
+sudo reboot
+```
+
+# - - - - - - = = = - - - - - - .
+
+# d24 old below ??
+
 TP-Link 150Mbps Wireless N Nano USB Adapter
 Model nr TL-WN725N
 
