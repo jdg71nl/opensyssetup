@@ -4,9 +4,10 @@
 #
 #ping -i3 1.1.1.1
 #
-echo "# > ping -4 1.1.1.1 ... "
-ping -4 1.1.1.1
+#echo "# > ping -4 1.1.1.1 ... "
+#ping -4 1.1.1.1
 #
-exit 0
+echo "# > ping 1.1.1.1 ... "
+ping 1.1.1.1
 #
 #-eof
