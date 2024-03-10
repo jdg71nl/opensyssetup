@@ -60,6 +60,10 @@ if which psql >/dev/null ; then f_echo_exit1 "# 'postgres' is already installed 
 
 f_check_install_packages postgresql adminer
 
+PGVER=$( find /etc/postgresql -type f -name postgresql.conf | perl -pe 's/^.*?(\d+).*$/$1/' )
+# > echo "-$PGVER-"
+# -12-
+
 # instead of typing pwd at command: > passwd postgres 
 # we do:
 #
@@ -85,7 +89,7 @@ sudo -u postgres -H -- psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 #su - postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 
 
-cat >> /etc/postgresql/15/main/postgresql.conf <<HERE
+cat >> /etc/postgresql/$PGVER/main/postgresql.conf <<HERE
 
 # jdg
 listen_addresses = '*'
@@ -95,10 +99,10 @@ HERE
 #host    all             all             127.0.0.1/32            scram-sha-256
 #host    all             all             ::1/128                 scram-sha-256
 
-perl -i -pe 's/^(host\s+all\s+all\s+127.0.0.1.*)$/#$1/' /etc/postgresql/15/main/pg_hba.conf
-perl -i -pe 's/^(host\s+all\s+all\s+::1\/128.*)$/#$1/' /etc/postgresql/15/main/pg_hba.conf
+perl -i -pe 's/^(host\s+all\s+all\s+127.0.0.1.*)$/#$1/' /etc/postgresql/$PGVER/main/pg_hba.conf
+perl -i -pe 's/^(host\s+all\s+all\s+::1\/128.*)$/#$1/' /etc/postgresql/$PGVER/main/pg_hba.conf
 
-cat >> /etc/postgresql/15/main/pg_hba.conf <<HERE
+cat >> /etc/postgresql/$PGVER/main/pg_hba.conf <<HERE
 
 # jdg
 host    all             all             0.0.0.1/0             md5
