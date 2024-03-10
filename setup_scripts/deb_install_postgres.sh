@@ -58,8 +58,7 @@ read
 
 if which psql >/dev/null ; then f_echo_exit1 "# 'postgres' is already installed " ; fi
 
-if_check_install_packages postgresql adminer
-
+f_check_install_packages postgresql adminer
 
 # instead of typing pwd at command: > passwd postgres 
 # we do:
