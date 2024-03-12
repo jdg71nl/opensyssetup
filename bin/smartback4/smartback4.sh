@@ -5,11 +5,16 @@
 # apt install rsync apt-show-versions
 
 if [ `id -u` != 0 ]; then 
-	# re-run as root:
-	echo "# provide your password for 'sudo':"
-	sudo "$0" "$*"
-	#echo "ERROR: can only run this command as root .."
-	exit 1
+	## re-run as root:
+	#echo "# provide your password for 'sudo':"
+	#sudo "$0" "$*"
+	##echo "ERROR: can only run this command as root .."
+	##exit 1
+  #
+  # https://unix.stackexchange.com/questions/129072/whats-the-difference-between-and
+  # $* is a single string, whereas $@ is an actual array.
+  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
+  #
 fi
 
 #usage() {
@@ -20,24 +25,36 @@ fi
 #  exit 1
 #}
 
-f_check_install_package() {
-  PKG="$1"
-  # if dpkg-query -l rsync ; then echo true ; else echo false ; fi
-  if dpkg-query -l $PKG ; then
-    echo "# [check] package '$PKG' is installed."
-  else 
-    echo "# [check] package '$PKG' is NOT installed, ==> will install now ... "
-    echo "# > apt install -y $PKG "
-    apt install -y $PKG
-  fi
-}
+#: f_check_install_package() {
+#:   PKG="$1"
+#:   # if dpkg-query -l rsync ; then echo true ; else echo false ; fi
+#:   if dpkg-query -l $PKG ; then
+#:     echo "# [check] package '$PKG' is installed."
+#:   else 
+#:     echo "# [check] package '$PKG' is NOT installed, ==> will install now ... "
+#:     echo "# > apt install -y $PKG "
+#:     apt install -y $PKG
+#:   fi
+#: }
+#: echo "# - - - "
+#: echo "# test installed required packages:"
+#: f_check_install_package rsync
+#: f_check_install_package apt-show-versions
+#: f_check_install_package lshw
+#: #f_check_install_package raspinfo
 
-echo "# - - - "
-echo "# test installed required packages:"
-f_check_install_package rsync
-f_check_install_package apt-show-versions
-f_check_install_package lshw
-#f_check_install_package raspinfo
+f_check_install_packages() {
+  for PKG in $@ ; do
+    if ! dpkg-query -l $PKG >/dev/null ; then
+      echo "# auto installing package '$PKG' ==> sudo apt install -y $PKG "
+      sudo apt install -y $PKG
+    fi
+  done
+}
+# f_check_install_packages curl git sudo
+#
+f_check_install_packages rsync apt-show-versions lshw raspinfo
+
 
 # general settings:
 CONF_DIR="/etc/smartback4"
