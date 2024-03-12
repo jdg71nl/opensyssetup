@@ -1,0 +1,32 @@
+# ubuntu-remove-firefox-snap.quicky
+
+https://fostips.com/ubuntu-21-10-two-firefox-remove-snap/
+
+snap remove --purge firefox
+
+sudo apt remove --autoremove firefox
+
+sudo add-apt-repository ppa:mozillateam/ppa
+
+sudo vi /etc/apt/preferences.d/99mozillateamppa
+
+# add this 2x3 lines:
+#
+# /etc/apt/preferences.d/99mozillateamppa
+# add the 3 lines below will set higher priority for Firefox package from this PPA
+Package: firefox*
+Pin: release o=LP-PPA-mozillateam
+Pin-Priority: 501
+#
+# And the lines below will block Firefox from Ubuntu’s own repository. Without this section, Firefox will go back SNAP once you disabled/removed the PPA and run system update.
+#
+Package: firefox*
+Pin: release o=Ubuntu
+Pin-Priority: -1
+#
+#.
+
+sudo apt install -t 'o=LP-PPA-mozillateam' firefox
+
+
+#-eof
