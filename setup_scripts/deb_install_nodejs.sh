@@ -72,6 +72,17 @@ apt update
 #apt install -y nodejs npm
 apt install -y nodejs 
 
+# Note: if npm gives problems you may need to just reinstall:
+# 1.
+# > sudo apt install --reinstall nodejs
+# 2. 
+# > sudo apt purge nodejs
+# > sudo rm -rf /usr/lib/node_modules
+# > sudo apt install nodejs
+# > sudo npm install -g npm
+# > sudo npm i nodemon -g
+# > sudo npm i pm2 -g
+
 #
 npm i -g npm
 npm i nodemon -g
