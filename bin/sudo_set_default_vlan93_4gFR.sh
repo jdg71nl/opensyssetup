@@ -23,12 +23,12 @@ fi
 # JDG: vlan93 = 4G-Bouygues-FR
 #
 /sbin/ip route del 0/0 via 10.86.91.254
-#/sbin/ip route del 0/0 via 10.86.92.254
-/sbin/ip route del 0/0 via 10.86.93.254
+/sbin/ip route del 0/0 via 10.86.92.254
+#/sbin/ip route del 0/0 via 10.86.93.254
 #
 #/sbin/ip route add 0/0 via 10.86.91.254
-/sbin/ip route add 0/0 via 10.86.92.254
-#/sbin/ip route add 0/0 via 10.86.93.254
+#/sbin/ip route add 0/0 via 10.86.92.254
+/sbin/ip route add 0/0 via 10.86.93.254
 #
 #
 exit 0
