@@ -1,6 +1,10 @@
 # certbot.quicky
 
-sudo apt install certbot python-certbot-apache
+#
+sudo apt install certbot python3-certbot-apache
+
+#
+a2enmod ssl proxy proxy_http rewrite headers expires
 
 #-eof
 
