@@ -36,6 +36,11 @@ export PATH=$HOME/opensyssetup/bin:$HOME/opensyssetup/mac/bin:$PATH
 # -rwxr-xr-x  1 jdg  staff   1.0K Jan 18 15:28 /Applications/Visual Studio Code.app/Contents/Resources/app/bin/code
 #
 #export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+#
+# above gives errors on non-Mac platforms
+# better create symlink:
+# > cd ~
+# > ln -s /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code .
 
 # jdg-tokenme:
 alias sti='sudo -u tokenme -i' 
