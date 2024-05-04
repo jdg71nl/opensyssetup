@@ -16,6 +16,7 @@ SCRIPT_PATH=`dirname $SCRIPT`
 #  echo "# usage: $BASENAME " 1>&2 
 #  exit 1
 #}
+echo_exit1() { echo $1 ; exit 1 ; }
 #if [ $MYUID != 0 ]; then
 #  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 #fi
@@ -23,6 +24,10 @@ SCRIPT_PATH=`dirname $SCRIPT`
 #if [ -f ${SOME_FILE} ]; then
 #else
 #fi
+#
+# some_cmd
+# # exit if the last command failed
+# if [ $? -ne 0 ]; then exit 1; fi
 #
 # my statements here ...
 #
