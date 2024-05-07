@@ -1,0 +1,31 @@
+# debian-pure-ifupdown-remove-dhcpcd-2024.quicky
+
+# d240507 intro:
+- I want RPI with solid control in ifaces using /etc/network/interfaces so that is ifupdown package (that is the old SysV init system, before systemd)
+- I don't want systemd (magic)
+- I don't want NetworkManager or network-manager (that is a desktop/client GUI tool)
+- I don't want dhcpcd, which is tightly bound to systemd
+- I found this:
+https://raspberrypi.stackexchange.com/questions/66851/how-to-disable-dhcpcd
+
+# will stop (deactivate) dhcpcd:
+> sudo systemctl stop dhcpcd.service
+# will prevent it from restarting:
+> sudo systemctl disable dhcpcd.service
+
+# note: let's not (yet?) remove the dhcpcd package, or the nm package (to leave the Raspberry Pi OS bullseye install intact as much as possible):
+
+--[CWD=~/opensyssetup/info(git:main)]--[1715064979 08:56:19 Tue 07-May-2024 CEST]--[jdg@virb-werouter]--[hw:RPI4b-1.5,os:Debian-11/bullseye,isa:aarch64]------
+> dpkg -l | egrep 'dhcpcd|network-manager'
+ii  dhcpcd5                              1:8.1.2-1+rpt9                   arm64        DHCPv4, IPv6RA and DHCPv6 client with IPv4LL support
+ii  network-manager                      1.30.6-1+deb11u1                 arm64        network management framework (daemon and userspace tools)
+
+# note: that the isc-dhcp-client package IS present by default ...
+
+> dpkg -l | egrep 'dhcp'
+ii  dhcpcd5                              1:8.1.2-1+rpt9                   arm64        DHCPv4, IPv6RA and DHCPv6 client with IPv4LL support
+ii  isc-dhcp-client                      4.4.1-2.3+deb11u2                arm64        DHCP client for automatically obtaining an IP address
+ii  isc-dhcp-common                      4.4.1-2.3+deb11u2                arm64        common manpages relevant to all of the isc-dhcp packages
+
+
+#-eof
