@@ -1,6 +1,10 @@
 #!/bin/bash
 
-ssh -X jdg@10.86.10.254
+#ssh jdg@10.86.10.254
+#ssh -X jdg@10.86.10.254
+
+# $* is a single string, whereas $@ is an actual array.
+ssh jdg@10.86.10.254 $@
 
 #-eof
 
