@@ -1,6 +1,7 @@
 #!/bin/bash
 # Drop_File_Touch_Timestamp.sh
-# Create Automator script Drop_File_Touch_Timestamp.app using "Run Shell Script" and copy/paste there contents of this .sh file
+# Howto:
+# open Automator, new doc, Application, type "Run Shell Script", save-as Drop_File_Touch_Timestamp.app , pass-input=as-arguments, opy/paste contents of this .sh file
 
 function dolog {
         echo $1
