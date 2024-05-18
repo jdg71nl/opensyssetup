@@ -56,7 +56,8 @@ echo "# Are you sure you want to create these PostgreSQL settings ? (Y) (ctrl-c 
 
 read
 
-if which psql >/dev/null ; then f_echo_exit1 "# 'postgres' is already installed " ; fi
+# no need to check ...
+#if which psql >/dev/null ; then f_echo_exit1 "# 'postgres' is already installed " ; fi
 
 f_check_install_packages postgresql adminer
 
@@ -76,11 +77,20 @@ echo "postgres:${HASH}" | chpasswd -e
 #sudo -s -u postgres -D /var/lib/postgresql -- psql -c "GRANT ALL ON DATABASE $DB_NAME TO $DB_USER;"
 #sudo -s -u postgres -D /var/lib/postgresql -- psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 
-sudo -u postgres -H -- psql -c "ALTER USER postgres WITH PASSWORD '$PG_PWD';"
-sudo -u postgres -H -- psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PWD';"
-sudo -u postgres -H -- psql -c "CREATE DATABASE $DB_NAME;"
-sudo -u postgres -H -- psql -c "GRANT ALL ON DATABASE $DB_NAME TO $DB_USER;"
-sudo -u postgres -H -- psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
+echo "sudo -u postgres -H -- psql -c \"ALTER USER postgres WITH PASSWORD '$PG_PWD';\" "
+sudo       -u postgres -H -- psql -c  "ALTER USER postgres WITH PASSWORD '$PG_PWD';"
+
+echo "sudo -u postgres -H -- psql -c \"CREATE USER $DB_USER WITH PASSWORD '$DB_PWD';\" "
+sudo       -u postgres -H -- psql -c  "CREATE USER $DB_USER WITH PASSWORD '$DB_PWD';"
+
+echo "sudo -u postgres -H -- psql -c \"CREATE DATABASE $DB_NAME;\" "
+sudo       -u postgres -H -- psql -c  "CREATE DATABASE $DB_NAME;"
+
+echo "sudo -u postgres -H -- psql -c \"GRANT ALL ON DATABASE $DB_NAME TO $DB_USER;\" "
+sudo       -u postgres -H -- psql -c  "GRANT ALL ON DATABASE $DB_NAME TO $DB_USER;"
+
+echo "sudo -u postgres -H -- psql -c \"ALTER DATABASE $DB_NAME OWNER TO $DB_USER;\" "
+sudo       -u postgres -H -- psql -c  "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 
 #su - postgres psql -c "ALTER USER postgres WITH PASSWORD '$PG_PWD';"
 #su - postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PWD';"
@@ -196,4 +206,3 @@ HERE
 exit 0
 #
 #-eof
-
