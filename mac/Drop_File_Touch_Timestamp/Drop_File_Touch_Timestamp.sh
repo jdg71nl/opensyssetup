@@ -16,16 +16,28 @@ if [[ -d "$FILE" ]]; then TAG=$( date +%y%m%d-%H%M%S ) ; dolog "touch \"$FILE/d$
 TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?RASF0_20(\d{2}\d{2}\d{2})_[^\\\\\/]*$/\1/i" ) ; TAGHM="${TAG}0101"
 if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
 
+# dYYMMDD-hhmmss
 TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})\-(\d{4}\d{2})[^\\\\\/]*$/\1\2.\3/i" ) ; TAGHM="${TAG}"
 if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
 
+# dYYMMDD-hhmm
 TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})\-(\d{4})[^\\\\\/]*$/\1\2/i" ) ; TAGHM="${TAG}"
 if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
 
+# dYYMMDD
 TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6})[^\\\\\/]*$/\1/i" ) ; TAGHM="${TAG}0101"
 if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
 
+# dYYMM
 TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{4})[^\\\\\/]*$/\1/i" ) ; TAGHM="${TAG}010101"
+if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
+
+# YYYY-MM-DD
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?(\d{4})\-(\d{2})-(\d{2})[^\\\\\/]*$/\1\2\3/i" ) ; TAGHM="${TAG}0101"
+if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
+
+# YYYY-MM
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?(\d{4})\-(\d{2})[^\\\\\/]*$/\1\2/i" ) ; TAGHM="${TAG}010101"
 if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
 
 #TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{2})[^\\\\\/]*$/\1/i" ) ; TAGHM="${TAG}01010101"
