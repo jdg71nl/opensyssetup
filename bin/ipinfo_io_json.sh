@@ -21,7 +21,7 @@
 
 IP="$1"
 
-echo "curl -H 'Accept: application/json' -s ipinfo.io/$IP/json | jq .org | tr -d '\"' "
+#echo "curl -H 'Accept: application/json' -s ipinfo.io/$IP/json | jq .org | tr -d '\"' "
 curl -H "Accept: application/json" -s ipinfo.io/$IP/json | jq .org | tr -d '"'
 
 #-eof
