@@ -39,4 +39,6 @@ inc/
 /*.zip
 
 .DS_Store
+.secrets
+
 #-EOF
