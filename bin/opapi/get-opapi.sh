@@ -82,9 +82,11 @@ TOKEN=$( echo $AUTH_RESP | jq .data.token | tr -d '"' )
 #--[CWD=~/dev/dns-de-graaffnet/bin/test(git:master)]--[1712829171 11:52:51 Thu 11-Apr-2024 CEST]--[jdg@vps3]--[os:Debian-11/bullseye,isa:x86_64]------
 
 DATE=`date +d%y%m%d-%H%M%S`
-FILE="dgt-op-alldomains.$DATE.json"
+FILE="$OWNER-op-alldomains.$DATE.json"
 #
-curl -X GET -H "Authorization: Bearer $TOKEN" 'https://api.openprovider.eu/v1beta/domains/?limit=100' > $FILE
+mkdir -pv ./tmp/
+#
+curl -X GET -H "Authorization: Bearer $TOKEN" 'https://api.openprovider.eu/v1beta/domains/?limit=100' > ./tmp/$FILE
 
 #-eof
 
