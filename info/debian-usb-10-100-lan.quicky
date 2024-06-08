@@ -1,0 +1,205 @@
+# debian-usb-10-100-lan.quicky 
+
+# - - - - - - = = = - - - - - - 
+# intro:
+- gaat om cheapo USB 10/100 3xUSB2.0 witte adapter van kiwi-elektronics, heeft RTL8152 chip
+- after manual insert, it works
+- but after boot it does not come up, only after extract-insert
+
+# - - - - - - = = = - - - - - - 
+# info
+
+https://forums.debian.net/viewtopic.php?t=90139
+
+https://www.linuxquestions.org/questions/linux-hardware-18/why-can-the-module-%93r8152%94-still-be-loaded-after-the-driver-%93r8152-ko%94-was-deleted-4175732339/
+
+https://forum.armbian.com/topic/35192-raspberry-pi4b-usb-ethernet-not-detected-at-boot/
+
+https://github.com/raspberrypi/firmware/issues/1497
+> usb_modeswitch -v 0BDA -p 8151 --reset-usb
+
+https://forums.raspberrypi.com/viewtopic.php?t=336517
+lsusb output immediately after reboot:
+...
+lsusb ouput after unplugging and replugging the usb nic:
+...
+why the usb nic is coming up in "mass storage CD-ROM mode" after reboot but it is working fine otherwise I still need to figure out but it's progress.
+
+# I don't have the 'CD-ROM' issue, but I do have the missing-entry issue:
+#
+# after boot this is missing:
+> lsusb
+Bus 001 Device 010: ID 0bda:8152 Realtek Semiconductor Corp. RTL8152 Fast Ethernet Adapter
+#
+# after re-insert:
+--[CWD=~]--[1715067787 09:43:07 Tue 07-May-2024 CEST]--[jdg@virb-werouter]--[hw:RPI4b-1.5,os:Debian-11/bullseye,isa:aarch64]------
+> lsusb 
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 004: ID 1997:2433 Shenzhen Riitek Technology Co., Ltd wireless mini keyboard with touchpad
+Bus 001 Device 010: ID 0bda:8152 Realtek Semiconductor Corp. RTL8152 Fast Ethernet Adapter
+Bus 001 Device 009: ID 214b:7250 Huasheng Electronics USB2.0 HUB
+Bus 001 Device 002: ID 2109:3431 VIA Labs, Inc. Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+# or better:
+--[CWD=~]--[1715068264 09:51:04 Tue 07-May-2024 CEST]--[jdg@virb-werouter]--[hw:RPI4b-1.5,os:Debian-11/bullseye,isa:aarch64]------
+> lsusb -tv
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/4p, 5000M
+    ID 1d6b:0003 Linux Foundation 3.0 root hub
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/1p, 480M
+    ID 1d6b:0002 Linux Foundation 2.0 root hub
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+        ID 2109:3431 VIA Labs, Inc. Hub
+        |__ Port 3: Dev 9, If 0, Class=Hub, Driver=hub/4p, 480M
+            ID 214b:7250 Huasheng Electronics 
+            |__ Port 1: Dev 10, If 0, Class=Vendor Specific Class, Driver=r8152, 480M
+                ID 0bda:8152 Realtek Semiconductor Corp. RTL8152 Fast Ethernet Adapter
+        |__ Port 4: Dev 4, If 0, Class=Human Interface Device, Driver=usbhid, 12M
+            ID 1997:2433 Shenzhen Riitek Technology Co., Ltd wireless mini keyboard with touchpad
+        |__ Port 4: Dev 4, If 1, Class=Human Interface Device, Driver=usbhid, 12M
+            ID 1997:2433 Shenzhen Riitek Technology Co., Ltd wireless mini keyboard with touchpad
+
+# still at: https://forums.raspberrypi.com/viewtopic.php?t=336517
+I have never experienced any problem with the UE300 dongles, but the malfunctions started after an upgrade here too (no hardware changes and no undervoltage). I am using a modeswitch workaround too, but with different parameters:
+
+# https://raspberrypi.stackexchange.com/questions/140846/is-it-safe-to-update-eeprom-to-latest-using-rpi-eeprom-update
+#
+--[CWD=~]--[1715068264 09:51:04 Tue 07-May-2024 CEST]--[jdg@virb-werouter]--[hw:RPI4b-1.5,os:Debian-11/bullseye,isa:aarch64]------
+> sudo rpi-eeprom-update
+BOOTLOADER: up to date
+   CURRENT: Wed Jan 11 17:40:52 UTC 2023 (1673458852)
+    LATEST: Wed Jan 11 17:40:52 UTC 2023 (1673458852)
+   RELEASE: default (/lib/firmware/raspberrypi/bootloader/default)
+            Use raspi-config to change the release.
+
+  VL805_FW: Using bootloader EEPROM
+     VL805: up to date
+   CURRENT: 000138c0
+    LATEST: 000138c0
+
+
+
+# - - - - - - = = = - - - - - - 
+# maybe add blacklist ?
+
+https://wiki.debian.org/KernelModuleBlacklisting
+
+# - - - - - - = = = - - - - - - 
+# maybe interfene with boot ?
+
+https://www.debian.org/doc/manuals/debian-reference/ch03.en.html
+Chapter 3. The system initialization
+3.1. An overview of the boot strap process
+3.1.1. Stage 1: the UEFI
+3.1.2. Stage 2: the boot loader
+3.1.3. Stage 3: the mini-Debian system
+3.1.4. Stage 4: the normal Debian system
+3.2. Systemd
+3.2.1. Systemd init
+3.2.2. Systemd login
+3.3. The kernel message
+3.4. The system message
+3.5. System management
+3.6. Other system monitors
+3.7. System configuration
+3.7.1. The hostname
+3.7.2. The filesystem
+3.7.3. Network interface initialization
+3.7.4. Cloud system initialization
+3.7.5. Customization example to tweak sshd service
+3.8. The udev system
+3.9. The kernel module initialization
+
+
+3.8. The udev system
+The udev system provides mechanism for the automatic hardware discovery and initialization (see udev(7)) since Linux kernel 2.6.
+
+#
+# - - - - - - = = = - - - - - - 
+
+--[CWD=~]--[1715066619 09:23:39 Tue 07-May-2024 CEST]--[root@virb-werouter]--[hw:RPI4b-1.5,os:Debian-11/bullseye,isa:aarch64]------
+>  modinfo r8152
+name:           r8152
+filename:       (builtin)
+version:        v1.12.13
+license:        GPL
+file:           drivers/net/usb/r8152
+description:    Realtek RTL8152/RTL8153 Based USB Ethernet Adapters
+author:         Realtek linux nic maintainers <nic_swsd@realtek.com>
+firmware:       rtl_nic/rtl8156b-2.fw
+firmware:       rtl_nic/rtl8156a-2.fw
+firmware:       rtl_nic/rtl8153c-1.fw
+firmware:       rtl_nic/rtl8153b-2.fw
+firmware:       rtl_nic/rtl8153a-4.fw
+firmware:       rtl_nic/rtl8153a-3.fw
+firmware:       rtl_nic/rtl8153a-2.fw
+
+# - - - - - - = = = - - - - - - 
+#
+> dmesg says (look for 1-1.3.1)
+
+[    2.306214] usb 1-1.3: new high-speed USB device number 3 using xhci_hcd
+[    2.406825] usb 1-1.3: New USB device found, idVendor=214b, idProduct=7250, bcdDevice= 1.00
+[    2.409205] usb 1-1.3: New USB device strings: Mfr=0, Product=1, SerialNumber=0
+[    2.411517] usb 1-1.3: Product: USB2.0 HUB
+[    2.416545] hub 1-1.3:1.0: USB hub found
+[    2.418918] hub 1-1.3:1.0: 4 ports detected
+[    2.443495] NET: Registered PF_INET6 protocol family
+[    2.447753] Segment Routing with IPv6
+[    2.450001] In-situ OAM (IOAM) with IPv6
+[    2.502275] usb 1-1.4: new full-speed USB device number 4 using xhci_hcd
+[    2.517886] systemd[1]: systemd 247.3-7+deb11u4 running in system mode. (+PAM +AUDIT +SELINUX +IMA +APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTL>
+[    2.523896] systemd[1]: Detected architecture arm64.
+[    2.544127] systemd[1]: Set hostname to <virb-werouter.j71.nl>.
+[    2.618607] usb 1-1.4: New USB device found, idVendor=1997, idProduct=2433, bcdDevice= 1.06
+[    2.622036] usb 1-1.4: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[    2.625201] usb 1-1.4: Product: mini keyboard
+[    2.630348] usb 1-1.4: Manufacturer:  
+[    2.647801] input:   mini keyboard as /devices/platform/scb/fd500000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/usb1/1-1/1-1.4/1-1.4:1.0/0003:1997:2433.0001/input>
+[    2.711420] hid-generic 0003:1997:2433.0001: input,hidraw0: USB HID v1.11 Keyboard [  mini keyboard] on usb-0000:01:00.0-1.4/input0
+[    2.714451] usb 1-1.3.1: new full-speed USB device number 5 using xhci_hcd
+[    2.728442] input:   mini keyboard Mouse as /devices/platform/scb/fd500000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/usb1/1-1/1-1.4/1-1.4:1.1/0003:1997:2433.0002>
+[    2.735575] input:   mini keyboard System Control as /devices/platform/scb/fd500000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/usb1/1-1/1-1.4/1-1.4:1.1/0003:1997:>
+[    2.798638] usb 1-1.3.1: device descriptor read/64, error -32
+[    2.802096] input:   mini keyboard Consumer Control as /devices/platform/scb/fd500000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/usb1/1-1/1-1.4/1-1.4:1.1/0003:199>
+[    2.805666] hid-generic 0003:1997:2433.0002: input,hidraw1: USB HID v1.11 Mouse [  mini keyboard] on usb-0000:01:00.0-1.4/input1
+[    2.990505] usb 1-1.3.1: device descriptor read/64, error -32
+[    3.186258] usb 1-1.3.1: new full-speed USB device number 6 using xhci_hcd
+[    3.270535] usb 1-1.3.1: device descriptor read/64, error -32
+...
+[   37.561265] usb 1-1.3: USB disconnect, device number 3
+[   40.086195] usb 1-1.3: new high-speed USB device number 9 using xhci_hcd
+[   40.186796] usb 1-1.3: New USB device found, idVendor=214b, idProduct=7250, bcdDevice= 1.00
+[   40.186828] usb 1-1.3: New USB device strings: Mfr=0, Product=1, SerialNumber=0
+[   40.186845] usb 1-1.3: Product: USB2.0 HUB
+[   40.188637] hub 1-1.3:1.0: USB hub found
+[   40.188797] hub 1-1.3:1.0: 4 ports detected
+[   40.474200] usb 1-1.3.1: new high-speed USB device number 10 using xhci_hcd
+[   40.575663] usb 1-1.3.1: New USB device found, idVendor=0bda, idProduct=8152, bcdDevice=20.00
+[   40.575692] usb 1-1.3.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   40.575709] usb 1-1.3.1: Product: USB 10/100 LAN
+[   40.575724] usb 1-1.3.1: Manufacturer: Realtek
+[   40.575737] usb 1-1.3.1: SerialNumber: 00E04C68565C
+[   40.666762] usb 1-1.3.1: reset high-speed USB device number 10 using xhci_hcd
+[   40.796249] r8152 1-1.3.1:1.0: skip request firmware
+[   40.827916] r8152 1-1.3.1:1.0 eth1: v1.12.13
+[   40.911921] usbcore: registered new interface driver cdc_ether
+[   43.456288] IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
+[   43.456756] r8152 1-1.3.1:1.0 eth1: carrier on
+
+# - - - - - - = = = - - - - - - 
+# this does not work:
+
+--[CWD=~]--[1715065611 09:06:51 Tue 07-May-2024 CEST]--[root@virb-werouter]--[hw:RPI4b-1.5,os:Debian-11/bullseye,isa:aarch64]------
+> cat /etc/modprobe.d/r8152-blacklist.conf
+# https://www.linuxquestions.org/questions/linux-hardware-18/why-can-the-module-%93r8152%94-still-be-loaded-after-the-driver-%93r8152-ko%94-was-deleted-4175732339/
+#
+# blacklist r8152
+blacklist r8152
+#.
+
+# - - - - - - = = = - - - - - - 
+# - - - - - - = = = - - - - - - 
+#-eof
+
+

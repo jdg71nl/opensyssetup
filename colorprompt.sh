@@ -36,6 +36,11 @@ export PATH=$HOME/opensyssetup/bin:$HOME/opensyssetup/mac/bin:$PATH
 # -rwxr-xr-x  1 jdg  staff   1.0K Jan 18 15:28 /Applications/Visual Studio Code.app/Contents/Resources/app/bin/code
 #
 #export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+#
+# above gives errors on non-Mac platforms
+# better create symlink:
+# > cd ~
+# > ln -s /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code .
 
 # jdg-tokenme:
 alias sti='sudo -u tokenme -i' 
@@ -180,9 +185,9 @@ ffm ()   { echo "# bash-function, see 'type ffm':"; gfind . -iname '*'$1'*'; }
 fifm ()  { echo "# bash-function, see 'type fifm':"; gfind . -xtype f -iname '*'$2'*' -print0 | gxargs -0i grep -sinH "$1" "{}"; }
 #
 # alt:
-#brew install ffind
-#brew install git-xargs
-#fifm ()  { echo "# bash-function, see 'type fifm':"; ffind . -xtype f -iname '*'$2'*' -print0 | git-xargs -0i grep -sinH "$1" "{}"; }
+# > brew install ffind
+# > brew install rargs
+fifm2 ()  { echo "# bash-function, see 'type fifm':"; ffind . -xtype f -iname '*'$2'*' -print0 | rargs -0 egrep -sinH "$1" "{}"; }
 
 # -i causes Less to search '/' with case-insensitive
 # -S chop long-lines

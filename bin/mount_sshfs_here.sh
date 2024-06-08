@@ -2,11 +2,13 @@
 #= mount_sshfs_here.sh
 # (c)2023 John@de-Graaff.net
 #
-# (OLD) Note: on Mac install these apps from: https://osxfuse.github.io/
-# - macFUSE 4.4.2 macOS 10.9 or later 
-# - SSHFS   2.5.0 macOS 10.5 or later
+# MacOS:
+# # d240504 >> OLD !! << -- on Mac install these apps from: https://osxfuse.github.io/
+#   - macFUSE 4.4.2 macOS 10.9 or later 
+#   - SSHFS   2.5.0 macOS 10.5 or later
+# # d240504 on MacOS follow: https://github.com/macos-fuse-t/fuse-t
 #
-# Note: on Debian Linux do:
+# Debian:
 # > apt install sshfs
 #
 BASENAME=`basename $0`
@@ -22,8 +24,10 @@ usage() {
 # fi
 #
 f_echo_exit1() { echo $1 ; exit 1 ; }
-if [ ! -e /etc/debian_version ]; then f_echo_exit1 "# Error: found non-Debain OS .." ; fi
-if ! which sshfs >/dev/null ; then f_echo_exit1 "# please install first (as root) ==> sudo apt install sshfs " ; fi
+#
+# d240504 disabled now, as MacOS has FUSE_T ...
+#if [ ! -e /etc/debian_version ]; then f_echo_exit1 "# Error: found non-Debain OS .." ; fi
+#if ! which sshfs >/dev/null ; then f_echo_exit1 "# please install first (as root) ==> sudo apt install sshfs " ; fi
 #
 # static defaults:
 HOST=""

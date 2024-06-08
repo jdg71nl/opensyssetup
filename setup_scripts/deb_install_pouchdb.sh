@@ -55,11 +55,22 @@ sudo chown jdg:jdg $DBPATH
 if [ ! -d $DBPATH ] ; then mkdir -pv $DBPATH ; fi
 #
 #
+# - - - - - - = = = - - - - - - . 
+#
 sudo npm install -g pouchdb-server
+#
+# https://www.warp.dev/terminus/npm-reinstall
+# > sudo npm uninstall -g pouchdb-server
+#
+# - - - - - - = = = - - - - - - . 
 #
 # # launch example
 # # pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
 # NODE_ENV=development pouchdb-server --port 5984 --host 0.0.0.0 --dir /home/jdg/dev/dcs-rpi-linuxsrv/local_dbs/pouchdb/var/
+
+# NOTE: if 'undefined:1' error when starting pouchdb-server :
+# > cd /home/jdg/run/pouchdb/
+# > rm config.json  # <== which is empty file, probably created so if diskfree-0 ...
 
 #
 cd $DBPATH
