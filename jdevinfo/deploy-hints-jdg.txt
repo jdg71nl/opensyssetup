@@ -1,0 +1,161 @@
+#= deploy-hints-jdg.txt
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: Traefik
+
+https://traefik.io/traefik/
+https://traefik.io/glossary/https-encryption-tls-ssl-letsencrypt/
+https://doc.traefik.io/traefik/https/overview/
+https://github.com/traefik/traefik
+https://hub.docker.com/_/traefik
+https://www.qloaked.com/traefik-lets-encrypt-ssl-tutorial/
+https://github.com/paularah/node-traefik
+https://dev.to/paularah/deploy-and-automatically-provision-ssl-certs-on-a-node-js-server-with-traefik-and-docker-2j0e
+
+# Canary deployment
+https://wa.aws.amazon.com/wat.concept.canary-deployment.en.html
+#
+https://martinfowler.com/bliki/CanaryRelease.html?ref=wellarchitected
+# "Canary release is a technique to reduce the risk of introducing a new software version in production by slowly rolling out the change to a small subset of users before rolling it out to the entire infrastructure and making it available to everybody."
+# !:
+https://semaphoreci.com/blog/what-is-canary-deployment
+
+# NOTE: ACME = Automatic Certificate Management Environment
+https://www.rfc-editor.org/rfc/rfc8555
+
+# - - - - - - = = = - - - - - - 
+# About: Configuring Traefik
+
+idea from: https://dev.to/paularah/deploy-and-automatically-provision-ssl-certs-on-a-node-js-server-with-traefik-and-docker-2j0e
+
+To introduce Traefik into our flow, we create a new service for Traefik in our docker-compose file.
+
+> cat dc-traefik.yml 
+services:
+  reverse-proxy:
+    # https://hub.docker.com/_/traefik/tags
+    #image: traefik:v2.9
+    image: traefik:v2.4
+    container_name: "traefik"
+    command:
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--api.debug=true"
+      - "--providers.docker=true"
+      - "--log.LEVEL=DEBUG"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--providers.docker.exposedbydefault=false"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=hello@paularah.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "443:443"
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+> cat /etc/apache2/sites-available/tmc1.traimaco.com.conf | egrep '  ProxyPass|^  ServerName'
+  ServerName tmc1.traimaco.com
+  ProxyPass        /code/73990882/dashboard http://127.0.0.1:8081
+  ProxyPassReverse /code/73990882/dashboard http://127.0.0.1:8081
+
+> cat Dockerfile
+FROM node:12-alpine
+RUN mkdir home/node-traefik
+WORKDIR /home/node-traefik
+COPY . .
+RUN npm install
+EXPOSE 3000
+CMD [ "node", "server.js" ]
+
+> cat dc-node-server.yml
+node-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: node-server
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.node-server.rule=Host(`tmc1.traimaco.com`)"
+      - "traefik.http.routers.node-server.entrypoints=websecure"
+      - "traefik.http.routers.node-server.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.redirs.entrypoints=web"
+      - "traefik.http.routers.redirs.middlewares=redirect-to-https"
+
+#
+http://tmc1.i.zap-i.net:8080/api/rawdata
+
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: certbot letsencrypt
+
+> sudo apt install python-certbot-apache
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: pm2 
+
+# https://www.npmjs.com/package/pm2
+> sudo npm install pm2 -g
+
+--[CWD=~/dev/TCS/api_server(git:main)]--[1671535871 12:31:11 Tue 20-Dec-2022 CET]--[jdg@cloud11]--[os:Debian-10/buster,kernel:4.19.0-20-amd64,isa:x86_64]------
+> ./start.sh 
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Spawning PM2 daemon with pm2_home=/home/jdg/.pm2
+[PM2] PM2 Successfully daemonized
+[PM2] Starting /home/jdg/dev/TCS/api_server/node-start.sh in fork_mode (1 instance)
+[PM2] Done.
+┌─────┬──────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id  │ name             │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├─────┼──────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0   │ tcs91_prd_api    │ default     │ 3.1.0   │ fork    │ 7825     │ 0s     │ 0    │ online    │ 0%       │ 3.0mb    │ jdg      │ disabled │
+└─────┴──────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+--[CWD=~/dev/TCS/api_server(git:main)]--[1671535873 12:31:13 Tue 20-Dec-2022 CET]--[jdg@cloud11]--[os:Debian-10/buster,kernel:4.19.0-20-amd64,isa:x86_64]------
+
+
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# - - - - - - = = = - - - - - - 
+#-eof

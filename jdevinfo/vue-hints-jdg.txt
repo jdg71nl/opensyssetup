@@ -1,0 +1,38 @@
+#= vue-hints-jdg.txt
+# - - - - - - = = = - - - - - - 
+
+# - - - - - - = = = - - - - - - 
+# About: d240114 JDG-ISSUE "async-with-composition-api"
+
+# https://antfu.me/posts/async-with-composition-api
+# Wrap the Async Function as "Reactive Sync"
+# In some situations, your logic might be relying on the data that fetched asynchronously. In this way, you could consider using the trick I have shared on VueDay 2021 to turn your async function into a sync reactive state.":
+# const data = ref(null)
+# fetch('https://api.github.com/')
+#   .then(r => r.json())
+#   .then(res => data.value = res)
+# const user = computed(() => data?.user)
+
+# JDG: in my own words:
+# - async_func writes to var_ref
+# - var_computed reads the var_ref
+# - components use the var_computed
+
+# JDG-summary:
+const http_result_ref = ref(null);
+const anchors_computed = computed(() => http_result_ref.value);
+onMounted(async () => {
+    async function fa_update_api() {
+        let ittl_anchor = [];
+        const http_result = await http_svc.get(api_endpoint);
+        ittl_anchor = (http_result.data && http_result.data.ittl_anchor) || [];
+        http_result_ref.value = ittl_anchor;
+    }
+    await fa_update_api();
+});
+<template>
+  <DataTable :value="anchors_computed" ></DataTable>
+</template>
+
+- - - - - - = = = - - - - - - 
+#-eof

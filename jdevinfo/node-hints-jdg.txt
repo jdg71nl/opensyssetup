@@ -1,0 +1,536 @@
+#= ./project/node-hints-jdg.txt
+# - - - - - - = = = - - - - - - 
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# generic node npm info
+
+https://nodejs.org/en/
+https://en.wikipedia.org/wiki/Node.js
+
+https://www.npmjs.com/
+https://docs.npmjs.com/
+https://github.com/npm/cli
+https://en.wikipedia.org/wiki/Npm_(software)
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: installing node
+
+https://github.com/nodesource/distributions
+https://github.com/nodejs/release#release-schedule
+d2201 ==> we want node v18.x !
+
+# Node.js v18.x:
+#
+#Using Ubuntu
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
+sudo apt-get install -y nodejs
+#
+# Using Debian, as root
+curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
+apt-get install -y nodejs
+
+# install Node on RPI4 / arm7l
+
+# don't do manual:
+>
+curl-save https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-armv7l.tar.gz
+tar tvfz node-v18.13.0-linux-armv7l.tar.gz 
+tar xvfz node-v18.13.0-linux-armv7l.tar.gz 
+apt install build-essential
+
+# BETTER DO: (d230117 install Ok on rpi4 display-server project DeconSystems)
+>
+curl -sL https://deb.nodesource.com/setup_18.x | sudo bash -
+sudo apt-get install -y nodejs
+
+> node -v
+v18.13.0
+> npm -v
+8.19.3
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# npm usage
+
+> sudo npm update npm -g
+> npm install -g npm@latest
+> npm init
+> npm init --yes
+> npm install                       # to install if package.json already exists
+> npm install module-name
+> npm i -g module-name              # global, use 'sudo' on Mac
+> npm i module-name --save-dev      # for "devDependencies" only
+> npm view mongoose
+> npm view mongoose depencencies
+> npm view mongoose versions
+> npm list
+> npm list --depth=0
+> npm uninstall module-name
+> npm update                        # update to 'wanted' 
+> npm outdated                      # show outdated list
+
+> sudo npm i npm-check-updates -g
+> npm-check-updates 
+> ncu
+> ncu -u                            # update package.json ONLY
+> npm install                       # run this after "ncu -u"
+
+// "_comment_0": " // SemVer: Major.Minor.Patch ",
+// "_comment_1": " // carot^ like in '^6.Minor.Patch' is same as '6.x'   and means => I want latest version with fixed Major==6         ",
+// "_comment_2": " // tilde~ like in '~1.9.Patch'     is same as '1.9.x' and means => I want latest version with fixed Major.Minor==1.9 ",
+// "_comment_3": " // > npm outdated                      <== show Current, Wanted and Latest ",
+// "_comment_4": " // > npm update                        <== to update to Wanted versions",
+// "_comment_5": " // > sudo npm i npm-check-updates -g   <== then run:    > ncu   <== to see any newer version (beyond carot^ and tilde~) ",
+
+// example of actual upgade:
+--[CWD=~/dev/mern-template/help/api_server/src(git:main)]--[1669567067 17:37:47 Sun 27-Nov-2022 CET]--[jdg@MBP14jdg]--[os:MacOS--12.6,isa:arm64]------
+> npm outdated
+Package               Current   Wanted  Latest  Location                           Depended by
+config                 1.31.0   1.31.0   3.3.8  node_modules/config                src
+express-async-errors    2.1.2    2.1.2   3.1.1  node_modules/express-async-errors  src
+jest                   22.4.4   22.4.4  29.3.1  node_modules/jest                  src
+joi                    13.7.0   13.7.0  17.7.0  node_modules/joi                   src
+joi-objectid            2.0.0    2.0.0   4.0.2  node_modules/joi-objectid          src
+mongoose              5.13.15  5.13.15   6.7.3  node_modules/mongoose              src
+supertest               3.4.2    3.4.2   6.3.1  node_modules/supertest             src
+winston                 2.4.7    2.4.7   3.8.2  node_modules/winston               src
+winston-mongodb         3.0.2    3.0.2   5.1.0  node_modules/winston-mongodb       src
+#( bash[PROMPT_COMMAND]: prev.cmd returned non-zero code: 1 )
+--[CWD=~/dev/mern-template/help/api_server/src(git:main)]--[1669567130 17:38:50 Sun 27-Nov-2022 CET]--[jdg@MBP14jdg]--[os:MacOS--12.6,isa:arm64]------
+> ncu
+Checking /Users/jdg/dev/mern-template/help/api_server/src/package.json
+[====================] 15/15 100%
+
+ config                ^1.29.4  →    ^3.3.8
+ express               ^4.16.2  →   ^4.18.2
+ express-async-errors   ^2.1.0  →    ^3.1.1
+ jest                  ^22.4.4  →   ^29.3.1
+ joi                   ^13.1.0  →   ^17.7.0
+ joi-objectid           ^2.0.0  →    ^4.0.2
+ jsonwebtoken           ^8.1.1  →    ^8.5.1
+ lodash                ^4.17.4  →  ^4.17.21
+ moment                ^2.20.1  →   ^2.29.4
+ mongoose               ^5.0.2  →    ^6.7.3
+ supertest              ^3.0.0  →    ^6.3.1
+ winston                ^2.4.0  →    ^3.8.2
+ winston-mongodb        ^3.0.0  →    ^5.1.0
+
+Run ncu -u to upgrade package.json
+--[CWD=~/dev/mern-template/help/api_server/src(git:main)]--[1669567159 17:39:19 Sun 27-Nov-2022 CET]--[jdg@MBP14jdg]--[os:MacOS--12.6,isa:arm64]------
+
+// about: npm i module-name --save
+> npm help install
+// says:
+"npm install saves any specified packages into dependencies by default."
+-P, --save-prod  : is same as --save , and also default
+-D, --save-dev   : 
+--no-save        : Prevents saving to dependencies
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# Share Node.js Modules Across Multiple Projects
+
+https://stackoverflow.com/questions/29786887/how-can-i-make-multiple-projects-share-node-modules-directory
+https://reverentgeek.com/3-ways-to-share-nodejs-modules-across-multiple-projects/
+
+https://docs.npmjs.com/cli/v7/using-npm/workspaces
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About brypt
+
+While setting up code from TCNC on a Mac, in the new folder: ./mern-template/help/api_server/src/
+I had problems with the 'bcrypt' package, because the build/compiler environment on my Mac made node-gyp crash.
+WTF ... are we using a module that needs to use a binairy and also build that during 'npm i' ?!?
+-- but, we can replace it with a native-JS version:
+
+// const bcrypt = require('bcrypt'); // https://www.npmjs.com/package/bcrypt // PROBLEM: relies on troublesome (certainly on Mac) https://www.npmjs.com/package/node-pre-gyp or https://www.npmjs.com/package/node-gyp
+const bcrypt = require("bcryptjs"); // npm i bcryptjs // https://www.npmjs.com/package/bcryptjs // Optimized bcrypt in JavaScript with zero dependencies. Compatible to the C++ bcrypt binding on node.js (!!)
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# Nodemon
+
+> sudo npm i -g nodemon
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: module Mongoose
+
+(node:29373) DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version. To use the new parser, pass option { useNewUrlParser: true } to MongoClient.connect.
+
+(node:29470) [MONGODB DRIVER] Warning: Current Server Discovery and Monitoring engine is deprecated, and will be removed in a future version. To use the new Server Discover and Monitoring engine, pass option { useUnifiedTopology: true } to the MongoClient constructor.
+
+(node:29527) DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+> node --trace-deprecation index.js
+info: Listening on port 3000...
+(node:29580) DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
+    at NativeCollection.<computed> [as ensureIndex] (/Users/jdg/dev/mern-template/help/api_server/src/node_modules/mongoose/lib/drivers/node-mongodb-native/collection.js:244:33)
+    at NativeCollection.create (/Users/jdg/dev/mern-template/help/api_server/src/node_modules/mongoose/lib/model.js:1753:33)
+    at NativeCollection.Collection.doQueue (/Users/jdg/dev/mern-template/help/api_server/src/node_modules/mongoose/lib/collection.js:137:17)
+    at /Users/jdg/dev/mern-template/help/api_server/src/node_modules/mongoose/lib/collection.js:82:24
+    at processTicksAndRejections (node:internal/process/task_queues:78:11)
+info: Connected to mongodb://localhost/vidly...
+
+# BEFORE:
+mongoose.connect(db).then(() => winston.info(`Connected to ${db}...`));
+# AFTER:
+mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => winston.info(`Connected to ${db}...`));
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: Axios
+
+// https://github.com/axios/axios
+// https://axios-http.com/docs/intro
+// https://axios-http.com/docs/interceptors
+const axios = require("axios"); // import axios from "axios";   // npm i axios --save // https://axios-http.com/docs/intro
+
+// https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+// 1xx informational response
+// 2xx success
+//    200 OK
+//    Standard response for successful HTTP requests.
+// 3xx redirection
+//    304 Not Modified (RFC 7232)
+// 4xx client errors
+//    400 Bad Request
+//    401 Unauthorized (RFC 7235)
+//    402 Payment Required
+//    403 Forbidden
+//    404 Not Found
+//    405 Method Not Allowed
+// 5xx server errors
+//    500 Internal Server Error
+//    501 Not Implemented
+//    502 Bad Gateway
+//    503 Service Unavailable
+//    504 Gateway Timeout
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: the 'converting-circular-structure-to-json' problem
+
+from Axios I get this error:
+"Unknown error, error.message=Converting circular structure to JSON --> starting at object with constructor 'ClientRequest' | property 'socket' -> object with constructor 'TLSSocket' --- property '_httpMessage' closes the circle" 
+
+# https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json
+they say it is this problem: 
+var a = {}; 
+a.b = a;
+
+# maybe use node:util to inspect ?
+# https://nodejs.org/api/util.html#util_util_inspect_object_options
+const util = require('node:util');
+class Foo {
+  get [Symbol.toStringTag]() {
+    return 'bar';
+  }
+}
+class Bar {}
+const baz = Object.create(null, { [Symbol.toStringTag]: { value: 'foo' } });
+util.inspect(new Foo()); // 'Foo [bar] {}'
+util.inspect(new Bar()); // 'Bar {}'
+util.inspect(baz);       // '[foo] {}'
+
+# if above problem is about JSON-encode, then maybe this hint will help:
+# "I normally use the circular-json npm package to solve this."
+//
+// ESM
+import {parse, stringify} from 'flatted/esm';
+// CJS
+const {parse, stringify} = require('flatted/cjs');
+//
+const a = [{}];
+a[0].a = a;
+a.push(a);
+//
+stringify(a); // [["1","0"],{"a":"0"}]
+//
+# from: https://www.npmjs.com/package/flatted
+
+# d221124 FOUND THE BUG !!
+//
+// WRONG: direct use of 'response' gives 'converting-circular-structure-to-json' error:
+console.log(`response=${JSON.stringify(response)}`);
+//
+// CORRECT: use 'response.data':
+console.log(`response.data=${JSON.stringify(response.data)}`);
+
+# https://stackoverflow.com/questions/45319090/axios-gives-me-converting-circular-structure-to-json-error-while-sending-the-dat
+# en specifiek deze opmerking: "This happens many a time with axios because sometimes we directly return the response from the endpoint. For example, this error will occur if we pass the response directly, rather than passing the response.data"
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: measuring time/cou/ram usage during build
+
+https://stackoverflow.com/questions/63348396/create-react-app-yarn-build-on-small-ec2-server-takes-100-cpu-and-makes-it
+
+> apt search ^time$
+time/oldstable,now 1.7-25.1+b1 amd64 [installed]
+  GNU time program for measuring CPU resource usage
+
+apt install time
+
+> dpkg -L time
+/.
+/usr
+/usr/bin
+/usr/bin/time
+/usr/share
+/usr/share/doc
+/usr/share/doc/time
+/usr/share/doc/time/AUTHORS
+/usr/share/doc/time/NEWS.gz
+/usr/share/doc/time/README
+/usr/share/doc/time/changelog.Debian.amd64.gz
+/usr/share/doc/time/changelog.Debian.gz
+/usr/share/doc/time/changelog.gz
+/usr/share/doc/time/copyright
+/usr/share/doc/time/time.html
+/usr/share/doc-base
+/usr/share/doc-base/time
+/usr/share/info
+/usr/share/info/time.info.gz
+/usr/share/man
+/usr/share/man/man1
+/usr/share/man/man1/time.1.gz
+
+> /usr/bin/time -v ls
+cloud11.vpnsostarknl.crt  cloud11.vpnsostarknl.csr  cloud11.vpnsostarknl.key  cp-jdg-Xauthority.sh  distro.info  opensyssetup  template--sostark-gwclient  template--sostark-gwclient.tgz.b64.txt
+        Command being timed: "ls"
+        User time (seconds): 0.00
+        System time (seconds): 0.00
+        Percent of CPU this job got: 100%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 2416
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 0
+        Minor (reclaiming a frame) page faults: 118
+        Voluntary context switches: 1
+        Involuntary context switches: 0
+        Swaps: 0
+        File system inputs: 0
+        File system outputs: 0
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: pm2 node process manager
+
+https://pm2.io/
+
+>
+sudo npm install pm2@latest -g
+
+--[CWD=~/dev/ds-mcs-display/api_server(git:main)]--[1674478210 13:50:10 Mon 23-Jan-2023 CET]--[jdg@rpi-display-server-1]--[os:Raspbian-11/bullseye,kernel:5.15.61-v7l+,isa:armv7l]------
+> sudo npm install pm2@latest -g
+npm WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+
+added 184 packages in 17s
+
+12 packages are looking for funding
+  run `npm fund` for details
+--[CWD=~/dev/ds-mcs-display/api_server(git:main)]--[1674487720 16:28:40 Mon 23-Jan-2023 CET]--[jdg@rpi-display-server-1]--[os:Raspbian-11/bullseye,kernel:5.15.61-v7l+,isa:armv7l]------
+> pm2
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+usage: pm2 [options] <command>
+
+pm2 -h, --help             all available commands and options
+pm2 examples               display pm2 usage examples
+pm2 <command> -h           help on a specific command
+
+Access pm2 files in ~/.pm2
+#( bash[PROMPT_COMMAND]: prev.cmd returned non-zero code: 1 )
+
+--[CWD=~/dev/ds-mcs-display/api_server(git:main)]--[1674487728 16:28:48 Mon 23-Jan-2023 CET]--[jdg@rpi-display-server-1]--[os:Raspbian-11/bullseye,kernel:5.15.61-v7l+,isa:armv7l]------
+
+> pm2 list
+[PM2] Spawning PM2 daemon with pm2_home=/home/jdg/.pm2
+[PM2] PM2 Successfully daemonized
+┌─────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id  │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└─────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+--[CWD=~/dev/ds-mcs-display/api_server(git:main)]--[1674487732 16:28:52 Mon 23-Jan-2023 CET]--[jdg@rpi-display-server-1]--[os:Raspbian-11/bullseye,kernel:5.15.61-v7l+,isa:armv7l]------
+
+#
+https://pm2.keymetrics.io/docs/usage/startup/
+"
+Persistent applications: Startup Script Generator
+PM2 can generate startup scripts and configure them in order to keep your process list intact across expected or unexpected machine restarts.
+- systemd: Ubuntu >= 16, CentOS >= 7, Arch, Debian >= 7
+"
+
+> pm2 startup
+[PM2] Init System found: systemd
+[PM2] To setup the Startup Script, copy/paste the following command:
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u jdg --hp /home/jdg
+
+--service-name <name>
+--service-name api_srv_node
+
+--[CWD=~/dev/ds-mcs-display/api_server(git:main)]--[1674500465 20:01:05 Mon 23-Jan-2023 CET]--[jdg@rpi-display-server-1]--[os:Raspbian-11/bullseye,kernel:5.15.61-v7l+,isa:armv7l]------
+> pm2 startup
+[PM2] Init System found: systemd
+[PM2] To setup the Startup Script, copy/paste the following command:
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u jdg --hp /home/jdg
+
+> sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u jdg --hp /home/jdg --service-name api_srv_node
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Init System found: systemd
+Platform systemd
+Template
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=jdg
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/home/jdg/opensyssetup/bin:/home/jdg/opensyssetup/mac/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/usr/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/home/jdg/.pm2
+PIDFile=/home/jdg/.pm2/pm2.pid
+Restart=on-failure
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target
+
+Target path
+/etc/systemd/system/api_srv_node.service
+Command list
+[ 'systemctl enable api_srv_node' ]
+[PM2] Writing init configuration in /etc/systemd/system/api_srv_node.service
+[PM2] Making script booting at startup...
+[PM2] [-] Executing: systemctl enable api_srv_node...
+Created symlink /etc/systemd/system/multi-user.target.wants/api_srv_node.service → /etc/systemd/system/api_srv_node.service.
+[PM2] [v] Command successfully executed.
++---------------------------------------+
+[PM2] Freeze a process list on reboot via:
+$ pm2 save
+
+[PM2] Remove init script via:
+$ pm2 unstartup systemd
+
+
+--[CWD=~/dev/ds-mcs-display/api_server(git:main)]--[1674500582 20:03:02 Mon 23-Jan-2023 CET]--[jdg@rpi-display-server-1]--[os:Raspbian-11/bullseye,kernel:5.15.61-v7l+,isa:armv7l]------
+> cat /etc/systemd/system/api_srv_node.service
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=jdg
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/home/jdg/opensyssetup/bin:/home/jdg/opensyssetup/mac/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/usr/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/home/jdg/.pm2
+PIDFile=/home/jdg/.pm2/pm2.pid
+Restart=on-failure
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target
+
+#
+
+
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: nodemon
+
+>
+sudo npm install nodemon@latest -g
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: 
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# - - - - - - = = = - - - - - - 
+#-eof

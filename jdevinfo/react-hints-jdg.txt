@@ -1,0 +1,181 @@
+#= react-hints-jdg.txt
+# - - - - - - = = = - - - - - - 
+
+# - - - - - - = = = - - - - - - 
+# create-react-app 
+
+https://create-react-app.dev/
+
+# OLD WAY:
+>
+sudo npm i -g create-react-app 
+create-react-app my-app
+cd my-app/
+npm start
+
+# NEW WAY:
+>
+npx create-react-app my-app
+cd my-app/
+npm start
+
+# EVEN MORE NEWER WAY:
+(use 'create-next-app' instead of 'create-react-app' ...)
+
+# - - - - - - = = = - - - - - - 
+# Primereact from Primefaces
+
+Base links:
+https://www.primefaces.org/primereact/
+https://www.primefaces.org/primereact/setup/
+Icons =>        https://www.primefaces.org/primereact/icons/
+CSS =>          https://www.primefaces.org/primeflex/
+Bootstrap =>    https://getbootstrap.com/docs/4.0/utilities/colors/
+Componenets =>  
+https://www.primefaces.org/primereact/calendar/
+https://www.primefaces.org/primereact/datatable/
+https://www.primefaces.org/primereact/gmap/
+https://www.primefaces.org/primereact/picklist/
+https://www.primefaces.org/primereact/fileupload/
+https://www.primefaces.org/primereact/terminal/
+
+>
+npm install --save primereact primeicons primeflex 
+
+# example usage:
+
+import React, { useState } from "react";
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
+//
+//import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
+import "primereact/resources/themes/saga-blue/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
+import "primeicons/primeicons.css"; //icons
+// instead of <link rel="stylesheet" href="https://unpkg.com/primeflex/themes/saga-blue.css"> :
+import "primeflex/themes/saga-blue.css";
+//
+function App() {
+  const [v_state_visible, f_setstate_visiable] = useState(false);
+  return (
+    <div className="App">
+      <Dialog visible={v_state_visible} onHide={() => f_setstate_visiable(false)} >
+        Content
+      </Dialog>
+      <Button label="Show" onClick={() => f_setstate_visiable(true)} />
+    </div>
+  );
+}
+
+# - - - - - - = = = - - - - - - 
+# about: useEffect
+
+// https://www.w3schools.com/react/react_useeffect.asp
+// https://reactjs.org/docs/hooks-effect.html
+
+useEffect(() => {
+  // no 2nd param => Runs on every render
+});
+
+useEffect(() => {
+  // empty array as 2nd param => Runs only on the first render
+}, []);
+
+useEffect(() => {
+  // non-empty array => Runs on the first render, And any time any dependency value changes
+}, [prop, state]);
+
+// summary:
+useEffect(() => {
+  // about 2nd param -- useEffect( () => {}, 2nd_param );
+  // - no 2nd param    => Runs on every render
+  // - empty array     => Runs only on the first render
+  // - non-empty array => Runs on the first render, And any time any dependency value changes
+});
+
+# NOTE: DON'T use async in useEffect-cb, place it inside!
+# Typical error: "Effect callbacks are synchronous to prevent race conditions. Put the async function inside:"
+# WRONG:
+useEffect(async () => {
+          ^^^^^
+  await fa_ui_refresh_api();
+}, []);
+# CORRECT:
+useEffect(() => {
+  async function fa_wrapper() {
+  ^^^^^
+    await fa_ui_refresh_api();
+  }
+  fa_wrapper();
+}, []);
+
+# - - - - - - = = = - - - - - - 
+# about: ESLint and the many 'no-unused-vars' warnings
+
+https://stackoverflow.com/questions/42541559/eslint-with-react-gives-no-unused-vars-errors
+
+# (NOT NEEDED ==>) > npm install --save-dev eslint-plugin-react
+
+# add in: package.json
+"eslintConfig": {
+  "rules": {
+    "no-unused-vars": [
+      "off"
+    ]
+  }
+}
+
+# - - - - - - = = = - - - - - - 
+# about: sakai-react, next.js
+
+'sakai-react' is a react package build on next.js and using/demoing primefaces componenets
+
+# the folder 'sakai-react-lean' is the lean-version of this 'sakai-react-lean' repo:
+https://github.com/primefaces/sakai-react
+https://www.primefaces.org/sakai-react/
+#
+# We took the repo:
+> git clone https://github.com/primefaces/sakai-react.git
+# and removed some unneccesary styles (to reduce size)
+# and then removed the .git folder
+# and zipped it, to be used as a template in new projects
+
+# next.js
+https://nextjs.org/
+
+# create-next-app
+https://nextjs.org/docs/api-reference/create-next-app
+https://create-next-app.js.org/
+# examples
+https://github.com/vercel/next.js/tree/canary/examples
+
+# create new project:
+> npx create-next-app@latest
+
+# build / deploy
+https://nextjs.org/docs/deployment
+"This output is generated inside the .next folder"
+
+# build static HTML = export
+https://nextjs.org/docs/advanced-features/static-html-export
+"next export allows you to export your Next.js application to static HTML, which can be run standalone without the need of a Node.js server. It is recommended to only use next export if you don't need any of the unsupported features requiring a server."
+
+# - - - - - - = = = - - - - - - 
+# about: Hooks
+
+# Error: Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons: 1. You might have mismatching versions of React and the renderer (such as React DOM) 2. You might be breaking the Rules of Hooks 3. You might have more than one copy of React in the same app See https://reactjs.org/link/invalid-hook-call for tips about how to debug and fix this problem.
+#
+https://reactjs.org/warnings/invalid-hook-call-warning.html
+https://reactjs.org/docs/hooks-rules.html
+
+# - - - - - - = = = - - - - - - 
+# about: 
+
+# - - - - - - = = = - - - - - - 
+# about: 
+
+# - - - - - - = = = - - - - - - 
+# about: 
+
+# - - - - - - = = = - - - - - - 
+#-eof

@@ -1,0 +1,181 @@
+#= vscode-hints.txt
+# - - - - - - = = = - - - - - - 
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+
+# install modules: 
+- Prettier
+- Prettier-ESLint
+- "Remote - SSH"
+- ESLint (<== optional? already installed with 'Prettier-ESLint' ?)
+- Ayu
+- "Simple React Snippets"
+- "Auto Import - ES6, TS, JSX, TSX"
+
+# MUST set these settings:
+"editor.defaultFormatter": "esbenp.prettier-vscode"
+"editor.formatOnPaste": true
+"editor.formatOnSave": true
+
+# CAN set these settings:
+"editor.acceptSuggestionOnCommitCharacter": false
+"prettier.tabWidth": 2
+"prettier.singleQuote": true
+"prettier.printWidth": 240
+
+# DO NOT touch:
+"editor.autoClosingQuotes": "never"
+"editor.autoClosingQuotes": "languageDefined"
+"javascript.preferences.quoteStyle": "single"
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+
+# About: max_user_watches
+
+> cat /etc/sysctl.conf | grep -B4 -A2 fs.inotify.max_user_watches
+# jdg 
+# https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
+# then do> sudo sysctl -p
+#fs.inotify.max_user_watches=524288
+fs.inotify.max_user_watches=205000
+
+# > echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+# BETTER:
+> sudo config_replace_match_with_line.sh /etc/sysctl.conf 'fs.inotify.max_user_watches' 'fs.inotify.max_user_watches=524288'
+root> ~/opensyssetup/bin/config_replace_match_with_line.sh /etc/sysctl.conf 'fs.inotify.max_user_watches' 'fs.inotify.max_user_watches=524288'
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+
+# About: Prettier
+
+// prettier-ignor
+const above_statement = 'prevents prettier to format the following line';
+
+// d221211 solved 'mystery' why VSCode kept putting key:value on new line when line is too long ...
+// ==> it was the setting in .rc: "printWidth":80 !
+
+> cat /Users/jdg/dev/greenberry/import-from-spreadsheet/.prettierrc.js
+module.exports = {
+  ...require('@greenberry/prettier-config'),
+};
+
+> cat /Users/jdg/dev/greenberry/import-from-spreadsheet/node_modules/@greenberry/prettier-config/index.js
+module.exports = {
+  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "htmlWhitespaceSensitivity": "css",
+  "insertPragma": false,
+  "jsxBracketSameLine": false,
+  "jsxSingleQuote": false,
+  "printWidth": 80,
+  "proseWrap": "preserve",
+  "quoteProps": "as-needed",
+  "requirePragma": false,
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "useTabs": false,
+  "endOfLine": "lf"
+}
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: ESLint
+
+# use "no-unused-vars":"off" in .rc file to disable naging "no-unused-vars" warnings
+
+> cat .eslintrc
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "@greenberry/eslint-config"
+  ],
+  "rules": {
+    "semi": ["error", "always"],
+    "no-unused-vars": "off"
+  },
+  "parserOptions": {
+    // Only ESLint 6.2.0 and later support ES2020.
+    "ecmaVersion": 2020
+  }
+}
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: Working with JavaScript
+
+https://code.visualstudio.com/docs/nodejs/working-with-javascript
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: Vetur = Vue tooling for VS Code
+
+https://vuejs.github.io/vetur/
+https://vuejs.github.io/vetur/guide/setup.html
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: git diff
+
+Name: GitLens — Git supercharged
+Id: eamodio.gitlens
+Description: Supercharge Git within VS Code — Visualize code authorship at a glance via Git blame annotations and CodeLens, seamlessly navigate and explore Git repositories, gain valuable insights via rich visualizations and powerful comparison commands, and so much more
+Version: 14.7.0
+Publisher: GitKraken
+VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
+
+
+# [below] not so good :
+
+https://stackoverflow.com/questions/51316233/how-can-i-see-git-diff-on-the-visual-studio-code-side-by-side-file
+
+# "for git-diff in same branch"
+#
+In Visual Studio Code, on the left side, there is a Git icon that looks like this:
+By clicking on this icon, then double-clicking one of the files listed under Changes you can see the Git difference in two sides.
+#
+For completeness, since not everyone has the icons showing, look under menu View ->SCM (Show source control) ctrl-shift-G – 
+#.
+
+# "for git-diff in different branches"
+#
+# If you want to see the diff changes from different branches, there is some extra work. For example you want to see all the changes from last N commits in your Feature branch.
+
+    Set up Visual Studio Code to be your default difftool by adding this in your ~/.gitconfig file.
+
+    [diff]
+        tool = vscode
+    [difftool "vscode"]
+        cmd = code --wait --diff $LOCAL $REMOTE
+
+    Go to your Git project. Type in:
+
+    git difftool {{branch you want to check with}}, for example git difftool master
+
+    You will be prompted for each file, if you want to open it in Visual Studio Code or not.
+#.
+
+# d230123 my current .gitconfig file:
+
+[user]
+	name = John de Graaff
+	email = john@de-graaff.net
+[alias]
+	ss = status -s
+	logg = log --oneline --decorate --graph --all --pretty=format:'%C(auto)%h %aD %d %s'
+	logn = log --oneline --decorate --graph --all --pretty=format:'%h - %ae - %ad : %s' --numstat
+[diff]
+	tool = vscode
+[difftool "vscode"]
+	cmd = code --wait --diff $LOCAL $REMOTE
+
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: 
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: 
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: 
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# About: 
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# - - - - - - = = = - - - - - - 
+#-eof

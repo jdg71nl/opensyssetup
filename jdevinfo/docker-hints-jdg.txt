@@ -1,0 +1,102 @@
+#= ./project/docker-hints-jdg.txt
+# - - - - - - = = = - - - - - - 
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# generic docker info
+
+https://www.docker.com/
+https://hub.docker.com/
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: installing docker
+
+# https://docs.docker.com/engine/install/debian/
+
+# (as root do:)
+apt-get remove docker docker-engine docker.io containerd runc
+apt install -y ca-certificates curl gnupg lsb-release
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+--[CWD=~/dev/tmc01(git:main)]--[1673715962 18:06:02 Sat 14-Jan-2023 CET]--[jdg@tmc1]--[os:Debian-10/buster,kernel:4.19.0-19-amd64,isa:x86_64]------
+> cat /etc/apt/sources.list.d/docker.list
+deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian   buster stable
+--[CWD=~/dev/tmc01(git:main)]--[1673715962 18:06:02 Sat 14-Jan-2023 CET]--[jdg@tmc1]--[os:Debian-10/buster,kernel:4.19.0-19-amd64,isa:x86_64]------
+
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+#
+adduser jdg docker
+# (re-login jdg)
+
+# test:
+docker run hello-world
+
+# - - - - - - = = = - - - - - - 
+# About: postgres password in docker container
+
+https://github.com/docker-library/postgres/issues/203#issuecomment-255200501
+"Problem setting environment variables through docker-compose"
+"Yeah, the problem is not the existing images on your host, but it stems from the volume (or bind mount directory) being already initialized after your first start. The postgres user, and database creation only happens on the first start (ie, /var/lib/postgresql/data must not already contain database files)."
+
+# - - - - - - = = = - - - - - - 
+# About: remove volume
+
+https://stackoverflow.com/questions/45511956/remove-a-named-volume-with-docker-compose
+#
+An example approach:
+.
+# Stop and remove container's using the target volume
+docker-compose stop NAME_OF_CONTAINER
+.
+# We need the force flag, "-f", as the container is still bound to the volume
+docker-compose rm -f NAME_OF_CONTAINER
+.
+# Next find your volume name in the following list
+docker volume ls
+.
+# Finally remove the volume
+docker volume rm VOLUME_NAME
+
+# test connection with: 
+> psql -h 127.0.0.1 -p 5491 -U postgres tcs_db
+
+# - - - - - - = = = - - - - - - 
+# About: nice template for Dockerfile:node
+
+# idea from: https://dev.to/paularah/deploy-and-automatically-provision-ssl-certs-on-a-node-js-server-with-traefik-and-docker-2j0e
+
+FROM node:12-alpine
+RUN mkdir home/node-traefik
+WORKDIR /home/node-traefik
+COPY . .
+RUN npm install
+EXPOSE 3000
+CMD [ "node", "server.js" ]
+
+# - - - - - - = = = - - - - - - 
+# About: docker-compose
+
+https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose
+"
+The docker compose (with a space) is a newer project to migrate compose to Go with the rest of the docker project. This is the v2 branch of the docker/compose repo. It's been first introduced to Docker Desktop users, so docker users on Linux didn't see the command. In addition to migrating to Go, it uses the compose-spec, and part of the rewrite may result in behavior differences.
+The original python project, called docker-compose, aka v1 of docker/compose repo, has now been deprecated and development has moved over to v2. To install the v2 docker compose as a CLI plugin on Linux, supported distribution can now install the docker-compose-plugin package. E.g. on debian, I run apt-get install docker-compose-plugin.
+"
+
+> apt install docker-compose-plugin
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: 
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: 
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: 
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# - - - - - - = = = - - - - - - 
+#-eof
