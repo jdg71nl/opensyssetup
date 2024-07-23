@@ -236,6 +236,8 @@ fi
 # Shell prompt
 #===============================================================
 
+# https://tldp.org/HOWTO/Bash-Prompt-HOWTO/index.html
+
 # idea from: https://david.newgas.net/return_code/
 #export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "returned \033[01;31m$ret\033[00;00m"; fi'
 export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "\n#( bash[PROMPT_COMMAND]: prev.cmd returned non-zero code: \033[01;31m$ret\033[00;00m )"; else echo; fi'
@@ -266,11 +268,28 @@ export PROMPT_COMMAND='ret=$?; if [ $ret -ne 0 ] ; then echo -e "\n#( bash[PROMP
 [ -f $HOME/opensyssetup/git-prompt.sh ] && source $HOME/opensyssetup/git-prompt.sh
 #
 RED='\e[1;31m' ; GREEN='\e[1;32m' ; YELLOW='\e[1;33m' ; BLUE='\e[1;34m' ; CYAN='\e[1;36m' ; NOCOLOR='\e[0m'
+nothingnessssssssxssssssssssssss=""
 #
-[ -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+[   -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+[ ! -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]${$nothingnessssssssxssssssssssssss}--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
 #
-[ ! -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
-#
+#: # d240723 new fixed-length-truncated-path. idea from: https://www.gilesorr.com/bashprompt/prompts/twtty.html 
+#: TERMWIDTH=${COLUMNS}
+#: let promptsize=$(echo -n "--(${usernam}@${hostnam}:${cur_tty})---(${PWD})--" | wc -c | tr -d " ")
+#: let fillsize=${TERMWIDTH}-${promptsize}
+#: fill=""
+#: while [ "$fillsize" -gt "0" ]; do 
+#:   fill="${fill}-"
+#:   let fillsize=${fillsize}-1
+#: done
+#: if [ "$fillsize" -lt "0" ]l then
+#:   let cut=3-${fillsize}
+#:   newPWD="...$(echo -n $PWD | sed -e "s/\(^.\{$cut\}\)\(.*\)/\2/")"
+#: fi
+#: #
+#: [   -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${YELLOW}"'$(__git_ps1 "(git:%s)")'"${CYAN}]--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+#: [ ! -f $HOME/opensyssetup/git-prompt.sh ] && export PS1="${CYAN}--[CWD=${RED}\w${CYAN}]${$nothingnessssssssxssssssssssssss}--[\D{%s} \t \D{%a %d-%b-%Y %Z}]--[${RED}\u${CYAN}@\h]--[${YELLOW}$DISTRO_TYPE${CYAN}]------${NOCOLOR}\n> "
+#: #
 
 #===============================================================
 # Mac exports
