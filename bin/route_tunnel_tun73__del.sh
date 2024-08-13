@@ -1,6 +1,9 @@
 #!/bin/bash
 #= route_tunnel_tun73__del.sh
 
+# display every line executed in this bash script:
+set -o xtrace
+
 TUN="tun73"
 TUN_GW="185.84.140.52"
 VIA="10.86.93.254"

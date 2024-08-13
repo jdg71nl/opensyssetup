@@ -1,6 +1,9 @@
 #!/bin/bash
 #= route_tunnel_tun21__set.sh
 
+# display every line executed in this bash script:
+set -o xtrace
+
 TUN="tun21"
 TUN_GW="193.38.153.11"
 VIA="10.86.92.254"
