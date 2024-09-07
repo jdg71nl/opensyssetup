@@ -1,0 +1,36 @@
+
+
+# - - - 
+# info on extracting GPS geoloc from JPEG photo
+
+# https://www.openstreetmap.org/user/James%20Birkett/diary/405003
+
+Viewing photo GPS locations on linux
+
+Posted by James Birkett on 5 September 2024 in English.
+
+I’m running linux as my desktop OS and couldn’t find a tool I was happy with for viewing the GPS coordinates stored in a photograph’s metadata (exif). I whipped up this quick-and-dirty shell script to do it for me.
+
+~/.local/bin/photolocation :
+
+xdg-open $(seq 1 4 | while read i; do exif "$1" -m --ifd=GPS -t=0x000$i; done  | tr '\n' ' ' | awk  '{printf ("%s%.6f %s%.6f\n",$1,$2+$3/60+$4/3600,$5,$6+$7/60+$8/3600)}' |sed 's/[NE]//;s/[SW]/-/;' | awk '{printf "https://www.openstreetmap.org/?mlat=" $1 "&mlon=" $2 "#map=18/" $1 "/" $2 "\n"}')
+
+I also made a .desktop entry so I can run it from the file manager or from my image viewer by choosing “open with…”
+
+.local/share/applications/photolocation.desktop :
+
+[Desktop Entry]
+Name=View location in OpenStreetMap
+TryExec=photolocation
+Exec=photolocation %f
+Terminal=false
+Type=Application
+MimeType=image/jpeg;image/jpg;
+Keywords=Picture;Photo;Photograph;Map;OpenStreetMap;
+
+    Comment on this entry
+    Send a message to the author
+    No comments
+
+# - - - 
+
