@@ -128,6 +128,9 @@ else
   echo "# adding specific package for: \"other\" distro's ..."
   ADD_PKG_LINES="netcat"
 fi
+# d241001 disabled:
+ADD_PKG_LINES=""
+#
 #
 FILE="apt_default_list.txt"
 #
