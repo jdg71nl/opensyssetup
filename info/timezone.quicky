@@ -1,6 +1,29 @@
 # timezone.quicky
 #
 
+# - - - 
+# d241011 set timezone TZ on Debian 12:
+# https://wiki.crowncloud.net/?How_To_Change_TimeZone_on_Debian_12
+
+> sudo timedatectl 
+               Local time: Fri 2024-10-11 03:33:38 EDT
+           Universal time: Fri 2024-10-11 07:33:38 UTC
+                 RTC time: Fri 2024-10-11 07:33:38
+                Time zone: US/Eastern (EDT, -0400)
+System clock synchronized: yes
+              NTP service: n/a
+          RTC in local TZ: no
+
+> sudo timedatectl list-timezones | grep Ams
+Europe/Amsterdam
+
+> cat /etc/timezone
+Europe/Amsterdam
+
+> sudo timedatectl set-timezone Europe/Amsterdam
+
+
+# - - - 
 # d2201 timezone in Ubuntu:
 # https://linuxize.com/post/how-to-set-or-change-timezone-on-ubuntu-20-04/
 # read:
@@ -95,3 +118,4 @@ Do you want to change that? [n]:
 Your time zone will not be changed
 
 #  ----++++----++++----++++----++++----++++----++++----++++----++++----++++----
+
