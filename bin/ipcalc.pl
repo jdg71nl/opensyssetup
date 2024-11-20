@@ -13,7 +13,6 @@ use Cwd 'abs_path'; # also resolves symlinks
 use Data::Dumper;
 
 # centos: yum install perl-NetAddr-IP
-# (debian: aptitude install netaddr)
 # debian: apt install libnetaddr-ip-perl
 use NetAddr::IP;
 
