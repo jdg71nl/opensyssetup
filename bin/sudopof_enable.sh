@@ -17,11 +17,7 @@ if [ $MYUID != 0 ]; then
 fi
 #
 SUDOPOF_FILE="/root/opensyssetup/.sudopof.disabled"
-#
-if [ -e $SUDOPOF_FILE ]; then
-  echo "# sudopof is DISABLED by this file: $SUDOPOF_FILE ..."
-else
-  /usr/sbin/poweroff 
-fi
+rm $SUDOPOF_FILE
+ls -altr $SUDOPOF_FILE
 #
 #-eof
