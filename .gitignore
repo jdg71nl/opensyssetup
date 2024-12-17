@@ -1,5 +1,7 @@
 #= .gitignore
 #
+.sudopof.disabled
+#
 *.pem
 #
 !Build/
