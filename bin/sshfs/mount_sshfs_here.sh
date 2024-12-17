@@ -1,0 +1,1 @@
+/Users/jdg/opensyssetup/bin/mount_sshfs_here.sh
