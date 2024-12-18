@@ -152,7 +152,9 @@ apt install -y $PKG_STRING
 # apt install -y ifupdown net-tools vlan bridge-utils
 # DON'T?: apt remove dhcpcd5
 #
+# for: xeyes
 # apt install -y x11-apps x11-utils 
+#
 # apt install -y build-essential 
 # apt install -y build-essential dkms bc raspberrypi-kernel-headers
 #
