@@ -2,6 +2,98 @@
 # - - - - - - = = = - - - - - - . 
 
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# generic docker info
+
+https://www.docker.com/
+https://hub.docker.com/
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# install docker on: Debian
+
+# https://docs.docker.com/engine/install/debian/
+
+# (as root do:)
+apt-get remove docker docker-engine docker.io containerd runc
+apt install -y ca-certificates curl gnupg lsb-release iptables
+#
+# and/or:
+for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
+
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+#
+adduser jdg docker
+# (re-login jdg)
+
+# test:
+docker run hello-world
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# install docker on: Ubuntu
+
+# d250102 https://docs.docker.com/engine/install/ubuntu/
+
+# clean / prep:
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+apt install -y ca-certificates curl gnupg lsb-release iptables
+
+#
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+#
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list 
+cat /etc/apt/sources.list.d/docker.list 
+sudo apt-get update
+
+#
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# configure:
+sudo adduser jdg docker
+
+# verify :
+# DO_FIRST ==> Logout & Login
+docker -v
+#
+docker run hello-world
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# install docker-compose
+
+# https://docs.docker.com/compose/
+# https://docs.docker.com/compose/install/
+# https://docs.docker.com/compose/install/linux/#install-the-plugin-manually
+
+# OFFICIAL WAY:
+DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+mkdir -p $DOCKER_CONFIG/cli-plugins
+curl -SL https://github.com/docker/compose/releases/download/v2.32.0/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+#
+chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+# BETTER WAY:
+# check yourself on: https://github.com/docker/compose/releases/tag/v2.32.1
+#
+# for arch = aarch64
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.32.1/docker-compose-linux-aarch64 -o /usr/local/bin/docker-compose
+# for arch = x86_64
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.32.1/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+#
+sudo chmod +x /usr/local/bin/docker-compose
+#
+> docker-compose version
+Docker Compose version v2.32.1
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
 # build
 
 ## Use this file:
@@ -17,31 +109,104 @@ net.ipv6.conf.default.disable_ipv6 = 1
 > cat .dockerignore 
 node_modules/
 
-# build width explicit tag (default tag = latest)
+## build width explicit tag (default tag = latest)
 > docker build -t react-app:1 .
 
-# run with caching disabled:
+## run with caching disabled:
 > docker build -t react-app --no-cache .
+
+## tag an image (after build):
+> docker image tag react-app:latest react-app:1
+## or using IMAGE_ID
+> docker image tag react-app:latest react-app:1
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# volumes
+
+## create
+> docker volume create app-data
+
+## inspect (gives JSON)
+> docker volume inspect app-data 
 
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
 # run 
 
-## Note: you can start a remote-image directly:
+## Note: you can start a remote-image directly: 
 > docker run -it alpine       # <== if without command, then the in-file CMD is used
 > docker run -it alpine sh    # <== if command is provided, the in-file CMD is aignored
 
 ## interactively
 > docker run -it react-app sh
 
-# run -d == detached
+## run -d == detached
 > docker run -d react-app
 
-# run 
+## run 
 > docker run react-app
 
-# run with port-map
-docker run -p 5000:3000 react-app
+## run with port-map
+docker run -d -p 4000:3000 react-app
 
+## stop/start a container (use 'run' only to start a new container)
+> docker stop <first_digits_img_id>
+> docker start <first_digits_img_id>
+
+## copy file between host and container:
+> docker cp <first_digits_img_id>:/app/log.txt .
+## or reverse:
+> docker cp secret.txt <first_digits_img_id>:/app/
+
+## run with volume
+> docker run -d -p 4000:3000 -v app-data:/app/data react-app
+
+## using volume to share (src-) folder between host and container (not for production, but for: development)
+> docker run -d -p 4000:3000 -v $(pwd):/app react-app
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# verify
+
+## view images:
+> docker images
+> docker image ls
+## show all (also stale, cached):
+> docker image ls -a
+
+## view containers:
+> docker container ls
+## show all (also stale, cached):
+> docker container ls -a
+
+## view running containers
+> docker ps
+## show all
+> docker ps -a
+
+
+## view logs
+> docker logs <first_digits_img_id>
+## follow
+> docker logs -f <first_digits_img_id>
+
+## exec cmd in running container:
+> docker exec <first_digits_img_id> ls -altr
+
+## use 'exec' for opening a shell in running container:
+> docker exec -it <first_digits_img_id> sh
+> docker exec -it <first_digits_img_id> bash
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# maintenance
+
+## remove stale images:
+> docker image prune
+
+## remove stale containers:
+> docker container prune
+
+## stop-remove all:
+> docker image rm -f $(docker image ls -q)
+> docker container rm -f $(docker container ls -aq)
 
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
 #-eof
