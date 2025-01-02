@@ -1,0 +1,47 @@
+# docker.jdevinfo.txt
+# - - - - - - = = = - - - - - - . 
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# build
+
+## Use this file:
+> docker build -t react-app .
+## About error: Get "https://registry-1.docker.io/v2/": dial tcp [2600:1f18:2148:bc02:445d:9ace:d20b:c303]:443: connect: network is unreachable
+## https://forums.docker.com/t/force-docker-to-only-use-ipv4/140486
+## can do
+> cat /etc/sysctl.conf | grep ^net.ipv6
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+
+## can define .dockerignore file to skip items during COPY:
+> cat .dockerignore 
+node_modules/
+
+# build width explicit tag (default tag = latest)
+> docker build -t react-app:1 .
+
+# run with caching disabled:
+> docker build -t react-app --no-cache .
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# run 
+
+## Note: you can start a remote-image directly:
+> docker run -it alpine       # <== if without command, then the in-file CMD is used
+> docker run -it alpine sh    # <== if command is provided, the in-file CMD is aignored
+
+## interactively
+> docker run -it react-app sh
+
+# run -d == detached
+> docker run -d react-app
+
+# run 
+> docker run react-app
+
+# run with port-map
+docker run -p 5000:3000 react-app
+
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+#-eof
