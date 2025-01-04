@@ -78,6 +78,20 @@ module.exports = {
   "endOfLine": "lf"
 }
 
+# d240520 in case of Prettier problems/errors regarding require() and ESM stuff: upgrade to v3
+# https://prettier.io/blog/2023/07/05/3.0.0.html
+#
+--[CWD=~/dev/dcs-mcs-server/web_quasar(git:main)]--[1716200701 12:25:01 Mon 20-May-2024 CEST]--[jdg@deb12vm-minim2]--[os:Debian-12/bookworm,isa:aarch64]------
+> npm list
+webui-quasar@0.0.1 /home/jdg/dev/dcs-mcs-server/web_quasar
+├── prettier@2.8.8
+#
+> npm i prettier@3
+#
+> npm list
+webui-quasar@0.0.1 /home/jdg/dev/dcs-mcs-server/web_quasar
+├── prettier@3.2.5
+
 # - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
 # About: ESLint
 
