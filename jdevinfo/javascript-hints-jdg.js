@@ -1,7 +1,17 @@
 #!/usr/bin/env node
 //= ./project/javascript-node-hints-jdg.js
 // - - - - - - = = = - - - - - -
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// generic web info
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// top-level require:
 
 const mongoose = require("mongoose"); // npm i mongoose
 
@@ -22,7 +32,7 @@ const jwt = require("jsonwebtoken"); // npm install jsonwebtoken
 
 const winston = require("winston"); // npm i winston
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // JDG-TOP generic problems-solved by experience
 
 // (*) forget to wrap a (ALL) function-call(s) in a SEPARATE (!) Try-Catch block
@@ -32,10 +42,10 @@ const winston = require("winston"); // npm i winston
 // (*)
 // (*)
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: tests from: TCNC-The-Complete-Node-js-Course
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-02-Global-Object.mp4
 // console.log();         // = global object (function)
 // window.console.log     // = can write as (only in browser)
@@ -43,7 +53,7 @@ const winston = require("winston"); // npm i winston
 // window.message         // = global object (only in browser)
 // global.message         // = global object (only in Node), but still no: 'message' is var in file/module-scope
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-03-Modules.mp4
 // console.log(module);
 //
@@ -69,7 +79,7 @@ const winston = require("winston"); // npm i winston
 //   ]
 // }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-04-Creating-a-Module.mp4
 //
 //: logger.js
@@ -97,7 +107,7 @@ const winston = require("winston"); // npm i winston
 // }
 // module.exports = log;        // <== export a func directly and not in an object
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-05-Loading-a-Module.mp4
 //: app.js
 // var log = require("./logger");
@@ -193,7 +203,7 @@ const winston = require("winston"); // npm i winston
 //   ]
 // }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-06-Module-Wrapper-Function.mp4
 // //= logger.js
 // var x =;
@@ -240,7 +250,7 @@ const winston = require("winston"); // npm i winston
 //   console.log(module);
 // });
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-07-Path-Module.mp4
 //
 // > node --version
@@ -262,7 +272,7 @@ if (false) {
 //   name: 'some_tests'
 // }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-08-OS-Module.mp4
 // https://nodejs.org/docs/latest-v14.x/api/os.html
 if (false) {
@@ -274,7 +284,7 @@ if (false) {
 // > node project/playground/some_tests.js
 // Total Memory: 12594167808, Free Memory: 7048085504
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-09-File-System-Module.mp4
 // https://nodejs.org/docs/latest-v14.x/api/fs.html
 if (false) {
@@ -294,7 +304,9 @@ if (false) {
 if (false) {
   // read JSON file (async):
   // import { readFile } from "fs/promises";
-  const json = JSON.parse(await readFile(new URL("./some-file.json", import.meta.url)));
+  const json = JSON.parse(
+    await readFile(new URL("./some-file.json", import.meta.url))
+  );
   //
   // read JSON file (sync)
   // import * as fs from "node:fs";
@@ -306,7 +318,7 @@ if (false) {
   }
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-10-Events-Module.mp4
 // https://nodejs.org/docs/latest-v14.x/api/events.html
 //
@@ -323,7 +335,7 @@ if (false) {
 // > node project/playground/some_tests.js
 // Listener called
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-11-Event-Arguments.mp4
 if (false) {
   emitter.on("messageLogged", function (arg) {
@@ -335,7 +347,7 @@ if (false) {
 // > node project/playground/some_tests.js
 // Listener called { id: 1, url: 'http://' }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L02-12-Extending-EventEmitter.mp4
 //
 //: logger.js
@@ -362,7 +374,7 @@ if (false) {
 // message
 // Listener called { id: 1, url: 'http://' }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L03-05-Package-Dependencies.mp4
 
 // "_comment_0": " // SemVer: Major.Minor.Patch ",
@@ -372,7 +384,7 @@ if (false) {
 // "_comment_4": " // > npm update                        <== to update to Wanted versions",
 // "_comment_5": " // > sudo npm i npm-check-updates -g   <== then run:    > ncu   <== to see any newer version (beyond carot^ and tilde~) ",
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L05-04-Built-in-Middleware.mp4
 //
 if (false) {
@@ -385,7 +397,7 @@ if (false) {
   app.use(express.urlencoded({ extended: true }));
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L05-05-Third-party-Middleware.mp4
 
 // http://expressjs.com/en/resources/middleware.html
@@ -422,7 +434,7 @@ if (false) {
   // npm i passport
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L05-06-Environments.mp4
 
 // 2 ways to read 'NODE_ENV' environment variable:
@@ -431,7 +443,7 @@ if (false) {
   app.get("env"); // 'development' if not defined
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // L05-07-Configuration.mp4
 
 if (false) {
@@ -461,7 +473,7 @@ if (false) {
 // cat run_debug.sh
 // NODE_ENV=development NODE_CONFIG_DIR="../../../config" node --trace-warnings ./data_proc_daemon.js
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // L05-08-Debugging.mp4
 // better to replace 'console.log()' with 'debug()' because of ENV control and Namespaces
 // https://www.npmjs.com/package/debug
@@ -487,16 +499,28 @@ if (false) {
   // debug("print object single-line: %o", { key: "val" }); // %o = Pretty-print an Object all on a single line.
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L05-10-Database-Integration.mp4
 // http://expressjs.com/en/guide/database-integration.html
 //
 // https://github.com/vitaly-t/pg-promise
 // "Built on top of node-postgres, this library adds the following:"
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L06-06-Promises.mp4
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
+// Chaining
+// A common need is to execute two or more asynchronous operations back to back, where each subsequent operation starts when the previous operation succeeds, with the result from the previous step.
+// .
+// With promises, we accomplish this by creating a promise chain. The API design of promises makes this great, because callbacks are attached to the returned promise object, instead of being passed into a function.
+// .
+// Here's the magic: the then() function returns a new promise, different from the original:
+// const promise = doSomething();
+// const promise2 = promise.then(successCallback, failureCallback);
+
 if (false) {
+  // from Mosh:
   const p = new Promise((resolve, reject) => {
     setTimeout(() => {
       // Kick off some async work
@@ -505,7 +529,62 @@ if (false) {
       reject(new Error("Error-message"));
     }, 2000);
   });
-  p.then((result) => console.log("Result", result)).catch((err) => console.log("Error", err.message));
+  p.then((result) => console.log("Result", result)).catch((err) =>
+    console.log("Error", err.message)
+  );
+
+  // - - -
+  // from Mozilla:
+  function doSomething() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Other things to do before completion of the promise
+        console.log("Did something");
+        // The fulfillment value of the promise
+        resolve("https://example.com/");
+      }, 200);
+    });
+  }
+  //
+  doSomething()
+    .then(function (result) {
+      return doSomethingElse(result);
+    })
+    .then(function (newResult) {
+      return doThirdThing(newResult);
+    })
+    .then(function (finalResult) {
+      console.log(`Got the final result: ${finalResult}`);
+    })
+    .catch(failureCallback);
+  //
+  doSomething()
+    .then((result) => doSomethingElse(result))
+    .then((newResult) => doThirdThing(newResult))
+    .then((finalResult) => {
+      console.log(`Got the final result: ${finalResult}`);
+    })
+    .catch(failureCallback);
+  //
+
+  // Floating promises could be worse if you have race conditions — if the promise from the last handler is not returned, the next then handler will be called early, and any value it reads may be incomplete.
+  // Therefore, as a rule of thumb, whenever your operation encounters a promise, return it and defer its handling to the next then handler.
+  const listOfIngredients = [];
+  doSomething()
+    .then((url) => {
+      // `return` keyword now included in front of fetch call.
+      return fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          listOfIngredients.push(data);
+        });
+    })
+    .then(() => {
+      console.log(listOfIngredients);
+      // listOfIngredients will now contain data from fetch call.
+    });
+
+  //
 }
 
 function f_demo_func_returning_a_promise() {
@@ -523,7 +602,7 @@ function f_demo_func_returning_a_promise() {
   });
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L06-08-Consuming-Promises.mp4
 // in words: every call to function that is doing something and returning data, that function returns a Promise, and in the .then() consumption you can call another Promise-Returning Function (PRF), then you get a .then "chaining" with one shared .catch
 if (false) {
@@ -534,7 +613,7 @@ if (false) {
     .catch((err) => console.log("Error", err.message));
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L06-10-Running-Promises-in-Parallel.mp4
 if (false) {
   const p1 = new Promise((resolve, reject) => {
@@ -560,18 +639,18 @@ if (false) {
     .catch((err) => console.log("Error", err.message));
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L06-11-Async-and-Await.mp4
 
 // . . .
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // more info on Promise/async-await
 
 // https://javascript.info/async-await
 // Summary
-// The async keyword before a function has two effects:
-// -  Makes it always return a promise.                   <=============== !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// The ASYNC keyword before a function has two effects:
+// -  Makes it ALWAYS return a PROMISE.                   <==== !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // -  Allows await to be used in it.
 // The await keyword before a promise makes JavaScript wait until that promise settles, ...
 
@@ -637,7 +716,7 @@ if (false) {
   f3();
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L??-??----Mongoose ??
 
 if (false) {
@@ -658,7 +737,7 @@ if (false) {
   mongoose_schema.set("toJSON", to_lean_mongo_obj); // ALSO can use it in: .toObject(to_lean_mongo_obj)
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L09-09-ObjectID.mp4
 
 // _id: 5a724953ab83547957541e6a
@@ -693,13 +772,18 @@ if (false) {
   passwordComplexity().validate("aPassword123!");
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L10-04-Using-Lodash.mp4
 
 if (false) {
   //
   // const _ = require("lodash"); // npm i lodash // https://lodash.com/docs/4.17.15
-  const ori_obj = { _id: "sadasdsa", name: "my name", email: "some@bull.shit", password: "this better be secret" };
+  const ori_obj = {
+    _id: "sadasdsa",
+    name: "my name",
+    email: "some@bull.shit",
+    password: "this better be secret",
+  };
   console.log(ori_obj);
   // { _id: 'sadasdsa', name: 'my name', email: 'some@bull.shit', password: 'this better be secret' }
   //
@@ -713,7 +797,7 @@ if (false) {
   const omit_object = lodash.omit(ori_obj, ["_id", "password"]);
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L10-05-Hashing-Passwords.mp4
 
 if (false) {
@@ -739,7 +823,7 @@ if (false) {
   // $2a$10$FwMhRtYxPm8G.CrWOvIPeO
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L10-08-JSON-Web-Tokens.mp4
 
 // test: https://jwt.io/
@@ -760,9 +844,19 @@ if (false) {
     },
   }; // from middleware func(req, res)
   res.header("x-auth-token", token).send(my_response);
+
+  //
+  // const jwt = require("jsonwebtoken"); // npm i jsonwebtoken // https://www.npmjs.com/package/jsonwebtoken
+  // .verify() ==> "(Synchronous) If a callback is not supplied, function acts synchronously. Returns the payload decoded if the signature is valid and optional expiration, audience, or issuer are valid. If not, it will throw the error."
+  let decoded;
+  try {
+    decoded = jwt.verify(token, jwtPrivateKey);
+  } catch (err) {
+    //
+  }
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L11-01-___-Handling-and-Logging-Errors-Introduction.mp4
 //: Why Error Handling? 1) send a friendly error, 2) Log the exception
 //
@@ -779,7 +873,7 @@ if (false) {
   }
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L11-03-Express-Error-Middleware.mp4
 //
 if (false) {
@@ -806,16 +900,16 @@ if (false) {
   });
   //
   // or better: move to a seperate middleware module/file:
-  //: error.js
+  //: error_mw.js
   module.exports = function (err, req, res, next) {
     console.log("Something failed.");
   };
   //
-  const error = require("./middleware/error");
-  app.use(error); // dont CALL the function, just pass the func ..
+  const error_mw = require("./middleware/error_mw");
+  app.use(error_mw); // dont CALL the function, just pass the func ..
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L11-04-Removing-Try-Catch-Blocks.mp4
 //: we want to move the try-catch structure to central place..
 //: definition: a FACTORY FUNCTION is a function that returns a function
@@ -844,7 +938,7 @@ if (false) {
   );
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L11-05-Express-Async-Errors.mp4
 //: https://www.npmjs.com/package/express-async-errors
 //: this NPM module will monkey-patch the route-function at run-time
@@ -873,7 +967,7 @@ if (false) {
   // NOTE: above was only to centrally handle async-errors in express route-handlers ..
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 //: L11-06-Logging-Errors.mp4
 
 if (false) {
@@ -888,10 +982,10 @@ if (false) {
   // https://www.loggly.com/
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: object destructering
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
 
@@ -905,7 +999,7 @@ if (false) {
   console.log(c); // // 'Hi!'
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Array
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
@@ -919,7 +1013,7 @@ if (false) {
   ["joe", "jane", "mary"].includes("jane"); // true
   //
   // NOTE: .includes() also works for: String
-  if (["a", "a", "c"].includes("b")) {
+  if ("abc".includes("b")) {
     // do something terrible
   }
   //
@@ -934,6 +1028,16 @@ if (false) {
 
 // generate an Array -- idea from: https://stackoverflow.com/questions/3746725/how-to-create-an-array-containing-1-n
 if (false) {
+  //
+  console.log(JSON.stringify(Array(10)));
+  // [null,null,null,null,null,null,null,null,null,null]
+  //
+  console.log(JSON.stringify(Array.from(Array(10).keys())));
+  // [0,1,2,3,4,5,6,7,8,9]
+  //
+  console.log(JSON.stringify([...Array(10).keys()].map((x) => x + 1)));
+  // [1,2,3,4,5,6,7,8,9,10]
+  //
   const gen_arr_1 = Array.from(Array(10).keys());
   //=> [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
   // start from 1:
@@ -962,7 +1066,10 @@ if (false) {
   const array1 = [1, 2, 3, 4];
   // 0 + 1 + 2 + 3 + 4 = 10
   const initialValue = 0;
-  const sumWithInitial = array1.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue);
+  const sumWithInitial = array1.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    initialValue
+  );
 }
 
 // https://stackoverflow.com/questions/24806772/how-to-skip-over-an-element-in-map
@@ -998,6 +1105,7 @@ if (false) {
 if (false) {
   //
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+  // The find() method of Array instances returns the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, undefined is returned.
   const find_array1 = [5, 12, 8, 130, 44];
   const found = find_array1.find((element) => element > 10);
   console.log(found);
@@ -1047,7 +1155,7 @@ if (false) {
   const spring = months.filter((element) => element !== "April");
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: truthy / falsy
 
 // # Truthy
@@ -1078,7 +1186,7 @@ if (false) {
   const my_bool = !!unknown_var_truthy_falsey;
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: String
 
 if (false) {
@@ -1092,12 +1200,19 @@ if (false) {
   const uc = some_str.toUpperCase();
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
+  // includes(searchString)
+  // includes(searchString, position)
+  // searchString
+  // A string to be searched for within str. Cannot be a regex. All values that are not regexes are coerced to strings, so omitting it or passing undefined causes includes() to search for the string "undefined", which is rarely what you want.
+  // position
+  // The position within the string at which to begin searching for searchString. (Defaults to 0.)
   "FooBar".includes("oo"); // true
   "FooBar".includes("foo"); // false
   "FooBar".includes("oo", 2); // false
 
   function f_get_substring_length({ str, length }) {
-    let my_str = str && typeof str === "string" && str.trim().length > 0 ? str.trim() : "";
+    let my_str =
+      str && typeof str === "string" && str.trim().length > 0 ? str.trim() : "";
     if (my_str.length > length - 3) {
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring
       my_str = my_str.substring(0, length - 3) + "...";
@@ -1106,8 +1221,12 @@ if (false) {
   }
 
   function f_sanitize_str_or_default_str(str, default_str) {
-    const san_default = default_str && typeof default_str === "string" ? default_str.trim() : "";
-    const san_str = str && typeof str === "string" && str.trim().length > 0 ? str.trim() : san_default;
+    const san_default =
+      default_str && typeof default_str === "string" ? default_str.trim() : "";
+    const san_str =
+      str && typeof str === "string" && str.trim().length > 0
+        ? str.trim()
+        : san_default;
     return san_str;
   }
 
@@ -1116,7 +1235,7 @@ if (false) {
   }
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: optional chaining (?.) operator
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
@@ -1129,7 +1248,7 @@ if (false) {
   const nestedProp2 = obj.first?.second;
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: package.json
 
 // # SemVer package.json
@@ -1143,7 +1262,7 @@ if (false) {
 //   },
 // }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 // # Node Command-line Arguments
 
@@ -1161,7 +1280,7 @@ if (false) {
 //   'four',
 //   'five' ]
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 // - - - - - - = = = - - - - - -
 // # Named and Default exports (ES5-in-browser, or in Node.js 'ES-module'):
@@ -1195,7 +1314,7 @@ if (false) {
 // const my_class = new MyClass('some_argument_here');
 // my_class.my_method1();
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // About ES-Module style 'import':
 
 // just import, no need for variable:
@@ -1228,7 +1347,7 @@ import lib_meta from "../../lib_glob/meta.js";
 import import__pg from "pg";
 const { Pool } = import__pg;
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // About 'async import':
 
 // -- INSTEAD normal 'import':
@@ -1251,10 +1370,13 @@ async function fa_main() {
   const func_name = `${mod_name}.fa_main()`;
   console.log(`# ${func_name}: started.`);
   // ...
+  await import("some");
+  // ...
 }
+// call async-func from top-level:
 fa_main();
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 // - - - - - - = = = - - - - - -
 // # about: Error() and try-catch and new-operator
@@ -1297,7 +1419,7 @@ if (false) {
   // expected output: "Eagle"
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 // - - - - - - = = = - - - - - -
 // about: Promise and .then() .catch()
@@ -1315,10 +1437,12 @@ if (false) {
   //
   const result_promise = my_promise_based_func({ a: 1, b: 2 });
   //
-  result_promise.then((result) => console.log("Result", result)).catch((err) => console.log("Error", err.message));
+  result_promise
+    .then((result) => console.log("Result", result))
+    .catch((err) => console.log("Error", err.message));
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Math div remainer (modulo, mod)
 
 // https://stackoverflow.com/questions/4228356/how-to-perform-an-integer-division-and-separately-get-the-remainder-in-javascr
@@ -1326,13 +1450,15 @@ if (false) {
   const quotient = Math.floor(y / x);
   const remainder = y % x;
   //
+  // ~ operator ==> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_NOT
+  // ~~ is the only convertion that gives 0 when string is NaN
   var num = ~~(a / b);
   //
   var div = Math.trunc(y / x);
   var rem = y % x;
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: IIFE
 
 // https://developer.mozilla.org/en-US/docs/Glossary/IIFE
@@ -1352,13 +1478,10 @@ if (false) {
   })();
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
-// about: setInterval
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// About: setInterval
 
 // https://developer.mozilla.org/en-US/docs/Web/API/setInterval
-
-// similar regarding async:
-// https://developer.mozilla.org/en-US/docs/Web/API/setTimeout
 
 if (false) {
   setInterval(func, delay, arg1, arg2);
@@ -1381,7 +1504,14 @@ if (false) {
   });
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - .
+// About: setTimeout
+
+// similar regarding async:
+// https://developer.mozilla.org/en-US/docs/Web/API/setTimeout
+// "The setTimeout() method of the Window interface sets a timer which executes a function or specified piece of code once the timer expires."
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
@@ -1392,9 +1522,11 @@ if (false) {
   console.log(decodeURI(window.location.href));
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: RegExp Regular Expressions
 // tags: regex
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp
 if (true) {
@@ -1423,11 +1555,15 @@ if (true) {
   //
   const query_duration = "4W";
   const m = query_duration.match(/^(\d+)([smhDWMY])$/);
+  // [ '4W', '4', 'W', index: 0, input: '4W', groups: undefined ]
+  const entire_match = m[0];
   const duration_nr = m[1] || 0;
   const duration_unit = m[2] || "";
   //
   const a = rep_str.toLowerCase().match(/[0-9a-f]{2}/g);
-  rep_str_colons = `${a[0]}:${a[1]}:${a[2]}${a[3]}:${a[4]}::${rep_str.substr(5 * 2)}.`;
+  rep_str_colons = `${a[0]}:${a[1]}:${a[2]}${a[3]}:${a[4]}::${rep_str.substr(
+    5 * 2
+  )}.`;
   //
   // replace using RE:
   const reg_exp = new RegExp(`{{${v_key}}}`, "g");
@@ -1444,7 +1580,7 @@ if (true) {
   //
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 // about: deleting a key from an Object
 
@@ -1462,7 +1598,7 @@ if (false) {
 // delete ==> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete
 // "If the property which you are trying to delete does not exist, delete will not have any effect and will return true."
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 // Number types & Bitwise operators:
 
@@ -1506,7 +1642,7 @@ if (false) {
   debug("this is hex: %h", new Buffer("hello world"));
   //   foo this is hex: 68656c6c6f20776f726c6421 +0ms
 }
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Loop methods:
 
 if (false) {
@@ -1525,6 +1661,15 @@ if (false) {
     console.log(element);
   }
 
+  // *) for..in
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
+  // note: this for...in is designed for objects not arrays -- adviced to use for-loop
+  // "It is better to use a for loop with a numeric index, Array.prototype.forEach(), or the for...of loop, because they will return the index as a number instead of a string, and also avoid non-index properties."
+  for (let index in array1) {
+    const element = array1[index];
+    console.log(`array1[${index}] = ${element} `);
+  }
+
   // *) for
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for
   for (let i = 0; i < 9; i++) {
@@ -1533,21 +1678,25 @@ if (false) {
   //
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: URL
 
 if (false) {
   const api_url_limit = 100;
   //
   let url_obj = new URL("http://some.org/api");
-  let params = new URLSearchParams(url_obj.search);
+  let params = new URLSearchParams(url_obj.search); // <== initiate with current .search
   params.append("limit", api_url_limit);
   url_obj.search = params;
   //
-  const response = await http_svc.get(url_obj, {}, { timeout: model.api_timeout_ms });
+  const response = await http_svc.get(
+    url_obj,
+    {},
+    { timeout: model.api_timeout_ms }
+  );
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Set unique Array
 
 if (false) {
@@ -1557,7 +1706,7 @@ if (false) {
   console.log(unique); // unique is ['a', 1, 2, '1']
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: spread operator
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
@@ -1571,9 +1720,19 @@ if (false) {
   const obj2 = { b: "two", d: 4 };
   const obj3 = { ...obj1, ...obj2 };
   //  obj3 = { a: 1, b: "two", c: 3, d: 4 }
+
+  // also used in: object destructering
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+  const a = { b: { c: "Hi!" } }; // <== construct object
+  const {
+    b: new_name_for_b,
+    b: { c },
+  } = a; // <== destruct object
+  console.log(new_name_for_b); // { c: 'Hi!' }
+  console.log(c); // // 'Hi!'
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Axios
 
 // https://github.com/axios/axios
@@ -1649,7 +1808,7 @@ if (false) {
 // https://stackoverflow.com/questions/45319090/axios-gives-me-converting-circular-structure-to-json-error-while-sending-the-dat
 // "This happens many a time with axios because sometimes we directly return the response from the endpoint. For example, this error will occur if we pass the response directly, rather than passing the response.data"
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Object.entries()
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
@@ -1669,13 +1828,30 @@ if (false) {
 if (false) {
   //
   // https://stackoverflow.com/questions/5467129/sort-javascript-object-by-key
-  var data = { zIndex: 99, name: "sravan", age: 25, position: "architect", amount: "100k", manager: "mammu" };
+  var data = {
+    zIndex: 99,
+    name: "sravan",
+    age: 25,
+    position: "architect",
+    amount: "100k",
+    manager: "mammu",
+  };
   console.log(
     Object.entries(data)
       .sort()
       .reduce((o, [k, v]) => ((o[k] = v), o), {})
   );
+  // gives:
+  // {
+  //   age: 25,
+  //   amount: '100k',
+  //   manager: 'mammu',
+  //   name: 'sravan',
+  //   position: 'architect',
+  //   zIndex: 99
+  // }
   //
+  // same as:
   Object.fromEntries(Object.entries(data).sort());
   //
   // sort by specific key:
@@ -1692,11 +1868,13 @@ if (false) {
   // - non-ASCI can be sorted by:   (a, b) => a.localeCompare(b)
   //
   Object.fromEntries(Object.entries(data).sort((a, b) => a.tpid - b.tpid));
-  Object.fromEntries(Object.entries(data).sort((a, b) => a.tpid.localeCompare(b.tpid)));
+  Object.fromEntries(
+    Object.entries(data).sort((a, b) => a.tpid.localeCompare(b.tpid))
+  );
   //
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Array.filter()
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
@@ -1709,16 +1887,18 @@ if (false) {
   // Expected output: Array ["exuberant", "destruction", "present"]
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Array intersecion
 
 // https://stackoverflow.com/questions/1885557/simplest-code-for-array-intersection-in-javascript
 
 if (false) {
-  const array_intersection = array_1.filter((element) => array_2.includes(element));
+  const array_intersection = array_1.filter((element) =>
+    array_2.includes(element)
+  );
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Number conversion
 
 https: if (false) {
@@ -1728,7 +1908,7 @@ https: if (false) {
   this.dev_major = ("000" + ~~this.dev_major).slice(-3);
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 
 if (false) {
@@ -1760,7 +1940,7 @@ if (false) {
   //
 }
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Process exit handler
 
 async function fa_on_exit() {
@@ -1778,16 +1958,16 @@ process.on("SIGINT", fa_on_exit);
 //   process.on(eventType, cleanUpServer.bind(null, eventType));
 // })
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: (Node) CommonJS modules vs. ECMAScript modules (ESM)
 
 // https://nodejs.org/api/esm.html#introduction
 
 // https://nodejs.org/api/modules.html#modules-commonjs-modules
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 
-//: - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - -
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // - - - - - - = = = - - - - - -
 //-eof
