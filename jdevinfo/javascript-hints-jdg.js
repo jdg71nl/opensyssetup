@@ -1451,7 +1451,8 @@ if (false) {
   const remainder = y % x;
   //
   // ~ operator ==> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_NOT
-  // ~~ is the only convertion that gives 0 when string is NaN
+  // use: ~~ to make sure the result is a number or 0 is anything else
+  // note: ~~ is the only convertion that gives 0 when string is NaN
   var num = ~~(a / b);
   //
   var div = Math.trunc(y / x);
@@ -1904,7 +1905,14 @@ if (false) {
 https: if (false) {
   const nr = parseInt(number_string, 10);
 
-  // ~~ is the only convertion that gives 0 when string is NaN
+  // ~ operator ==> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_NOT
+  // Use: ~~ is a shortcut for Math.floor(), but it also gives 0 for string or NaN.
+  // Note: ~~ is the only convertion that gives 0 when string is NaN
+  // ~~5.5 === 5
+  // ~~"5.5" === 5
+  // ~~"a_string" === 0
+  // ~~{} === 0
+  // ~~(1/0) === 0
   this.dev_major = ("000" + ~~this.dev_major).slice(-3);
 }
 
