@@ -182,7 +182,12 @@ For completeness, since not everyone has the icons showing, look under menu View
 
 
 # - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
-# About: 
+# About: copy-paste problems d250114
+
+https://github.com/microsoft/vscode/issues/236625
+
+Until then the workaround is to set "typescript.updateImportsOnPaste.enabled": false / "javascript.updateImportsOnPaste.enabled": false
+
 # - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
 # About: 
 # - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
