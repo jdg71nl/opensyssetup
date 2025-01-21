@@ -1187,6 +1187,73 @@ if (false) {
 }
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// about: Primitive Types
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures
+// All primitive types, except null and undefined, have their corresponding object wrapper types, which provide useful methods for working with the primitive values. For example, the Number object provides methods like toExponential().
+
+// https://developer.mozilla.org/en-US/docs/Glossary/Primitive
+// In JavaScript, a primitive (primitive value, primitive data type) is data that is not an object and has no methods or properties.
+// There are 7 primitive data types:
+//     string
+//     number
+//     bigint
+//     boolean
+//     undefined
+//     symbol
+//     null
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// about: typeof
+
+// https://www.w3schools.com/js/js_typeof.asp
+// A complex data type can store multiple values and/or different data types together.
+// JavaScript has one complex data type:
+//     object
+// All other complex types like arrays, functions, sets, and maps are just different types of objects.
+//
+// The typeof operator returns only two types:
+//     object
+//     function
+// Example
+// typeof {name:'John'}   // Returns object
+// typeof [1,2,3,4]       // Returns object
+// typeof new Map()       // Returns object
+// typeof new Set()       // Returns object
+// typeof function (){}   // Returns function
+
+if (false) {
+  if (typeof input === "number") {
+    //
+  }
+  if (typeof input === "string") {
+    //
+  }
+  //
+  function f_is_object(val) {
+    if (val === null || val === undefined) {
+      return false;
+    }
+    // return typeof val === "function" || typeof val === "object";
+    return val === Object(val);
+  }
+  //
+  function f_is_primitive_scalar(test) {
+    // https://stackoverflow.com/questions/31538010/test-if-a-variable-is-a-primitive-rather-than-an-object
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/Object
+    return test !== Object(test);
+  }
+  //
+  function f_is_empty_object(obj) {
+    // idea from: https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
+    return f_is_object(obj) && Object.keys(obj).length === 0;
+  }
+  //
+}
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: String
 
 if (false) {
@@ -1914,38 +1981,6 @@ https: if (false) {
   // ~~{} === 0
   // ~~(1/0) === 0
   this.dev_major = ("000" + ~~this.dev_major).slice(-3);
-}
-
-//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
-// about:
-
-if (false) {
-  if (typeof input === "number") {
-    //
-  }
-  if (typeof input === "string") {
-    //
-  }
-  //
-  function f_is_object(val) {
-    if (val === null || val === undefined) {
-      return false;
-    }
-    // return typeof val === "function" || typeof val === "object";
-    return val === Object(val);
-  }
-  //
-  function f_is_primitive_scalar(test) {
-    // https://stackoverflow.com/questions/31538010/test-if-a-variable-is-a-primitive-rather-than-an-object
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/Object
-    return test !== Object(test);
-  }
-  //
-  function f_is_empty_object(obj) {
-    // idea from: https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
-    return f_is_object(obj) && Object.keys(obj).length === 0;
-  }
-  //
 }
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
