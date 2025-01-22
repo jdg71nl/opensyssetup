@@ -1926,7 +1926,7 @@ if (false) {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
   // "The sort() method of Array instances sorts the elements of an array in place and returns the reference to the same array, now sorted."
   //
-  // compareFn(a, b) return value  -- sort order
+  // compareFn(a, b) return value -- sort order
   // > 0 	                        -- sort a after b     , e.g. [b, a]
   // < 0 	                        -- sort a before b    , e.g. [a, b]
   // === 0 	                      -- keep original order of a and b
@@ -1939,6 +1939,67 @@ if (false) {
   Object.fromEntries(
     Object.entries(data).sort((a, b) => a.tpid.localeCompare(b.tpid))
   );
+  //
+  let parent_obj = {
+    a: 1,
+    c: 2,
+    b: 3,
+    z: 26,
+    arr: [1, 2, 3],
+    obj: { k1: 1, k2: 2 },
+  };
+  Object.entries(parent_obj).forEach(([key, value], index) =>
+    console.log(
+      `# key='${key}' typeof:value='${typeof value}' index='${index}'`
+    )
+  );
+  // # key='a' typeof:value='number' index='0'
+  // # key='c' typeof:value='number' index='1'
+  // # key='b' typeof:value='number' index='2'
+  // # key='z' typeof:value='number' index='3'
+  // # key='arr' typeof:value='object' index='4'
+  // # key='obj' typeof:value='object' index='5'
+  //
+  parent_obj = Object.fromEntries(Object.entries(parent_obj).sort());
+  // { a: 1, arr: [ 1, 2, 3 ], b: 3, c: 2, obj: { k1: 1, k2: 2 }, z: 26 }
+  //
+  Object.entries(parent_obj).forEach(([key, value], index) =>
+    console.log(
+      `# key='${key}' typeof:value='${typeof value}' index='${index}'`
+    )
+  );
+  // # key='a' typeof:value='number' index='0'
+  // # key='arr' typeof:value='object' index='1'
+  // # key='b' typeof:value='number' index='2'
+  // # key='c' typeof:value='number' index='3'
+  // # key='obj' typeof:value='object' index='4'
+  // # key='z' typeof:value='number' index='5'
+  //
+  parent_obj = Object.fromEntries(
+    Object.entries(parent_obj).sort(([k1, v1], [k2, v2]) => {
+      console.log(`# k1='${k1}' k2='${k2}'`);
+      return k1.localeCompare(k2);
+    })
+  );
+  // # k1='obj' k2='z'
+  // # k1='c' k2='obj'
+  // # k1='b' k2='c'
+  // # k1='arr' k2='b'
+  // # k1='a' k2='arr'
+  // { a: 1, arr: [ 1, 2, 3 ], b: 3, c: 2, obj: { k1: 1, k2: 2 }, z: 26 }
+  //
+  parent_obj = Object.fromEntries(
+    Object.entries(parent_obj).sort(([k1, v1], [k2, v2]) => {
+      console.log(`# k1='${k1}' k2='${k2}'`);
+      return k2.localeCompare(k1);
+    })
+  );
+  // # k1='arr' k2='a'
+  // # k1='b' k2='arr'
+  // # k1='c' k2='b'
+  // # k1='obj' k2='c'
+  // # k1='z' k2='obj'
+  // { z: 26, obj: { k1: 1, k2: 2 }, c: 2, b: 3, arr: [ 1, 2, 3 ], a: 1 }
   //
 }
 
