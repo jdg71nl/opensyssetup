@@ -34,6 +34,8 @@ GITSTATUS=$(git status --porcelain)
 if [ -n "$GITSTATUS" ]; then
     echo "# NOTE: there are local changes in this repo -- 'git status --porcelain' says:"
     echo $GITSTATUS
+else
+    echo "# NOTE: there are NO local changes in this repo -- according to 'git status --porcelain'"
 fi
 echo "# After 'fetch', first check 'logg', and then decide to 'merge' : "
 echo -n '# Press ENTER to continue, CTRL-C to abort...'
