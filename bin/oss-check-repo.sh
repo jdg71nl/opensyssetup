@@ -1,5 +1,6 @@
 #!/bin/bash
 #= oss-check-repo.sh
+# (c)2025 John @ de-Graaff .net
 
 BASENAME=`basename $0`
 echo "# "
