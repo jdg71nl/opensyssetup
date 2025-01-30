@@ -1,0 +1,47 @@
+#
+
+# d250130 when this gives a problem:
+> ansible vps -m ping
+#
+# (output)
+vps3.i.j71.nl | FAILED! => {
+    "msg": "to use the 'ssh' connection type with passwords or pkcs11_provider, you must install the sshpass program"
+}
+#
+# use this:
+> ansible -c paramiko vps -m ping
+#
+# or this:
+> cat ansible.cfg | grep -A1 jdg
+;jdg
+transport=paramiko
+
+#
+# https://stackoverflow.com/questions/42835626/ansible-to-use-the-ssh-connection-type-with-passwords-you-must-install-the-s
+"
+Just to add to various answers above and this method directly resolves and answers the main issue as stated in the title.
+
+It is possible to pass the parameter using paramiko, which is another pure python implementation of SSH. This is supported by ansible and would be the preferred option as it relies on less cross language dependancies that has to be separately managed; Thus this essentially by-passes the need for another library installed on your host machine : sshpass.
+
+instead of using the connection ssh as below :
+
+    $ansible-playbook -i hosts -v -b -c ssh --ask-pass myplaybook.yml
+
+you can and will find it easier to use the following :
+
+    $ansible-playbook -i hosts -v -b -c paramiko --ask-pass myplaybook.yml
+
+if you are interested, you can read more here: http://www.paramiko.org/
+
+thanks for additional comments as mention, via the paramiko way, you can also set it in your inventory file, or set it as a playbook option.
+"
+#.
+
+> yum install python3-pip
+
+> pip install paramiko
+
+# 'bash ansible' says:
+ -c 'CONNECTION', --connection 'CONNECTION'
+          connection type to use (default=ssh)
+#-eof
