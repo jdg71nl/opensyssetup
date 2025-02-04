@@ -529,6 +529,30 @@ WantedBy=multi-user.target
 sudo npm install nodemon@latest -g
 
 # - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
+# about: import using #root as root-path (there are located: package.json & node_modules/)
+
+// - - - - - - = = = - - - - - - .
+// d250204 JDG-Note: this works (but ONLY for import)
+// https://stackoverflow.com/questions/75806206/how-to-import-javascript-files-in-nodejs-using-file-paths-from-project-root-in
+//
+// // package.json:
+// {
+// "type" : "module",
+// "imports": {
+//   "#root/*.js": "./*.js"
+// }
+// }
+// // main.js
+// import { Source } from '#root/path/to/Source.js';
+//
+// d250204 JDG-Note: for non-import use: app-root-path
+// > npm i app-root-path // https://github.com/inxilpro/node-app-root-path
+// import import_app_root_path from "app-root-path";
+// const root = import_app_root_path?.path;
+// const site_static_config_file = `${root}/site-static-config.json`;
+// - - - - - - = = = - - - - - - .
+
+# - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 
 # about: 
 
 # - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - - - - - - - = = = - - - - - - 

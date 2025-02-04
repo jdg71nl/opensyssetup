@@ -1336,16 +1336,19 @@ if (false) {
 // https://nodejs.org/en/knowledge/command-line/how-to-parse-command-line-arguments/
 
 // $ cat argv.js
-// console.log(process.argv);
-
+// console.log("process.argv = ", process.argv);
+//
 // $ node argv.js one two three four five
-// [ 'node',
+//
+// process.argv = [
+//   'node',
 //   '/home/avian/argvdemo/argv.js',
 //   'one',
 //   'two',
 //   'three',
 //   'four',
-//   'five' ]
+//   'five'
+// ]
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
