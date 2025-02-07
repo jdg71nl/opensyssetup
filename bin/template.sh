@@ -18,6 +18,7 @@ SCRIPT_PATH=`dirname $SCRIPT`
 #}
 echo_exit1() { echo $1 ; exit 1 ; }
 #if [ $MYUID != 0 ]; then
+#  # $* is a single string, whereas $@ is an actual array.
 #  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
 #fi
 #
