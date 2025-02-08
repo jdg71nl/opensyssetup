@@ -1300,6 +1300,14 @@ if (false) {
   function f_check_sanitize_string(str) {
     return typeof str === "string" ? str.trim() : null;
   }
+
+  // zero-prefix ==> ("00" + nr).substr(-1 * 2);
+  //
+  const f_nr_to_padzero_string = function (nr, digits) {
+    // better name: f_pre_padzero_string_to_nr_length(str, nr)
+    var padded_str = "00000" + nr;
+    return padded_str.substr(-1 * digits);
+  };
 }
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
@@ -2073,8 +2081,109 @@ process.on("SIGINT", fa_on_exit);
 // https://nodejs.org/api/modules.html#modules-commonjs-modules
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// about: JSON
+
+if (false) {
+  function f_pretty_json_stringify(obj) {
+    return JSON.stringify(obj, null, 2);
+  }
+
+  function f_js(obj) {
+    return JSON.stringify(obj);
+  }
+}
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// about: method to extract Section-Lesson names from HTML page (codewithmosh)
+
+if (true) {
+  let document = {};
+  //
+  // - - - - - - = = = - - - - - - .
+  // - - - - - - = = = - - - - - - .
+  function extract(prefix) {
+    //
+    function pad(nr) {
+      return ("00" + nr).substr(-1 * 2);
+    }
+    let section_hash = {};
+    [...document.getElementsByClassName("section-title")].forEach((el, i) => {
+      let name = el?.textContent;
+      if (name) {
+        name = name.trim().replace(/\s\([^\)]*\)$/, "");
+        if (!/^\d/.test(name)) {
+          let [entire1, ltr1, ltr2] =
+            name.match(/^([A-Z])[A-Za-z]+[\s,]*([A-Z]?).*/) ?? [];
+          if (!ltr2) {
+            const [entire2, ltr3, ltr4] = name.match(/^([A-Z])(.).*/) ?? [];
+            ltr2 = ltr4?.toUpperCase();
+          }
+          if (!section_hash[i + 1]) {
+            section_hash[i + 1] = {};
+          }
+          section_hash[i + 1] = {
+            nr: pad(i + 1),
+            abbrev: ltr1 + ltr2,
+            name: name.replace(/\s+/g, "_"),
+          };
+        }
+      }
+    });
+    // console.log(JSON.stringify(section_hash, null, 2));
+    //
+    let section_nr = 0;
+    let lesson_nr = 0;
+    [...document.getElementsByClassName("lecture-name")].forEach((el, i) => {
+      let nr_name_str = el?.textContent;
+      nr_name_str = nr_name_str.trim().replace(/\s*\([^\)]*\)$/, "");
+      let [entire, nr, name] = nr_name_str.match(/^(\d+)?-?\s*(.*)$/) ?? [];
+      if (!nr) {
+        nr = lesson_nr + 1;
+      }
+      if (name) {
+        lesson_nr = nr;
+        let first_lesson_str = "";
+        if (nr == 1) {
+          section_nr = section_nr + 1;
+          first_lesson_str = `--===---${section_hash?.[section_nr]?.name}-`;
+        }
+        const section_str = `${section_hash?.[section_nr]?.nr}-${section_hash?.[section_nr]?.abbrev}`;
+        const str = `${prefix}-${section_str}-${pad(
+          nr
+        )}-${first_lesson_str}-${name.replace(/[:\s]+/g, "_")}`;
+        console.log(str);
+      }
+    });
+  }
+  extract("TUNS-p2");
+  // - - - - - - = = = - - - - - - .
+  // - - - - - - = = = - - - - - - .
+  //
+  // "Getting Started".match(/^([A-Z])[A-Za-z]+\s+([A-Z]).*/);
+  // "Web Development Fundamentals".match(/^([A-Z])[A-Za-z]+\s+([A-Z]).*/);
+  // "HTML Basics".match(/^([A-Z])[A-Za-z]+\s+([A-Z]).*/);
+  // "CSS Basics".match(/^([A-Z])[A-Za-z]+\s+([A-Z]).*/);
+  //
+  // "Getting Started".match(/^([A-Z])[A-Za-z]+[\s,]*([A-Z]?).*/) ?? [];
+  // "Layout".match(/^([A-Z])[A-Za-z]+[\s,]*([A-Z]?).*/) ?? [];
+  // "Transformations, Transitions, and Animations".match(
+  //   /^([A-Z])[A-Za-z]+[\s,]*([A-Z]?).*/
+  // ) ?? [];
+  //
+}
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
-// - - - - - - = = = - - - - - -
+// about:
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// about:
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// about:
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// - - - - - - = = = - - - - - - .
 //-eof
