@@ -1,0 +1,20 @@
+# svg-convert-info.quicky.txt
+
+# - - - - - - = = = - - - - - - . 
+# convert 'text-using-fonts' into 'paths':
+
+> sudo npm i -g svg-text-to-path
+
+for x in \
+  Silvr-favicon-v2-dark-font.svg \
+  Silvr-favicon-v2-light-font.svg
+do
+  echo "# $x "
+  svg-text-to-path -c config.json $x -o $x-path.svg
+done
+#.
+
+# - - - - - - = = = - - - - - - . 
+
+#-eof
+
