@@ -10,11 +10,13 @@
 #
 # above gives errors on non-Mac platforms
 # better create symlink:
-# > cd ~
-# > ln -s /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code .
+# > ln -s /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code ~
 
-cd ~
-ln -sv /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code .
+echo # > ln -sv /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code ~
+ln -sv /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code ~
+
+echo # > sudo ln -sv /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code /usr/local/bin/
+sudo ln -sv /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code /usr/local/bin/
 
 #-eof
 
