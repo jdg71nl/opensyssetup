@@ -1660,7 +1660,7 @@ if (true) {
 }
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
-// about:
+// about: Object
 // about: deleting a key from an Object
 
 if (false) {
@@ -1676,6 +1676,15 @@ if (false) {
 
 // delete ==> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete
 // "If the property which you are trying to delete does not exist, delete will not have any effect and will return true."
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty
+if (false) {
+  const object1 = {};
+  object1.property1 = 42;
+
+  console.log(object1.hasOwnProperty("property1"));
+  // Expected output: true
+}
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
