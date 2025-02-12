@@ -1371,7 +1371,7 @@ if (false) {
 
 // # file: my_exports_module.js
 //
-// export function my_function() {
+// function my_function() {
 //   // <=== NAMED EXPORT, import this using its name within { braces }
 //   console.log('# running: my_function() ');
 // }
@@ -2182,7 +2182,93 @@ if (true) {
 }
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
-// about:
+// about: Data Time funcs
+
+if (false) {
+  //
+  const f_get_date_now = function () {
+    const date_now = new Date();
+    return date_now;
+  };
+
+  const f_get_epoch_now = function () {
+    // const date_now = f_get_date_now();
+    const date_now = new Date();
+    const epoch_now = Math.round(date_now / 1000);
+    // const epoch_now = Math.round(new Date() / 1000)
+    // const time_now_unix = Math.round(new Date() / 1000)
+    return epoch_now;
+  };
+
+  // npm i moment // https://www.npmjs.com/package/moment
+  // https://momentjs.com/
+  // https://momentjs.com/docs/#/use-it/node-js/
+  // const moment_js = require("moment");
+  // import moment_js from "moment";
+
+  const f_date_to_nicetime_str = (date) => {
+    return moment_js(date).format("YYYY-MMM-DD/HH:mm:ss");
+  };
+
+  const f_date_to_nicetime_ms_str = (date) => {
+    return moment_js(date).format("YYYY-MMM-DD/HH:mm:ss.SSS");
+  };
+
+  const f_epoch_to_nicetime = (epoch) => {
+    // import moment_js from "moment"; // npm i moment --save
+    return moment_js(epoch * 1000).format("YYYY-MMM-DD/HH:mm:ss");
+  };
+
+  // Wed, 12 Feb 2025 23:23:47 +0000
+  const f_epoch_to_iso_time_str = (epoch) => {
+    return moment_js(epoch * 1000).format("ddd, DD MM YYY HH:mm:ss ZZ");
+  };
+
+  const f_nicetime_str_now = () => {
+    const date_now = new Date();
+    // const moment_js = require("moment"); // npm i moment --save
+    return moment_js(date_now).format("YYYY-MMM-DD/HH:mm:ss");
+  };
+
+  function f_utc_string_to_localtime_string(str) {
+    let moment_var = {};
+    let localzone_format = "";
+    try {
+      moment_var = moment_js(str);
+      // localzone_format = moment_var.format("YYYY-MM-DD[T]HH:mm:ss");
+      localzone_format = moment_var.format("YYYY-MM-DD HH:mm:ss");
+    } catch (err) {
+      localzone_format = "";
+    }
+    return localzone_format;
+  }
+
+  function f_epoch_to_localtime_string(epoch) {
+    let localzone_format = "";
+    try {
+      // let moment_var = moment_js.utc(epoch * 1000);
+      let moment_var = moment_js.unix(epoch);
+      // localzone_format = moment_var.format("YYYY-MM-DD[T]HH:mm:ss");
+      localzone_format = moment_var.format("YYYY-MM-DD HH:mm:ss");
+    } catch (err) {
+      localzone_format = "";
+    }
+    return localzone_format;
+  }
+
+  function f_string_to_epoch(str) {
+    // moment_js("2018-12-24T18:04:47.806Z").toDate();
+    let epoch = "";
+    try {
+      const date_obj = moment_js(str).toDate();
+      epoch = Math.round(date_obj / 1000);
+    } catch (err) {
+      epoch = 0;
+    }
+    return epoch;
+  }
+  //
+}
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
