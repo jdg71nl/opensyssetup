@@ -2024,6 +2024,25 @@ if (false) {
 }
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
+// about: Array
+
+if (false) {
+  //
+  const f_obj_is_array = function (obj) {
+    return obj && Array.isArray(obj);
+  };
+
+  const f_obj_is_empty_array = function (obj) {
+    return obj && Array.isArray(obj) && obj.length == 0;
+  };
+
+  const f_obj_is_non_empty_array = function (obj) {
+    return obj && Array.isArray(obj) && obj.length > 0;
+  };
+  //
+}
+
+//: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about: Array.filter()
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
