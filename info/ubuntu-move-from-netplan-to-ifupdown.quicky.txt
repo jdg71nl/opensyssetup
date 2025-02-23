@@ -1,0 +1,10 @@
+#= ubuntu-move-from-netplan-to-ifupdown.quicky.txt
+
+# https://www.reddit.com/r/Ubuntu/comments/k4mie1/how_do_i_replace_ubuntu_2004_netplan_with_the/
+
+apt install ifupdown
+apt purge network-manager netplan.io
+rm -rf /etc/netplan/*.yml 
+
+#-eof
+
