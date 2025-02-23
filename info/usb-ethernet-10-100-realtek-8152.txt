@@ -1,0 +1,33 @@
+#= usb-ethernet-10-100-realtek-8152.txt
+
+# https://answers.launchpad.net/ubuntu/+question/703762
+sudo lshw -C network
+
+# above blog suggests the kernel module is offloaded
+# then: force load it:
+
+cp -av /home/jdg/opensyssetup/debian/etc/rc.local /etc/
+
+> cat /etc/rc.local 
+#!/bin/sh -e
+# /etc/rc.local
+#
+# also do:
+# > chmod +x  /etc/rc.local
+# > chown 0:0 /etc/rc.local 
+#
+# run at startup, see: [syssetup/debian] /etc/systemd/system/rc-local.service
+#
+modprobe -v r8152
+#
+# Note: must have this: exit 0
+exit 0
+#-eof
+
+# then:
+
+sudo systemctl enable rc-local
+
+
+#-eof
+
