@@ -1,5 +1,44 @@
 # samba.quicky
 
+# (newest ont top)
+# - - - - - - = = = = = = - - - - - - . 
+
+# - - - - - - = = = = = = - - - - - - . 
+# d250225
+# https://ubuntu.com/server/docs/samba-as-a-file-server
+sudo -i
+apt install samba
+cd /etc/samba/
+cp -av smb.conf smb.conf.ori
+vi smb.conf
+
+# (edit on top:)
+[global]
+  # jdg
+  workgroup = J33WORKGROUP 
+
+# (at bottom add:)
+
+#jdg
+[samba]
+    comment = Samba File Server Share
+    path = /srv/samba/share
+    browsable = yes
+    guest ok = yes
+    read only = no
+    create mask = 0755
+
+mkdir -pv /srv/samba/share
+chown nobody:nogroup /srv/samba/share/
+chmod 777 /srv/samba/share/
+cd ~
+ln -s /srv/samba/share/ samba
+systemctl restart smbd.service nmbd.service
+
+# - - - - - - = = = = = = - - - - - - . 
+
+
+
 # ---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++---+++-----
 # testing samba config:
 
