@@ -94,6 +94,7 @@ cat <<HERE
 # Best to do a small init commit:
 #
 git clone ssh://git@$GITHOST:2221/opt/git/$REPNAME.git 
+cd $REPNAME
 touch README.txt
 git add README.txt 
 git commit -am "initial"
