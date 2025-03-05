@@ -93,14 +93,14 @@ cat <<HERE
 # Note that this remote-repo is empty, so a 'git clone' will warn.
 # Best to do a small init commit:
 #
-git clone ssh://git@$$GITHOST:2221/opt/git/$REPNAME.git 
+git clone ssh://git@$GITHOST:2221/opt/git/$REPNAME.git 
 touch README.txt
 git add README.txt 
 git commit -am "initial"
 git push
 #
 git-show-repos.sh 
-git remote add jbase ssh://git@$$GITHOST:2221/opt/git/$REPNAME.git 
+git remote add jbase ssh://git@$GITHOST:2221/opt/git/$REPNAME.git 
 git push --set-upstream jbase main
 git branch --set-upstream-to=jbase/main main
 #
