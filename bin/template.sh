@@ -7,16 +7,24 @@
 #
 BASENAME=`basename $0`
 echo "# running: $BASENAME ... "
-SCRIPT=`realpath -s $0`  # man says: "-s, --strip, --no-symlinks : don't expand symlinks"
-SCRIPT_PATH=`dirname $SCRIPT`
+# SCRIPT=`realpath -s $0`  # man says: "-s, --strip, --no-symlinks : don't expand symlinks"
+# SCRIPT_PATH=`dirname $SCRIPT`
+#
+# https://en.wikipedia.org/wiki/Command-line_interface#Command_description_syntax
+# <angle>        brackets for required parameters:   ping <hostname>
+# [square]       brackets for optional parameters:   mkdir [-p] <dirname>
+# ellipses ...   for repeated items:                 cp <source1> [source2...] <dest>
+# vertical |     bars for choice of items:           netstat {-t|-u}
 #
 #MYUID=$( id -u )
+#
 #usage() {
 #  #echo "# usage: $BASENAME { req.flag | [ -opt.flag string ] } " 1>&2 
 #  echo "# usage: $BASENAME " 1>&2 
 #  exit 1
 #}
 echo_exit1() { echo $1 ; exit 1 ; }
+#
 #if [ $MYUID != 0 ]; then
 #  # $* is a single string, whereas $@ is an actual array.
 #  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;

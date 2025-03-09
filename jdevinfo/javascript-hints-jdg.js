@@ -1358,6 +1358,12 @@ if (false) {
 //   'five'
 // ]
 
+// https://en.wikipedia.org/wiki/Command-line_interface#Command_description_syntax
+// <angle>        brackets for required parameters:   ping <hostname>
+// [square]       brackets for optional parameters:   mkdir [-p] <dirname>
+// ellipses ...   for repeated items:                 cp <source1> [source2...] <dest>
+// vertical |     bars for choice of items:           netstat {-t|-u}
+
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
 // about:
 // - - - - - - = = = - - - - - -
