@@ -1,0 +1,16 @@
+#
+
+
+# d250311
+
+> apt search dirstat
+Sorting... Done
+Full Text Search... Done
+
+k4dirstat/oldstable 3.2.2-1 amd64
+  graphical disk usage display with cleanup facilities
+
+qdirstat/oldstable 1.7-2 amd64
+  Qt-based directory statistics
+
+#-eof
