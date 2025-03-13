@@ -1,1 +1,5 @@
-smartback4/smartback4.sh
+#!/bin/bash
+#= smartback4.sh
+echo "# this file has moved ..."
+#-eof
+

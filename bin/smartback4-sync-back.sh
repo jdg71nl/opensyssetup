@@ -1,1 +1,0 @@
-smartback4/smartback4-sync-back.sh

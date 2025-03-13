@@ -1,1 +1,0 @@
-smartback4/smartback4-show-remote.sh
