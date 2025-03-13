@@ -1645,6 +1645,17 @@ if (true) {
   const duration_nr = m[1] || 0;
   const duration_unit = m[2] || "";
   //
+  // or better:
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
+  const query_duration = "4W";
+  const matches = query_duration.match(/^(\d+)([smhDWMY])$/);
+  let duration_nr, duration_unit;
+  if (matches) {
+    const entire_match = matches[0];
+    duration_nr = matches[1];
+    duration_unit = matches[2];
+  }
+  //
   const a = rep_str.toLowerCase().match(/[0-9a-f]{2}/g);
   rep_str_colons = `${a[0]}:${a[1]}:${a[2]}${a[3]}:${a[4]}::${rep_str.substr(
     5 * 2
