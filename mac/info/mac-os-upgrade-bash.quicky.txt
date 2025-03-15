@@ -1,0 +1,104 @@
+#= mac-os-upgrade-bash.quicky.txt
+
+# https://www.shell-tips.com/mac/upgrade-bash/#gsc.tab=0
+# How To Upgrade your Bash Version on Mac OS?
+# "
+GNU Bashicon mdi-link-variant is a powerful shell. Unfortunately the Mac OS operating systems doesn’t provide the latest version which may prevent you to take advantage of the latest features that came with Bash 4 and 5. Also, running an outdated bash version probably expose you to some major vulnerabilities.
+
+Mac OS comes with Bash version 3 which is quite limiting and lack key features like the bash associative arraysicon mdi-link-variant, improved auto-completion, better Posix conformance, etc.
+
+This post cover simple steps on how to upgrade bash on MacOS.
+# "
+#
+bash --version
+brew upgrade
+brew install bash
+exec bash
+bash --version
+echo $(brew --prefix)/bin/bash
+sudo cat /private/etc/shells
+echo $(brew --prefix)/bin/bash | sudo tee -a /private/etc/shells  ## <==== does not work?, instead manually add:
+sudo vi /private/etc/shells
+sudo chpass -s $(brew --prefix)/bin/bash jdg
+
+# log:
+
+--[CWD=~]--[1742024890 08:48:10 Sat 15-Mar-2025 CET]--[jdg@MBAirM3-jdg71nl]--[os:MacOS--15.3.1,isa:arm64]------
+> bash --version
+GNU bash, version 3.2.57(1)-release (arm64-apple-darwin24)
+Copyright (C) 2007 Free Software Foundation, Inc.
+
+
+--[CWD=~]--[1742024926 08:48:46 Sat 15-Mar-2025 CET]--[jdg@MBAirM3-jdg71nl]--[os:MacOS--15.3.1,isa:arm64]------
+> brew install bash
+==> Downloading https://ghcr.io/v2/homebrew/core/bash/manifests/5.2.37-2
+##################################################################################################################################################################################################################################################### 100.0%
+==> Fetching dependencies for bash: ncurses
+==> Downloading https://ghcr.io/v2/homebrew/core/ncurses/manifests/6.5
+##################################################################################################################################################################################################################################################### 100.0%
+==> Fetching ncurses
+==> Downloading https://ghcr.io/v2/homebrew/core/ncurses/blobs/sha256:4a529cb864994c26766c55ae8e506297523b36319e0f5f5af0faf8250a451f77
+##################################################################################################################################################################################################################################################### 100.0%
+==> Fetching bash
+==> Downloading https://ghcr.io/v2/homebrew/core/bash/blobs/sha256:e77d408d550e8e9f6669abf16759e35d0b867fe2126121eaa1ff39a94921cd86
+##################################################################################################################################################################################################################################################### 100.0%
+==> Installing dependencies for bash: ncurses
+==> Installing bash dependency: ncurses
+==> Downloading https://ghcr.io/v2/homebrew/core/ncurses/manifests/6.5
+Already downloaded: /Users/jdg/Library/Caches/Homebrew/downloads/b2f8ce4e08b15832435170efd265346225ee388d5baab3d5c50e3a77c5673b5a--ncurses-6.5.bottle_manifest.json
+==> Pouring ncurses--6.5.arm64_sequoia.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/ncurses/6.5: 4,052 files, 9.9MB
+==> Installing bash
+==> Pouring bash--5.2.37.arm64_sequoia.bottle.2.tar.gz
+🍺  /opt/homebrew/Cellar/bash/5.2.37: 163 files, 12.4MB
+==> Running `brew cleanup bash`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+
+
+--[CWD=~]--[1742025053 08:50:53 Sat 15-Mar-2025 CET]--[jdg@MBAirM3-jdg71nl]--[os:MacOS--15.3.1,isa:arm64]------
+> echo $(brew --prefix)/bin/bash
+/opt/homebrew/bin/bash
+
+
+--[CWD=~]--[1742025230 08:53:50 Sat 15-Mar-2025 CET]--[jdg@MBAirM3-jdg71nl]--[os:MacOS--15.3.1,isa:arm64]------
+> sudo cat /private/etc/shells
+# List of acceptable shells for chpass(1).
+# Ftpd will not allow users to connect who are not using
+# one of these shells.
+
+/bin/bash
+/bin/csh
+/bin/dash
+/bin/ksh
+/bin/sh
+/bin/tcsh
+/bin/zsh
+
+
+--[CWD=~]--[1742025238 08:53:58 Sat 15-Mar-2025 CET]--[jdg@MBAirM3-jdg71nl]--[os:MacOS--15.3.1,isa:arm64]------
+> sudo vi /private/etc/shells
+
+--[CWD=~]--[1742025302 08:55:02 Sat 15-Mar-2025 CET]--[jdg@MBAirM3-jdg71nl]--[os:MacOS--15.3.1,isa:arm64]------
+> sudo cat /private/etc/shells
+# List of acceptable shells for chpass(1).
+# Ftpd will not allow users to connect who are not using
+# one of these shells.
+
+/bin/bash
+/bin/csh
+/bin/dash
+/bin/ksh
+/bin/sh
+/bin/tcsh
+/bin/zsh
+/opt/homebrew/bin/bash
+
+
+--[CWD=~]--[1742025379 08:56:19 Sat 15-Mar-2025 CET]--[jdg@MBAirM3-jdg71nl]--[os:MacOS--15.3.1,isa:arm64]------
+> sudo chpass -s $(brew --prefix)/bin/bash jdg
+Password:
+Changing shell for jdg.
+
+
+#-eof
