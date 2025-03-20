@@ -17,7 +17,11 @@ TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?RASF0_20(\d{2}\d{2}\d{2})_[^\\\\\
 if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
 
 # dYYMMDD-hhmmss
-TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})\-(\d{4}\d{2})[^\\\\\/]*$/\1\2.\3/i" ) ; TAGHM="${TAG}"
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})\-(\d{4})(\d{2})[^\\\\\/]*$/\1\2.\3/i" ) ; TAGHM="${TAG}"
+if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
+
+# dYYMMDDthhmmss
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})t(\d{4})(\d{2})[^\\\\\/]*$/\1\2.\3/i" ) ; TAGHM="${TAG}"
 if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
 
 # dYYMMDD-hhmm
