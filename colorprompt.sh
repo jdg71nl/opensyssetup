@@ -188,6 +188,8 @@ fifm ()  { echo "# bash-function, see 'type fifm':"; gfind . -xtype f -iname '*'
 # > brew install ffind
 # > brew install rargs
 fifm2 ()  { echo "# bash-function, see 'type fifm':"; ffind . -xtype f -iname '*'$2'*' -print0 | rargs -0 egrep -sinH "$1" "{}"; }
+#
+fifm3 () { egrep -sinH "$1" "$2"; }
 
 # -i causes Less to search '/' with case-insensitive
 # -S chop long-lines
