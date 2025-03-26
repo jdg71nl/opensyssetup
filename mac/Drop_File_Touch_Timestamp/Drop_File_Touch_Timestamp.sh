@@ -24,6 +24,10 @@ if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TA
 TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})t(\d{4})(\d{2})[^\\\\\/]*$/\1\2.\3/i" ) ; TAGHM="${TAG}"
 if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
 
+# dYYMMDDthhmm
+TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})t(\d{4})[^\\\\\/]*$/\1\2.01/i" ) ; TAGHM="${TAG}"
+if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
+
 # dYYMMDD-hhmm
 TAG=$( echo "$FILE" | /usr/bin/perl -pe "s/^.*?d(\d{6,8})\-(\d{4})[^\\\\\/]*$/\1\2/i" ) ; TAGHM="${TAG}"
 if [[ "$FILE" != "$TAG" ]]; then dolog "touch -t $TAGHM \"$FILE\""; touch -t $TAGHM "$FILE" ; continue ; fi
