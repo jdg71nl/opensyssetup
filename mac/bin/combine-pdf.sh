@@ -21,6 +21,14 @@ if [[ -e "$OUT" ]]; then
 	help
 fi
 
-echo "CMD> gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile='$OUT' $FILES"
-gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="$OUT" $FILES
+# d250328 gs sucks:
+#echo "CMD> gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile='$OUT' $FILES"
+#gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="$OUT" $FILES
+
+# d250328 this works like a charm:
+# https://stackoverflow.com/questions/2507766/merge-convert-multiple-pdf-files-into-one-pdf
+
+qpdf --empty --pages $FILES -- $OUT
+
+#-eof
 
