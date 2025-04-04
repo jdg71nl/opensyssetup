@@ -304,9 +304,7 @@ if (false) {
 if (false) {
   // read JSON file (async):
   // import { readFile } from "fs/promises";
-  const json = JSON.parse(
-    await readFile(new URL("./some-file.json", import.meta.url))
-  );
+  const json = JSON.parse(await readFile(new URL("./some-file.json", import.meta.url)));
   //
   // read JSON file (sync)
   // import * as fs from "node:fs";
@@ -529,9 +527,7 @@ if (false) {
       reject(new Error("Error-message"));
     }, 2000);
   });
-  p.then((result) => console.log("Result", result)).catch((err) =>
-    console.log("Error", err.message)
-  );
+  p.then((result) => console.log("Result", result)).catch((err) => console.log("Error", err.message));
 
   // - - -
   // from Mozilla:
@@ -1029,6 +1025,9 @@ if (false) {
 // generate an Array -- idea from: https://stackoverflow.com/questions/3746725/how-to-create-an-array-containing-1-n
 if (false) {
   //
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Array
+  // "new Array(arrayLength)"
+  // "Note: Array() can be called with or without new. Both create a new Array instance."
   console.log(JSON.stringify(Array(10)));
   // [null,null,null,null,null,null,null,null,null,null]
   //
@@ -1066,10 +1065,7 @@ if (false) {
   const array1 = [1, 2, 3, 4];
   // 0 + 1 + 2 + 3 + 4 = 10
   const initialValue = 0;
-  const sumWithInitial = array1.reduce(
-    (accumulator, currentValue) => accumulator + currentValue,
-    initialValue
-  );
+  const sumWithInitial = array1.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue);
 }
 
 // https://stackoverflow.com/questions/24806772/how-to-skip-over-an-element-in-map
@@ -1278,8 +1274,7 @@ if (false) {
   "FooBar".includes("oo", 2); // false
 
   function f_get_substring_length({ str, length }) {
-    let my_str =
-      str && typeof str === "string" && str.trim().length > 0 ? str.trim() : "";
+    let my_str = str && typeof str === "string" && str.trim().length > 0 ? str.trim() : "";
     if (my_str.length > length - 3) {
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring
       my_str = my_str.substring(0, length - 3) + "...";
@@ -1288,12 +1283,8 @@ if (false) {
   }
 
   function f_sanitize_str_or_default_str(str, default_str) {
-    const san_default =
-      default_str && typeof default_str === "string" ? default_str.trim() : "";
-    const san_str =
-      str && typeof str === "string" && str.trim().length > 0
-        ? str.trim()
-        : san_default;
+    const san_default = default_str && typeof default_str === "string" ? default_str.trim() : "";
+    const san_str = str && typeof str === "string" && str.trim().length > 0 ? str.trim() : san_default;
     return san_str;
   }
 
@@ -1521,9 +1512,7 @@ if (false) {
   //
   const result_promise = my_promise_based_func({ a: 1, b: 2 });
   //
-  result_promise
-    .then((result) => console.log("Result", result))
-    .catch((err) => console.log("Error", err.message));
+  result_promise.then((result) => console.log("Result", result)).catch((err) => console.log("Error", err.message));
 }
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
@@ -1638,12 +1627,15 @@ if (true) {
     // do something
   }
   //
-  const query_duration = "4W";
-  const m = query_duration.match(/^(\d+)([smhDWMY])$/);
-  // [ '4W', '4', 'W', index: 0, input: '4W', groups: undefined ]
-  const entire_match = m[0];
-  const duration_nr = m[1] || 0;
-  const duration_unit = m[2] || "";
+
+  {
+    const query_duration = "4W";
+    const m = query_duration.match(/^(\d+)([smhDWMY])$/);
+    // [ '4W', '4', 'W', index: 0, input: '4W', groups: undefined ]
+    const entire_match = m[0];
+    const duration_nr = m[1] || 0;
+    const duration_unit = m[2] || "";
+  }
   //
   // or better:
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match
@@ -1657,9 +1649,7 @@ if (true) {
   }
   //
   const a = rep_str.toLowerCase().match(/[0-9a-f]{2}/g);
-  rep_str_colons = `${a[0]}:${a[1]}:${a[2]}${a[3]}:${a[4]}::${rep_str.substr(
-    5 * 2
-  )}.`;
+  rep_str_colons = `${a[0]}:${a[1]}:${a[2]}${a[3]}:${a[4]}::${rep_str.substr(5 * 2)}.`;
   //
   // replace using RE:
   const reg_exp = new RegExp(`{{${v_key}}}`, "g");
@@ -1794,11 +1784,7 @@ if (false) {
   params.append("limit", api_url_limit);
   url_obj.search = params;
   //
-  const response = await http_svc.get(
-    url_obj,
-    {},
-    { timeout: model.api_timeout_ms }
-  );
+  const response = await http_svc.get(url_obj, {}, { timeout: model.api_timeout_ms });
 }
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
@@ -1973,9 +1959,7 @@ if (false) {
   // - non-ASCI can be sorted by:   (a, b) => a.localeCompare(b)
   //
   Object.fromEntries(Object.entries(data).sort((a, b) => a.tpid - b.tpid));
-  Object.fromEntries(
-    Object.entries(data).sort((a, b) => a.tpid.localeCompare(b.tpid))
-  );
+  Object.fromEntries(Object.entries(data).sort((a, b) => a.tpid.localeCompare(b.tpid)));
   //
   let parent_obj = {
     a: 1,
@@ -1985,11 +1969,7 @@ if (false) {
     arr: [1, 2, 3],
     obj: { k1: 1, k2: 2 },
   };
-  Object.entries(parent_obj).forEach(([key, value], index) =>
-    console.log(
-      `# key='${key}' typeof:value='${typeof value}' index='${index}'`
-    )
-  );
+  Object.entries(parent_obj).forEach(([key, value], index) => console.log(`# key='${key}' typeof:value='${typeof value}' index='${index}'`));
   // # key='a' typeof:value='number' index='0'
   // # key='c' typeof:value='number' index='1'
   // # key='b' typeof:value='number' index='2'
@@ -2000,11 +1980,7 @@ if (false) {
   parent_obj = Object.fromEntries(Object.entries(parent_obj).sort());
   // { a: 1, arr: [ 1, 2, 3 ], b: 3, c: 2, obj: { k1: 1, k2: 2 }, z: 26 }
   //
-  Object.entries(parent_obj).forEach(([key, value], index) =>
-    console.log(
-      `# key='${key}' typeof:value='${typeof value}' index='${index}'`
-    )
-  );
+  Object.entries(parent_obj).forEach(([key, value], index) => console.log(`# key='${key}' typeof:value='${typeof value}' index='${index}'`));
   // # key='a' typeof:value='number' index='0'
   // # key='arr' typeof:value='object' index='1'
   // # key='b' typeof:value='number' index='2'
@@ -2078,9 +2054,7 @@ if (false) {
 // https://stackoverflow.com/questions/1885557/simplest-code-for-array-intersection-in-javascript
 
 if (false) {
-  const array_intersection = array_1.filter((element) =>
-    array_2.includes(element)
-  );
+  const array_intersection = array_1.filter((element) => array_2.includes(element));
 }
 
 //: - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - .
@@ -2157,8 +2131,7 @@ if (true) {
       if (name) {
         name = name.trim().replace(/\s\([^\)]*\)$/, "");
         if (!/^\d/.test(name)) {
-          let [entire1, ltr1, ltr2] =
-            name.match(/^([A-Z])[A-Za-z]+[\s,]*([A-Z]?).*/) ?? [];
+          let [entire1, ltr1, ltr2] = name.match(/^([A-Z])[A-Za-z]+[\s,]*([A-Z]?).*/) ?? [];
           if (!ltr2) {
             const [entire2, ltr3, ltr4] = name.match(/^([A-Z])(.).*/) ?? [];
             ltr2 = ltr4?.toUpperCase();
@@ -2193,9 +2166,7 @@ if (true) {
           first_lesson_str = `--===---${section_hash?.[section_nr]?.name}-`;
         }
         const section_str = `${section_hash?.[section_nr]?.nr}-${section_hash?.[section_nr]?.abbrev}`;
-        const str = `${prefix}-${section_str}-${pad(
-          nr
-        )}-${first_lesson_str}-${name.replace(/[:\s]+/g, "_")}`;
+        const str = `${prefix}-${section_str}-${pad(nr)}-${first_lesson_str}-${name.replace(/[:\s]+/g, "_")}`;
         console.log(str);
       }
     });
