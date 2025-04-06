@@ -10,7 +10,8 @@ error() { echo "$1"; exit 1;}
 TARGET="$1"
 if [ ! -d "$TARGET" ]; then
 	echo "Error: could not read directory '$TARGET'"
-	exit 1
+	#exit 1
+  usage
 fi
 
 # pop $1 from the list of source-files:
