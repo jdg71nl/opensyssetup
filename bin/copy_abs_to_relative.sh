@@ -39,25 +39,32 @@ expand_source() {
 	ABS_SOURCE="$ABS_DIR/$FILE"
 }
 
-echo "Will copy these source files/dirs to the target:"
-for SOURCE in "$@"; do
-	expand_source "$SOURCE"
-	echo "* target: $TARGET < source: $ABS_SOURCE"
-done
+#echo "Will copy these source files/dirs to the target:"
+#for SOURCE in "$@"; do
+#	expand_source "$SOURCE"
+#	echo "* target: $TARGET < source: $ABS_SOURCE"
+#done
 
-echo 
-echo "Are you sure ?"
-echo -n 'Press ENTER to continue, CTRL-C to abort...'
-read
+#echo 
+#echo "Are you sure ?"
+#echo -n 'Press ENTER to continue, CTRL-C to abort...'
+#read
 
-echo 
-echo "executing:"
+# echo 
+#echo "executing:"
 for SOURCE in "$@"; do
-	expand_source "$SOURCE"
+  #
+	#expand_source "$SOURCE"
+  #
 	#echo "find $ABS_SOURCE -type f -print0 | xargs -0i cp -rLv --preserve=mode,timestamps --parents {} $TARGET"
 	#find "$ABS_SOURCE" -type f -print0 | xargs -0i cp -rLv --preserve=mode,timestamps --parents "{}" "$TARGET"
-	echo "find $ABS_SOURCE -type f -o -type l -print0 | xargs -0i cp -rPv --preserve=mode,timestamps --parents {} $TARGET"
-	find "$ABS_SOURCE" -type f -o -type l -print0 | xargs -0i cp -rPv --preserve=mode,timestamps --parents "{}" "$TARGET"
+  #
+	#echo "find $ABS_SOURCE -type f -o -type l -print0 | xargs -0i cp -rPv --preserve=mode,timestamps --parents {} $TARGET"
+	#find "$ABS_SOURCE" -type f -o -type l -print0 | xargs -0i cp -rPv --preserve=mode,timestamps --parents "{}" "$TARGET"
+  #
+	echo "# > cp -rPv --preserve=mode,timestamps --parents \"$SOURCE\" \"$TARGET\"  ... "
+	cp -rPv --preserve=mode,timestamps --parents "$SOURCE" "$TARGET"
+  #
 done
 
 
