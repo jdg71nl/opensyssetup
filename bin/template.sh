@@ -19,8 +19,6 @@ pwd
 # ellipses ...   for repeated items:                 cp <source1> [source2...] <dest>
 # vertical |     bars for choice of items:           netstat {-t|-u}
 #
-#MYUID=$( id -u )
-#
 #usage() {
 #  #echo "# usage: $BASENAME { req.flag | [ -opt.flag string ] } " 1>&2 
 #  echo "# usage: $BASENAME " 1>&2 
@@ -28,6 +26,8 @@ pwd
 #}
 echo_exit1() { echo $1 ; exit 1 ; }
 #
+#
+#MYUID=$( id -u )
 #if [ $MYUID != 0 ]; then
 #  # $* is a single string, whereas $@ is an actual array.
 #  echo "# provide your password for 'sudo':" ; sudo "$0" "$@" ; exit 0 ;
