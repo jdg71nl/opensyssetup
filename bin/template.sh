@@ -7,8 +7,11 @@
 #
 BASENAME=`basename $0`
 echo "# running: $BASENAME ... "
-# SCRIPT=`realpath -s $0`  # man says: "-s, --strip, --no-symlinks : don't expand symlinks"
-# SCRIPT_PATH=`dirname $SCRIPT`
+SCRIPT=`realpath -s $0`  # man says: "-s, --strip, --no-symlinks : don't expand symlinks"
+SCRIPT_PATH=`dirname $SCRIPT`
+echo "# now cd'ing (change dir) to:"
+cd $SCRIPT_PATH
+pwd
 #
 # https://en.wikipedia.org/wiki/Command-line_interface#Command_description_syntax
 # <angle>        brackets for required parameters:   ping <hostname>
