@@ -1,0 +1,24 @@
+# rpi-swap-file-info.txt 
+
+# https://forums.raspberrypi.com/viewtopic.php?t=46472
+
+# set:
+>
+sudo vi /etc/dphys-swapfile
+
+# check:
+>
+cat /etc/dphys-swapfile | grep CONF_SWAPSIZE
+#CONF_SWAPSIZE=100
+CONF_SWAPSIZE=800
+
+# view:
+>
+free -m
+
+# apply:
+>
+sudo dphys-swapfile setup
+
+#-eof
+
