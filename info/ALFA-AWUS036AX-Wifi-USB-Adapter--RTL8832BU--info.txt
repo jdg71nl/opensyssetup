@@ -1,0 +1,212 @@
+# ALFA-AWUS036AX-Wifi-USB-Adapter--RTL8832BU--info.txt
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+
+# - - - - - - = = = - - - - - - . 
+# d250406 this WORKS OK from: https://github.com/morrownr/rtl8852bu-20240418
+
+#
+>
+sudo apt install -y raspberrypi-kernel-headers build-essential bc dkms rfkill iw git
+mkdir -p ~/src
+cd ~/src
+git clone https://github.com/morrownr/rtl8852bu-20240418.git
+cd ~/src/rtl8852bu-20240418
+sudo ./install-driver.sh 
+#.
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# manufactorer info
+
+USB Adapter AWUS036AX
+
+https://alfa-network.eu/alfa-usb-adapter-awus036ax?srsltid=AfmBOoo4xm0wl4hzRNLKSbbprdOcTNMHcjbK6B99lhFzd4lTtiH83D9N
+
+AWUS036AX is the WiFi 6 (802.11ax) 2x2 dual-band 2.4 GHz and 5 GHz USB adapter.
+
+* RTL8832BU WiFi 6 chipset
+* USB-A connector support USB 3.2 GEN 1
+* RP-SMA external antenna connector
+* High-gain dual-band 2.4 GHz +5 GHz detachable dipole antenna
+* LED indicator
+
+Manufacturer	Alfa Network
+SKU	AWUS036AX
+EAN	4718050308613
+Chipset	Realtek™ RTL8832BU
+Wi-Fi Standards	802.11b, 802.11g, 802.11n, 802.11a, 802.11ac, 802.11ax
+Wi-Fi Frequency	2.4 Ghz, 5 Ghz
+2.4GHz Radio Rate	573Mbps
+5Ghz Radio Rate	1200Mbps
+Antenna Type	Omni-Directional
+Antenna Connector	RP-SMA Female
+Antenna Gain	5dBi
+Environment	Indoor
+USB Ports	USB 3.2
+Dimensions	87.4 x 28.5 x 12 mm
+
+#
+RTL8832BU_linux_(v1.15.11).tar
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# driver info
+
+#
+https://forums.debian.net/viewtopic.php?t=155627
+
+#
+https://github.com/realtek-lunix/RTL8852BU_RTL8832BU_WiFi_linux
+.
+sudo apt-get update
+sudo apt-get install make gcc linux-headers-$(uname -r) build-essential git
+git clone http://github.com/realtek-lunix/RTL8852BU_RTL8832BU_WiFi_linux.git
+cd RTL8852BU_RTL8832BU_WiFi_linux
+make clean
+make
+sudo make install
+
+#
+https://forums.raspberrypi.com/viewtopic.php?t=365772
+
+#
+https://github.com/morrownr/rtl8852bu-20240418
+.
+Tested Linux Distributions
+* Debian (kernels 5.10, 5.15 and 6.1)
+.
+Compatible Devices
+* ALFA AWUS036AX
+.
+>
+sudo apt install -y raspberrypi-kernel-headers build-essential bc dkms rfkill iw git
+>
+sudo dkms status
+r8152/2.19.2: added
+>
+mkdir -p ~/src
+cd ~/src
+git clone https://github.com/morrownr/rtl8852bu-20240418.git
+cd ~/src/rtl8852bu-20240418
+>
+sudo ./install-driver.sh 
+
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# https://github.com/morrownr/rtl8852bu-20240418  says:
+
+Recommended WiFi Router/ Access Point Settings
+
+Note: These are general recommendations, some of which may not apply to your specific situation.
+
+* Security: Set WPA2-AES or WPA2/WPA3 mixed or WPA3. Do not set WPA2 mixed mode or WPA or TKIP. Some clients may not work well with WPA2/WPA3 mixed.
+
+* Channel width for 2.4 GHz: Set 20 MHz fixed width. Do not use 40 MHz or 20/40 automatic.
+
+* Channels for 2.4 GHz: Set channel 1 or 6 or 11 depending on the congestion at your location. Do not set automatic channel selection. As time passes, if you notice poor performance, recheck congestion and set channel appropriately. The environment around you can and does change over time. With the advent of WiFi 6, Wifi 6 (AX) is now available for the 2.4 GHz band. No problems have been noted when setting an AP/wifi router to mixed WiFi 4 (n) and WiFi 6 (ax).
+
+* Mode for 2.4 GHz: For best performance, set "N only" if you no longer use B or G capable devices. Or, as noted above, you can use mixed n and ax mode.
+
+* Network names: Do not set the 2.4 GHz Network, 5 GHz Network or the 6 GHz Network to the same name. Note: Unfortunately many routers come with all networks set to the same name. You need to be able to control which network that is in use so changing the name of one of the networks is recommended. Since many IoT devices use the 2.4 GHz network, it may be better to change the names of the 5 GHz and 6 GHz networks.
+
+* Channels for 5 GHz: Not all devices are capable of using DFS channels (I'm looking at you Roku.) It may be necessary to set a fixed channel in the range of 36 to 48 or 149 to 165 in order for all of your devices to work on 5 GHz. (For US, other countries may vary.)
+
+* Best location for the WiFi router/access point: Near center of apartment or house, at least a couple of feet away from walls, in an elevated location. You may have to test to see what the best location is in your environment.
+
+* Check congestion: There are apps available for smart phones that allow you to get an idea of the congestion levels on WiFi channels. The apps generally go by the name of WiFi Analyzer or something similar.
+
+After making and saving changes, reboot the router.
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# print on adapter says:
+
+ALFA AWUS036AX
+Wifi6 Wireless USB Adapter
+S/N: 22CU036AX0536
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# dmesg says:
+
+--[CWD=~/opensyssetup(git:main)]--[1743939591 13:39:51 Sun 06-Apr-2025 CEST]--[jdg@j33rtr]--[hw:RPI5b-1.0,os:Debian-12/bookworm,isa:aarch64]------
+> uname -a
+Linux j33rtr.j71.nl 6.6.74+rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.6.74-1+rpt1 (2025-01-27) aarch64 GNU/Linux
+
+
+--[CWD=~]--[1743938930 13:28:50 Sun 06-Apr-2025 CEST]--[root@j33rtr]--[hw:RPI5b-1.0,os:Debian-12/bookworm,isa:aarch64]------
+> dmesg | o
+...
+[* 3.806064] usb 3-1: New USB device found, idVendor=0bda, idProduct=b832, bcdDevice= 0.00
+[* 3.814314] usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[* 3.821542] usb 3-1: Product: 802.11ax WLAN Adapter
+[* 3.826743] usb 3-1: Manufacturer: Realtek
+[* 3.831910] usb 3-1: SerialNumber: 00e04c000001
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# lsusb says:
+
+--[CWD=~/opensyssetup(git:main)]--[1743939505 13:38:25 Sun 06-Apr-2025 CEST]--[jdg@j33rtr]--[hw:RPI5b-1.0,os:Debian-12/bookworm,isa:aarch64]------
+> lsusb -s 003:003 -v
+
+Bus 003 Device 003: ID 0bda:b832 Realtek Semiconductor Corp. 802.11ax WLAN Adapter
+Couldn't open device, some information will be missing
+Device Descriptor:
+  bLength* * * * 18
+  bDescriptorType* *  1
+  bcdUSB* * *    2.00
+  bDeviceClass* * * 0 
+  bDeviceSubClass* *  0 
+  bDeviceProtocol* *  0 
+  bMaxPacketSize0* * 64
+  idVendor* *    0x0bda Realtek Semiconductor Corp.
+  idProduct* *   0xb832 
+  bcdDevice* * * 0.00
+  iManufacturer* *    1 Realtek
+  iProduct* * * * 2 802.11ax WLAN Adapter
+  iSerial* * * *  3 00e04c000001
+  bNumConfigurations*   1
+  Configuration Descriptor:
+* bLength* * * *  9
+* bDescriptorType* *  2
+* wTotalLength*    0x004a
+* bNumInterfaces* *   1
+* bConfigurationValue*  1
+* iConfiguration* *   0 
+* bmAttributes* *  0xe0
+*   Self Powered
+*   Remote Wakeup
+* MaxPower* * *   500mA
+* Interface Descriptor:
+*   bLength* * * *  9
+*   bDescriptorType* *  4
+*   bInterfaceNumber* * 0
+*   bAlternateSetting*    0
+*   bNumEndpoints* *    8
+*   bInterfaceClass*    255 Vendor Specific Class
+*   bInterfaceSubClass* 255 Vendor Specific Subclass
+*   bInterfaceProtocol* 255 Vendor Specific Protocol
+*   iInterface* * *   2 
+*   Endpoint Descriptor:
+* * bLength* * * *  7
+* * bDescriptorType* *  5
+* * bEndpointAddress*  0x84  EP 4 IN
+* * bmAttributes* * * 2
+* *   Transfer Type* * * Bulk
+* *   Synch Type* * *    None
+* *   Usage Type* * *    Data
+* * wMaxPacketSize*  0x0200  1x 512 bytes
+* * bInterval* * *    0
+*   Endpoint Descriptor:
+* * bLength* * * *  7
+* * bDescriptorType* *  5
+* * bEndpointAddress*  0x05  EP 5 OUT
+* * bmAttributes* * * 2
+* *   Transfer Type* * * Bulk
+* *   Synch Type* * *    None
+* *   Usage Type* * *    Data
+* * wMaxPacketSize*  0x0200  1x 512 bytes
+* * bInterval* * *    0
+*   Endpoint Descriptor:
+* * bLength* * * *  7
+
+
+# - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
+# - - - - - - = = = - - - - - - . 
+#-eof
