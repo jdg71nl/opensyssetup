@@ -121,6 +121,8 @@ alias fm='/usr/bin/find . \( -path "*.svn*" -prune \) -o \( -path "*/proc/*" -pr
 #alias ifc="/sbin/ifconfig | egrep 'encap|addr|MTU'"
 #alias ifc='/sbin/ifconfig | egrep -i "encap|addr|mtu|inet|ether"'
 alias ifc='echo "# ip addr show | egrep -i \"mtu|ether|inet\" .." && ip addr show | egrep -i "mtu|ether|inet"'
+alias ifcm='ifconfig | egrep "mtu|ether|inet"'
+#
 alias cdp='echo "change dir to: `pwd -P` ..";cd "`pwd -P`"'
 #
 #alias dusort='du -sbx * .??* | convertsize.pl | sort'
