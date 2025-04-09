@@ -33,6 +33,7 @@ fi
 #.
 
 GFIND="/opt/homebrew/bin/gfind"
+GFIND_SYMLINK="/opt/homebrew/bin/find"
 FIND="/usr/bin/find"
 FIND_BACKUP="$FIND.backup"
 
@@ -49,9 +50,12 @@ fi
 echo "# executing ... "
 set -o xtrace
 
-mv $FIND $FIND_BACKUP
+# Below gives error on MacOS 'operation not permitted' :
+#mv $FIND $FIND_BACKUP
+#cp -av $GFIND $FIND
 
-cp -av $GFIND $FIND
+# better just use symlink in brew, becase brew-path comes before /usr/bin :
+ln -s $GFIND $GFIND_SYMLINK
 
 #-eof
 
