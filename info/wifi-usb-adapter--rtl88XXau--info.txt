@@ -1,0 +1,22 @@
+# wifi-usb-adapter--rtl88XXau--info.txt 
+
+# Edimax 802.11n 2.4GHz = rtl88XXau
+
+# problems (random hang):
+
+--[CWD=/var/log]--[1744608547 07:29:07 Mon 14-Apr-2025 CEST]--[root@atlec-kz44]--[hw:RPI3b+1.3,os:Raspbian-11/bullseye,isa:armv7l]------
+> fif 88XXau
+# bash-function, see 'type fif':
+./syslog.1:1494:Apr  6 17:04:07 atlec-kz44 kernel: [   11.375009] 88XXau: loading out-of-tree module taints kernel.
+./syslog.1:1495:Apr  6 17:04:07 atlec-kz44 kernel: [   11.620156] usb 1-1.2: 88XXau 74:da:38:67:a2:f6 hw_info[107]
+./syslog.1:1496:Apr  6 17:04:07 atlec-kz44 kernel: [   11.625306] usbcore: registered new interface driver rtl88XXau
+./syslog.1:4859:Apr  9 14:12:37 atlec-kz44 kernel: [   11.442447] 88XXau: loading out-of-tree module taints kernel.
+./syslog.1:4860:Apr  9 14:12:37 atlec-kz44 kernel: [   11.693650] usb 1-1.2: 88XXau 74:da:38:67:a2:f6 hw_info[107]
+./syslog.1:4861:Apr  9 14:12:37 atlec-kz44 kernel: [   11.699519] usbcore: registered new interface driver rtl88XXau
+./syslog.1:8488:Apr 12 13:17:15 atlec-kz44 kernel: [   11.347957] 88XXau: loading out-of-tree module taints kernel.
+./syslog.1:8489:Apr 12 13:17:15 atlec-kz44 kernel: [   11.586737] usb 1-1.2: 88XXau 74:da:38:67:a2:f6 hw_info[107]
+./syslog.1:8490:Apr 12 13:17:15 atlec-kz44 kernel: [   11.591796] usbcore: registered new interface driver rtl88XXau
+^C
+
+#-eof
+
