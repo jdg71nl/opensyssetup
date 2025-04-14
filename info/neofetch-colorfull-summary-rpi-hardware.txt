@@ -1,0 +1,32 @@
+#
+
+# tags: neofetch hardware info raspberry pi rpi
+
+sudo apt install -y neofetch
+
+# - - - 
+
+
+--[CWD=~/opensyssetup(git:main)]--[1744663711 22:48:31 Mon 14-Apr-2025 CEST]--[root@atlec-kz44]--[hw:RPI3b+1.3,os:Debian-12/bookworm,isa:aarch64]------
+> neofetch 
+       _,met$$$$$gg.                                                                                                                                                                                                                                        
+    ,g$$$$$$$$$$$$$$$P.       ---------------------- 
+  ,g$$P"     """Y$$.".        OS: Debian GNU/Linux 12 (bookworm) aarch64 
+ ,$$P'              `$$$.     Host: Raspberry Pi 3 Model B Plus Rev 1.3 
+',$$P       ,ggs.     `$$b:   Kernel: 6.12.20+rpt-rpi-v8 
+`d$$'     ,$P"'   .    $$$    Uptime: 1 hour, 7 mins 
+ $$P      d$'     ,    $$P    Packages: 1074 (dpkg) 
+ $$:      $$.   -    ,d$$'    Shell: bash 5.2.15 
+ $$;      Y$b._   _,d$P'      CPU: (4) @ 1.400GHz 
+ Y$$.    `.`"Y$$$$P"'         Memory: 771MiB / 906MiB 
+ `$$b      "-.__
+  `Y$$                                                
+   `Y$$.                                              
+     `$$b.
+       `Y$$b.
+          `"Y$b._
+              `"""
+
+
+--[CWD=~/opensyssetup(git:main)]--[1744663810 22:50:10 Mon 14-Apr-2025 CEST]--[root@atlec-kz44]--[hw:RPI3b+1.3,os:Debian-12/bookworm,isa:aarch64]------
+

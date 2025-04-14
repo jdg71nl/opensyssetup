@@ -1,5 +1,7 @@
 # rpi-swap-file-info.txt 
 
+# tags: virtual memory
+
 # https://forums.raspberrypi.com/viewtopic.php?t=46472
 
 # set:
