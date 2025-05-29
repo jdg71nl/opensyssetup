@@ -58,18 +58,27 @@ f_check_install_packages ca-certificates curl gnupg
 #mkdir -p /etc/apt/keyrings
 
 #NODE_MAJOR=16
-NODE_MAJOR=18
+#NODE_MAJOR=18
 #NODE_MAJOR=20
+NODE_MAJOR=22
+
+apt-get install -y curl
 
 #curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash - 
 #curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | sudo -E bash -
+#curl -fsSL https://deb.nodesource.com/setup_$NODE_MAJOR.x | sudo -E bash -
+#
+#echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+cd ~
+mkdir -pv ~/tmp/
+cd ~/tmp/
+curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
+bash nodesource_setup.sh
+cd ~
 
 apt update
 
-#apt install -y nodejs npm
 apt install -y nodejs 
 
 # Note: if npm gives problems you may need to just reinstall:
