@@ -108,7 +108,7 @@ BASENAME=\`basename \$0\`
 SCRIPT=\`realpath \$0\`
 SCRIPT_PATH=\`dirname \$SCRIPT\`
 cd \$SCRIPT_PATH
-pm2 start -n pouchdb pm2_start.sh
+pm2 start -n pouchdb --disable-logs --log "/dev/null" --output "/dev/null" --error "/dev/null" pm2_start.sh
 #
 EOF
 chmod +x $FILE
@@ -122,19 +122,6 @@ SCRIPT=\`realpath \$0\`
 SCRIPT_PATH=\`dirname \$SCRIPT\`
 cd \$SCRIPT_PATH
 pm2 stop pouchdb
-#
-EOF
-chmod +x $FILE
-
-# - - - - - - = = = - - - - - - 
-FILE="restart.sh"
-cat <<EOF > $FILE
-#!/bin/bash
-BASENAME=\`basename \$0\`
-SCRIPT=\`realpath \$0\`
-SCRIPT_PATH=\`dirname \$SCRIPT\`
-cd \$SCRIPT_PATH
-pm2 restart pouchdb
 #
 EOF
 chmod +x $FILE
