@@ -1,4 +1,52 @@
 # lvm.quicky
+# - - - - - - = = = - - - - - - . 
+
+# d250602 my Ubuntu Server 24.04 install used 50% available space (LVM: LV = 50% VG)
+# tip: https://www.linuxtechi.com/extend-lvm-partitions/
+
+> lvextend -l +100%FREE /dev/mapper/ubuntu--vg-ubuntu--lv
+> resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
+
+# LOG:
+--[CWD=~]--[1748892783 19:33:03 Mon 02-Jun-2025 UTC]--[root@ub24-04-devstack-vm-mini2]--[os:Ubuntu-24.04/noble,isa:aarch64]------
+
+> lvextend -l +100%FREE /dev/mapper/ubuntu--vg-ubuntu--lv
+  Size of logical volume ubuntu-vg/ubuntu-lv changed from 15.47 GiB (3961 extents) to <30.95 GiB (7922 extents).
+  Logical volume ubuntu-vg/ubuntu-lv successfully resized.
+
+> vgdisplay
+  --- Volume group ---
+  VG Name               ubuntu-vg
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  3
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                1
+  Open LV               1
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               <30.95 GiB
+  PE Size               4.00 MiB
+  Total PE              7922
+  Alloc PE / Size       7922 / <30.95 GiB
+  Free  PE / Size       0 / 0
+  VG UUID               fWqN6h-emdu-FdA2-33U9-nbXD-FdNe-kWcYd8
+
+> resize2fs /dev/mapper/ubuntu--vg-ubuntu--lv
+
+resize2fs 1.47.0 (5-Feb-2023)
+Filesystem at /dev/mapper/ubuntu--vg-ubuntu--lv is mounted on /; on-line resizing required
+old_desc_blocks = 2, new_desc_blocks = 4
+The filesystem on /dev/mapper/ubuntu--vg-ubuntu--lv is now 8112128 (4k) blocks long.
+#.
+
+
+# - - - - - - = = = - - - - - - . 
+# old (before d250602)
 --
 HOWTO create LVM:
 
