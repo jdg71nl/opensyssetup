@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# $@ separates original arguments containing whitespace:
+#echo "# running: docker compose $@  "
+#docker compose $@
+
+# better use this trick:
+# tip: https://stackoverflow.com/questions/1668649/how-can-i-keep-quotes-in-bash-arguments
+
+args=""
+
+whitespace="[[:space:]]"
+for i in "$@"
+do
+    if [[ $i =~ $whitespace ]]
+    then
+        i=\"$i\"
+    fi
+    #echo "$i"
+    args="$args $i"
+done
+
+echo "# running:> docker compose $args  "
+docker compose $args
+
+#-eof
+

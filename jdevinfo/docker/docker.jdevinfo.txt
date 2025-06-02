@@ -80,12 +80,22 @@ docker run hello-world
 # - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . - - - - - - = = = - - - - - - . 
 # install docker-compose
 
+https://docs.docker.com/reference/cli/docker/compose/
+
+
 # d250529 NOTE ===> today DC is a sub-command of Docker -- no need to install seperately:
 # test:
 
 > docker compose version
 Docker Compose version v2.36.2
 
+
+SCRIPT="$HOME/opensyssetup/bin/docker-compose" ; [[ ! -x $SCRIPT ]] && echo "# creating '$SCRIPT' ..." && touch $SCRIPT; chmod +x $SCRIPT; cat <<HERE >$SCRIPT
+#!/bin/bash
+echo "# running: docker compose \$@  "
+docker compose \$@
+#-eof
+HERE
 
 
 # https://docs.docker.com/compose/
