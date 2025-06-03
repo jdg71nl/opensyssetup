@@ -1,0 +1,27 @@
+#= check_reset_linuxrouter
+
+# Note: this file must be owned by USER field (or simply by 'root'):
+# chmod 644 /etc/cron.d/check_reset_linuxrouter
+# chown 0:0 /etc/cron.d/check_reset_linuxrouter
+#
+# Otherwise this ERROR is logged:
+# Jun 03 22:11:01 j33rtr.j71.nl cron[635]: (*system*check_reset_linuxrouter) WRONG FILE OWNER (/etc/cron.d/check_reset_linuxrouter)
+#
+# this site says: https://unix.stackexchange.com/questions/296347/crontab-never-running-while-in-etc-cron-d
+# You should also ensure the permissions and owner:group are set correctly (-rw-r--r-- and owned by root:root)
+# Another thing I've observed is that the file in /etc/cron.d cannot have an extension. 
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  *  username  command
+# 1  2  3  4  5  6         7            <== position/column
+
+*/1 * * * * root  /home/jdg/prod/check_reset_linuxrouter.sh
+#
+#-eof
+
