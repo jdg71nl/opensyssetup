@@ -1,0 +1,14 @@
+# apparmor.quicky
+
+# d250605 https://www.server-world.info/en/note?os=Debian_12&p=apparmor&f=1#google_vignette
+
+# check
+aa-status
+
+# disable
+aa-teardown
+systemctl disable apparmor 
+
+#-eof
+
+
